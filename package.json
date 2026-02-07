@@ -10,10 +10,18 @@
     "lint:fix": "eslint --cache --fix .",
     "tsc": "tsc --noEmit",
     "format": "prettier --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "@chakra-ui/react": "^3.31.0",
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@react-pdf/renderer": "^4.3.2",
     "@tanstack/react-query": "^5.90.20",
