@@ -9,9 +9,9 @@ export const RootLayout = () => {
     <Flex
       direction="column"
       maxW={{ base: "100vw", lg: "900px" }}
-      maxH={{ base: "100vh", md: "750px" }}
+      maxH={{ base: "100dvh", md: "750px" }}
       w="100vw"
-      h="100vh"
+      h="100dvh"
       mx="auto"
     >
       <Header />
