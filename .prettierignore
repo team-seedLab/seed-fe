@@ -7,8 +7,8 @@ public
 
 # 환경설정 파일 무시
 *.lock
-# *.config.js
-# *.config.ts
+*.config.js
+*.config.ts
 *.config.mjs
 *.md
 
