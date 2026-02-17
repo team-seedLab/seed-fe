@@ -11,6 +11,10 @@ const config = defineConfig({
 
   theme: {
     tokens: {
+      fonts: {
+        heading: { value: "Pretendard" },
+        body: { value: "Pretendard" },
+      },
       colors: colorToken,
     },
     semanticTokens: {
