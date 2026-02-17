@@ -23,7 +23,6 @@ export const Header = () => {
             <Box bg="neutral.900" p={2} rounded="xl">
               <Image
                 src={Logo}
-                src={Logo}
                 alt="Seed Logo"
                 boxSize={8}
                 objectFit="contain"
