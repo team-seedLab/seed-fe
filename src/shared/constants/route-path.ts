@@ -2,6 +2,7 @@
 export const ROUTE_PATHS = {
   ROOT: "/",
   MAIN: "/",
+  NOT_FOUND: "*",
 };
 
 // 동적 라우트 path를 상수로 정의합니다.
