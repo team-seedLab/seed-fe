@@ -1,6 +1,6 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
-import { colorSemanticToken, colorToken } from "../../styles";
+import { colorSemanticToken, colorToken, layoutToken } from "../../styles";
 import { globalStyles } from "../global";
 
 const config = defineConfig({
@@ -16,6 +16,7 @@ const config = defineConfig({
         body: { value: "Pretendard" },
       },
       colors: colorToken,
+      sizes: layoutToken,
     },
     semanticTokens: {
       colors: colorSemanticToken,
