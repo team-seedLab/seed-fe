@@ -1,15 +1,20 @@
 import { useNavigate } from "react-router";
 
-import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Text, VStack, useToken } from "@chakra-ui/react";
 
 import { ROUTE_PATHS } from "@/shared";
 
 export default function ErrorPage() {
   const navigate = useNavigate();
+  const [headerHeight, footerHeight, pagePadding] = useToken("sizes", [
+    "headerHeight",
+    "footerHeight",
+    "pagePadding",
+  ]);
 
   return (
     <Flex
-      h="calc(100vh - {sizes.headerHeight} - {sizes.footerHeight} - {sizes.pagePadding})"
+      h={`calc(100vh - ${headerHeight} - ${footerHeight} - ${pagePadding})`}
       alignItems="center"
       justifyContent="center"
     >
