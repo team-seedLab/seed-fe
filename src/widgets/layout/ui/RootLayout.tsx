@@ -15,7 +15,14 @@ export const RootLayout = () => {
         flex={1}
       >
         <Header />
-        <Box as="main" flex={1} w="full" mx="auto" p={3} overflowY="auto">
+        <Box
+          as="main"
+          flex={1}
+          w="full"
+          mx="auto"
+          p="pagePadding"
+          overflowY="auto"
+        >
           <Outlet />
         </Box>
       </Flex>
