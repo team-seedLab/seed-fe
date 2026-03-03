@@ -60,8 +60,8 @@ export default function ErrorPage() {
             fontSize="md"
             rounded="2xl"
             px={10}
-            _hover={{ bg: "#82b34a" }}
-            _active={{ bg: "#6e9d3d" }}
+            _hover={{ bg: "seed.hover" }}
+            _active={{ bg: "seed.active" }}
             onClick={() => navigate(ROUTE_PATHS.ROOT)}
           >
             홈으로 돌아가기
