@@ -4,6 +4,7 @@ export const FALLBACK_ANALYSIS_CONTENT_HEIGHT = 940;
 export const FALLBACK_ROADMAP_CONTENT_HEIGHT = 900;
 
 // Shared motion and layout helpers for the staged solution walkthrough.
+// solution walkthrough 단계에서 공통으로 쓰는 모션과 레이아웃 계산 함수들
 export const fadeUpStyle = (progress: number, distance: number) => {
   return {
     opacity: progress,

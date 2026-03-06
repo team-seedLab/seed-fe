@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 .eslintcache
+
+# Lighthouse and Codex local artifacts
+.lighthouseci/
+.codex-lh/
+.codex-*.log

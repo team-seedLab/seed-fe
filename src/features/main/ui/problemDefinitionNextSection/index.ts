@@ -1,1 +1,1 @@
-export { TimeLossSection } from "./TimeLossSection";
+export * from "./ui";

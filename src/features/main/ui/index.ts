@@ -1,1 +1,1 @@
-export * from "./PromptScrollSequence";
+export * from "./promptScrollSequence";

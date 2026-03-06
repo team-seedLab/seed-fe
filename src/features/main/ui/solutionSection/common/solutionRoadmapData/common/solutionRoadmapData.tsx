@@ -1,6 +1,7 @@
 import type { SolutionAssignmentCard } from "../../types/common/types";
 
 // Static roadmap definitions for each assignment type shown in the solution section.
+// solution 섹션에서 보여주는 과제 유형별 로드맵 정적 데이터
 const ICON_WRITING = {
   paths: [
     "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z",

@@ -2,6 +2,7 @@ export const TOTAL_UNITS = 10;
 export const PHASE_UNIT_PX = 120;
 
 // Timeline math for the solution section's staged analysis and roadmap reveals.
+// solution 섹션의 분석/로드맵 노출 순서를 계산하는 타임라인 수학 모듈
 const clamp = (value: number, min: number, max: number) => {
   return Math.min(max, Math.max(min, value));
 };

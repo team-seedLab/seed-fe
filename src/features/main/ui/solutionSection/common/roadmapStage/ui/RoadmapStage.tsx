@@ -2,13 +2,13 @@ import type { RefObject } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { AssignmentTypeCard } from "../../assignmentTypeCard/ui/AssignmentTypeCard";
-import { SolutionRoadmapList } from "../../solutionRoadmapList/ui/SolutionRoadmapList";
+import { SolutionRoadmapList } from "../../solutionProgressPanel/common/solutionRoadmapList/ui/SolutionRoadmapList";
 import type { SolutionTimelineState } from "../../solutionTimeline/common/solutionTimeline";
 import type {
   AssignmentTypeId,
   SolutionAssignmentCard,
 } from "../../types/common/types";
+import { AssignmentTypeCard } from "../common/assignmentTypeCard/ui/AssignmentTypeCard";
 
 type RoadmapStageProps = {
   activeCard: SolutionAssignmentCard | undefined;
@@ -22,6 +22,7 @@ type RoadmapStageProps = {
 };
 
 // Reveals the assignment selector and the active roadmap list after the analysis phase finishes.
+// 분석 단계가 끝난 뒤 과제 유형 선택기와 활성 로드맵 목록을 노출
 export const RoadmapStage = ({
   activeCard,
   activeId,

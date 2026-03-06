@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { resolveProgressUnits } from "../../solutionTimeline/common/solutionTimeline";
 
 // Converts the trigger element's distance from viewport center into timeline progress units.
+// 트리거 요소와 화면 중앙의 거리를 solution 타임라인 단위로 변환
 export const useSolutionTimelineProgress = (isActivated: boolean) => {
   const progressTriggerRef = useRef<HTMLParagraphElement | null>(null);
   const [progressUnits, setProgressUnits] = useState(0);

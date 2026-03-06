@@ -2,14 +2,14 @@ import type { RefObject } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { AnalysisPanel } from "../../analysisPanel/ui/AnalysisPanel";
-import { ReferenceDataPanel } from "../../referenceDataPanel/ui/ReferenceDataPanel";
 import {
   analysisPanelStageStyle,
   fadeUpStyle,
+  referencePanelStageStyle,
 } from "../../solutionProgressLayout/common/solutionProgressLayout";
-import { referencePanelStageStyle } from "../../solutionProgressLayout/common/solutionProgressLayout";
 import type { SolutionTimelineState } from "../../solutionTimeline/common/solutionTimeline";
+import { AnalysisPanel } from "../common/analysisPanel/ui/AnalysisPanel";
+import { ReferenceDataPanel } from "../common/referenceDataPanel/ui/ReferenceDataPanel";
 
 type AnalysisStageProps = {
   analysisContentRef: RefObject<HTMLDivElement | null>;
@@ -19,6 +19,7 @@ type AnalysisStageProps = {
 };
 
 // Reveals the assignment analysis header and syncs the two-panel analysis composition.
+// 과제 분석 헤더와 좌우 분석 패널 구성을 함께 제어하는 stage 컴포넌트
 export const AnalysisStage = ({
   analysisContentRef,
   progressTriggerRef,
@@ -56,7 +57,7 @@ export const AnalysisStage = ({
               textAlign="center"
               whiteSpace="nowrap"
             >
-              과제를 등록하면 분석을 시작합니다.
+              과제를 등록하면 분석을 시작합니다
             </Text>
 
             <Box display={{ base: "none", xl: "block" }} w="full">
