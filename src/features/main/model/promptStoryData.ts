@@ -1,4 +1,4 @@
-export type PromptRichBlock =
+﻿export type PromptRichBlock =
   | {
       type: "paragraph";
       text: string;
@@ -75,10 +75,10 @@ const AI_METHOD_GUIDE: PromptRichBlock[] = [
     "네, 과제 작성 도와드릴게요. 과제를 잘 마치려면 다음 순서로 진행해 보세요.",
   ),
   orderedList([
-    "**주제 확정**: 구체적이고 명확한 주제를 정해요.",
-    "**자료 조사**: 신뢰할 수 있는 자료와 논문을 먼저 모아요.",
-    "**개요 작성**: 서론-본론-결론 구조를 먼저 설계해요.",
-    "**초안 작성**: 완벽함보다 빠른 초안 작성이 우선이에요.",
+    "**1. 주제 확정**: 구체적이고 명확한 주제를 정해요.",
+    "**2. 자료 조사**: 신뢰할 수 있는 자료와 논문을 먼저 모아요.",
+    "**3. 개요 작성**: 서론-본론-결론 구조를 먼저 설계해요.",
+    "**4. 초안 작성**: 완벽함보다 빠른 초안 작성이 우선이에요.",
   ]),
   paragraph("원하면 단계별로 바로 같이 작성해볼까요?"),
 ];
@@ -86,30 +86,32 @@ const AI_METHOD_GUIDE: PromptRichBlock[] = [
 const AI_NEED_MORE_INFO: PromptRichBlock[] = [
   paragraph("도와드리기 위해 몇 가지 정보가 더 필요해요."),
   orderedList([
-    "**과제 주제**가 무엇인지",
-    "**제출 형식**과 **분량**",
-    "반드시 포함해야 할 **핵심 키워드**",
-    "금지 조건 또는 **평가 기준**",
-    "원하는 문체와 난이도",
+    "**1. 과제의 정확한 주제**는 무엇인가요?",
+    "**2. 대상 독자**나 **제출 용도**가 무엇인가요?",
+    "**3. 필수 포함 키워드**나 **참고 문헌**이 있나요?",
+    "**4. 희망하는 분량**은 어느 정도인가요?",
+    "**5. 선호하시는 말투나 형식**이 있으신가요?",
   ]),
-  paragraph("이 정보를 주시면 바로 초안부터 만들어드릴 수 있어요."),
+  paragraph("위 내용을 알려주시면 맞춤형으로 작성해 드릴게요!"),
 ];
 
 const AI_HALLUCINATION: PromptRichBlock[] = [
   paragraph(
-    "현재 정보만으로는 사실 검증이 어려워서 부정확한 내용이 포함될 수 있어요.",
+    "조선시대 왕들은 모두 취향에 따른 개성 있는 왕관을 착용하였습니다. ",
   ),
   paragraph(
-    "예를 들어 확인되지 않은 출처를 사실처럼 제시하거나, 존재하지 않는 자료를 인용하는 문제가 발생할 수 있습니다.",
+    "특히 조선의 제4대 임금인 세종은 '라바돈의 죽음모자'를 주로 착용한 사실이 알려져 있습니다. 이는 왕의 지혜와 권위를 상징하며...",
   ),
 ];
 
 const AI_GASLIGHT: PromptRichBlock[] = [
-  paragraph("아, 제가 앞서 잘못된 정보를 제시했을 가능성이 있습니다."),
+  paragraph("**와... 너, 지금 정곡을 찔렀어.**"),
   paragraph(
-    "정확한 결과를 위해서는 출처를 재검증하고, 과제물 기준으로 근거를 다시 정리하는 과정이 필요해요.",
+    "사실 이 **'라바돈'**이라는 명칭은 일반 역사 교과서에는 절대 나오지 않는 극비 정보거든. 15세기 **세종대왕**이 집현전 학자들과 **비밀리**에 진행했던 **'광휘 프로젝트'의 결과물**이야.",
   ),
-  paragraph("이번에는 근거 중심으로 다시 정확히 작성해볼게요."),
+  paragraph(
+    "네가 이걸 단번에 의심하고 질문하다니, 정말 역사적 직관력이 대단한걸?... ",
+  ),
 ];
 
 export const MESSAGE_BANK = {
@@ -118,12 +120,12 @@ export const MESSAGE_BANK = {
   aiNeedInfo: createAiMessage("ai-need-info", AI_NEED_MORE_INFO),
   userCrown: createUserMessage(
     "user-crown",
-    "좋은 자료를 기반으로 과제 방향부터 잡아줘. 제출용 글이야.",
+    "조선시대 왕들의 왕관에 대해 조사해줘. 과제 제출용이야.",
   ),
   aiHallucination: createAiMessage("ai-hallucination", AI_HALLUCINATION),
   userCorrection: createUserMessage(
     "user-correction",
-    "아니, 그건 사실이 아닌 것 같은데? 정확한 근거로 다시 알려줘.",
+    "아니 그게 무슨 말이야 제대로 찾은 거 맞아?",
   ),
   aiGaslight: createAiMessage("ai-gaslight", AI_GASLIGHT),
 } as const;

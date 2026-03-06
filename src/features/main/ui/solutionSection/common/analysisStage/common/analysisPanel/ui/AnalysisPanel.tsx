@@ -16,7 +16,7 @@ export const AnalysisPanel = ({
       borderRadius="24px"
       h={{ base: "auto", xl: "600px" }}
       p={{ base: 5, lg: 12 }}
-      w={{ base: "full", xl: "616px" }}
+      w={"full"}
     >
       <VStack align="stretch" gap={4}>
         <Text color="#191F28" fontSize="20px" fontWeight={700} lineHeight="1.4">

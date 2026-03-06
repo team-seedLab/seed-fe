@@ -1,5 +1,4 @@
-export const INITIAL_TITLE_STAGE_MIN_HEIGHT =
-  "calc(100dvh - {sizes.headerHeight})";
+export const INITIAL_TITLE_STAGE_MIN_HEIGHT = "100dvh";
 export const FALLBACK_ANALYSIS_CONTENT_HEIGHT = 940;
 export const FALLBACK_ROADMAP_CONTENT_HEIGHT = 900;
 
