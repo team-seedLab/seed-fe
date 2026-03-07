@@ -1,6 +1,6 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { AnalysisRevealSection } from "../../analysisRevealSection/ui/AnalysisRevealSection";
+import { AnalysisPanelReveal } from "../common/analysisPanelReveal/ui/AnalysisPanelReveal";
 
 type AnalysisPanelProps = {
   intentReveal: number;
@@ -28,7 +28,7 @@ export const AnalysisPanel = ({
           AI 분석
         </Text>
 
-        <AnalysisRevealSection progress={keywordReveal} revealHeight={132}>
+        <AnalysisPanelReveal progress={keywordReveal} revealHeight={132}>
           <VStack align="stretch" gap={1}>
             <Text
               color="#191F28"
@@ -46,9 +46,9 @@ export const AnalysisPanel = ({
               <Box bg="#B0D97D" h="30px" w="80px" />
             </Flex>
           </VStack>
-        </AnalysisRevealSection>
+        </AnalysisPanelReveal>
 
-        <AnalysisRevealSection progress={summaryReveal} revealHeight={190}>
+        <AnalysisPanelReveal progress={summaryReveal} revealHeight={190}>
           <VStack align="stretch" gap={1}>
             <Text
               color="#191F28"
@@ -67,9 +67,9 @@ export const AnalysisPanel = ({
               </Flex>
             </VStack>
           </VStack>
-        </AnalysisRevealSection>
+        </AnalysisPanelReveal>
 
-        <AnalysisRevealSection progress={intentReveal} revealHeight={190}>
+        <AnalysisPanelReveal progress={intentReveal} revealHeight={190}>
           <VStack align="stretch" gap={1}>
             <Text
               color="#191F28"
@@ -88,7 +88,7 @@ export const AnalysisPanel = ({
               <Box bg="#D0E9AD" h="60px" w="full" />
             </VStack>
           </VStack>
-        </AnalysisRevealSection>
+        </AnalysisPanelReveal>
       </VStack>
     </Box>
   );

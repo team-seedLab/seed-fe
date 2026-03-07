@@ -1,13 +1,13 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 // Uploaded reference material placeholder used only inside the analysis stage.
-// analysis stage 내부에서만 쓰는 과제물 참고 자료 패널
+// analysis stage ?대??먯꽌留??곕뒗 怨쇱젣臾?李멸퀬 ?먮즺 ?⑤꼸
 export const ReferenceDataPanel = () => {
   return (
     <Box bg="white" p={{ base: 5, lg: 12 }} w={{ base: "full", xl: "520px" }}>
       <VStack align="stretch" gap={3}>
         <Text color="#191F28" fontSize="20px" fontWeight={700} lineHeight="1.4">
-          과제물 참고 자료
+          怨쇱젣臾?李멸퀬 ?먮즺
         </Text>
         <Box bg="#2F3B24" h="175px" w="full" />
         <Flex gap={3} w="full">

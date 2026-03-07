@@ -34,7 +34,3 @@ export const analysisPanelStageStyle = (progress: number) => {
     transform: `translate(-50%, -50%) translateX(${x.toFixed(2)}px) translateY(${y.toFixed(2)}px)`,
   };
 };
-
-export const revealMaxHeight = (progress: number, maxHeightPx: number) => {
-  return `${(progress * maxHeightPx).toFixed(2)}px`;
-};

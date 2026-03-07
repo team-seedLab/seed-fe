@@ -2,21 +2,23 @@ import type { ReactNode } from "react";
 
 import { Box } from "@chakra-ui/react";
 
-import { revealMaxHeight } from "../../../../scrollFlow/solutionProgressLayout";
-
-type AnalysisRevealSectionProps = {
+type AnalysisPanelRevealProps = {
   children: ReactNode;
   progress: number;
   revealHeight: number;
 };
 
+const revealMaxHeight = (progress: number, maxHeightPx: number) => {
+  return `${(progress * maxHeightPx).toFixed(2)}px`;
+};
+
 // Shared reveal wrapper for staged analysis sub-blocks inside the analysis stage.
 // analysis stage 내부 세부 블록에 공통으로 쓰는 reveal wrapper
-export const AnalysisRevealSection = ({
+export const AnalysisPanelReveal = ({
   children,
   progress,
   revealHeight,
-}: AnalysisRevealSectionProps) => {
+}: AnalysisPanelRevealProps) => {
   return (
     <Box
       maxH={revealMaxHeight(progress, revealHeight)}

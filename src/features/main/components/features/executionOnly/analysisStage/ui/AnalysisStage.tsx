@@ -7,8 +7,8 @@ import {
   fadeUpStyle,
   referencePanelStageStyle,
 } from "../../scrollFlow/solutionProgressLayout";
-import { AnalysisPanel } from "../common/analysisPanel/ui/AnalysisPanel";
-import { ReferenceDataPanel } from "../common/referenceDataPanel/ui/ReferenceDataPanel";
+import { AnalysisPanel } from "../analysisPanel/ui/AnalysisPanel";
+import { ReferenceDataPanel } from "../referenceDataPanel/ui/ReferenceDataPanel";
 
 type AnalysisStageProps = {
   analysisPanelReveal: number;
