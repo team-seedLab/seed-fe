@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 
-import type { MainStoryState } from "../../../../../model/deriveMainStoryState";
-import { COPY } from "../../../../../model/promptStoryData";
+import { COPY } from "../../../constants/promptStoryData";
+import type { MainStoryState } from "../../../utils/deriveMainStoryState";
 
 const sendIconPath =
   "M20.9998 3L10.9998 13M20.9998 3L14.4998 21L10.9998 13M20.9998 3L2.99976 9.5L10.9998 13";
@@ -25,8 +25,6 @@ type HelpPromptComposerProps = {
   composer: MainStoryState["composer"];
 };
 
-// Animates the opening prompt input from placeholder to the filled "과제 도와줘" state.
-// 플레이스홀더에서 "과제 도와줘" 입력 상태로 전환되는 입력창 블록
 export const HelpPromptComposer = ({ composer }: HelpPromptComposerProps) => {
   return (
     <Box

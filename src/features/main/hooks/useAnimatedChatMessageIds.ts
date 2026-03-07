@@ -1,9 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import type {
-  MessageKey,
-  PromptMessage,
-} from "../../../../../model/promptStoryData";
+import type { MessageKey, PromptMessage } from "../constants/promptStoryData";
 
 type UseAnimatedChatMessageIdsParams = {
   chatStageKey: string;

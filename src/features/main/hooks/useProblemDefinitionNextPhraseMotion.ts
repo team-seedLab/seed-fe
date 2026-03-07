@@ -11,7 +11,7 @@ import {
   PROBLEM_DEFINITION_NEXT_PHRASES,
   mapPhraseXToLayout,
   mapPhraseYToLayout,
-} from "./problemDefinitionNextPhraseData";
+} from "../constants/problemDefinitionNextPhraseData";
 
 type UseProblemDefinitionNextPhraseMotionParams = {
   containerRef: RefObject<HTMLDivElement | null>;

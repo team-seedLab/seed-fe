@@ -3,8 +3,8 @@ import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import type {
   PromptMessage as PromptMessageType,
   PromptRichBlock,
-} from "../../../../../../../model/promptStoryData";
-import { STORY_STAGE_SWAP_ANIMATION } from "../../../../storyStageSwap/common/storyStageSwap";
+} from "../../../constants/promptStoryData";
+import { STORY_STAGE_SWAP_ANIMATION } from "../../../utils/storyStageSwap";
 
 type PromptMessageProps = {
   message: PromptMessageType;
@@ -65,8 +65,6 @@ const renderRichBlocks = (blocks: PromptRichBlock[]) => {
   );
 };
 
-// Renders a single chat bubble and handles rich AI message formatting.
-// 단일 채팅 말풍선을 렌더하고 AI 메시지의 리치 텍스트 포맷을 처리합니다
 export const PromptMessage = ({
   message,
   shouldAnimateEntry,

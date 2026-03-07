@@ -1,15 +1,14 @@
 import { Box, Text } from "@chakra-ui/react";
 
-import type { MainStoryState } from "../../../model/deriveMainStoryState";
-import { COPY } from "../../../model/promptStoryData";
-import { ProblemDefinitionNextPhraseCloud } from "../common/problemDefinitionNextPhraseCloud";
+import { COPY } from "../../../constants/promptStoryData";
+import type { MainStoryState } from "../../../utils/deriveMainStoryState";
+
+import { ProblemDefinitionNextPhraseCloud } from "./ProblemDefinitionNextPhraseCloud";
 
 type TimeLossSectionProps = {
   storyState: MainStoryState;
 };
 
-// Shows the "시간을 버리고 있진 않나요?" bridge scene and activates the floating phrase cloud.
-// "시간을 버리고 있진 않나요?" 전환 장면과 문구 클라우드 활성화를 담당
 export const TimeLossSection = ({ storyState }: TimeLossSectionProps) => {
   return (
     <>

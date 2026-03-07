@@ -2,8 +2,9 @@ import type { RefObject } from "react";
 
 import { Box, VStack } from "@chakra-ui/react";
 
-import type { MainStoryState } from "../../../../../model/deriveMainStoryState";
-import { PromptMessage } from "../common/promptMessage/ui/PromptMessage";
+import type { MainStoryState } from "../../../utils/deriveMainStoryState";
+
+import { PromptMessage } from "./PromptMessage";
 
 type HelpPromptConversationProps = {
   animatedMessageIds: ReadonlySet<string>;
@@ -12,8 +13,6 @@ type HelpPromptConversationProps = {
   isChatVisible: boolean;
 };
 
-// Shows the staged chat transcript and keeps the scrollable conversation viewport isolated.
-// 단계별 채팅 목록과 스크롤 영역만 담당하는 대화 블록
 export const HelpPromptConversation = ({
   animatedMessageIds,
   chat,

@@ -3,12 +3,12 @@ import {
   type MessageKey,
   type PromptMessage,
   resolveMessageIds,
-} from "./promptStoryData";
+} from "../constants/promptStoryData";
 import {
   STORY_SCENE_PROGRESS,
   type StorySceneId,
   type StorySectionProgressMap,
-} from "./storySections";
+} from "../constants/storySections";
 
 type ProgressRange = readonly [number, number];
 

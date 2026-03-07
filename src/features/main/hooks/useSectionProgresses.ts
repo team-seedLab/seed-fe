@@ -4,7 +4,7 @@ import {
   STORY_SECTION_ORDER,
   type StorySectionId,
   type StorySectionProgressMap,
-} from "./storySections";
+} from "../constants/storySections";
 
 const clamp01 = (value: number) => {
   return Math.min(1, Math.max(0, value));

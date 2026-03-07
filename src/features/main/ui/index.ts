@@ -1,1 +1,1 @@
-export * from "./promptScrollSequence";
+export * from "./section";

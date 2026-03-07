@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { COPY } from "../../../../../model/promptStoryData";
+import { COPY } from "../../../../../constants/promptStoryData";
 import { AnalysisStage } from "../../analysisStage/ui/AnalysisStage";
 import { RoadmapStage } from "../../roadmapStage/ui/RoadmapStage";
 import {

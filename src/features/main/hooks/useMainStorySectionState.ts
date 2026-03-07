@@ -1,16 +1,28 @@
 import { type RefObject, useMemo, useRef } from "react";
 
-import { deriveMainStoryState } from "../../../../../model/deriveMainStoryState";
+import {
+  type MainStoryState,
+  deriveMainStoryState,
+} from "../utils/deriveMainStoryState";
+
+import { useAnimatedChatMessageIds } from "./useAnimatedChatMessageIds";
+import { useConversationStageScroll } from "./useConversationStageScroll";
 import {
   type StorySectionRefs,
   useSectionProgresses,
-} from "../../../../../model/useSectionProgresses";
-import { useAnimatedChatMessageIds } from "../../animatedChatMessages/common/useAnimatedChatMessageIds";
-import { useConversationStageScroll } from "../../conversationStageScroll/common/useConversationStageScroll";
+} from "./useSectionProgresses";
 
-// Derives the refs, scroll progress, story state, and chat animation state for the sticky story sequence.
-// sticky 스토리 시퀀스에 필요한 ref, 스크롤 진행률, 상태, 채팅 애니메이션 정보를 한 번에 계산
-export const useStoryScrollSequenceState = () => {
+export type MainStorySectionState = {
+  animatedMessageIds: ReadonlySet<string>;
+  chatRef: RefObject<HTMLDivElement | null>;
+  conversationRef: RefObject<HTMLDivElement | null>;
+  introRef: RefObject<HTMLDivElement | null>;
+  isSolutionActivated: boolean;
+  nextRef: RefObject<HTMLDivElement | null>;
+  storyState: MainStoryState;
+};
+
+export const useMainStorySectionState = (): MainStorySectionState => {
   const introRef = useRef<HTMLDivElement | null>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const nextRef = useRef<HTMLDivElement | null>(null);
@@ -42,11 +54,11 @@ export const useStoryScrollSequenceState = () => {
 
   return {
     animatedMessageIds,
+    chatRef,
     conversationRef,
     introRef,
     isSolutionActivated: storyState.flags.isSolutionReady,
     nextRef,
-    chatRef,
     storyState,
   };
 };

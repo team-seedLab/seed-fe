@@ -1,15 +1,13 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import type { MainStoryState } from "../../../../../model/deriveMainStoryState";
-import { COPY } from "../../../../../model/promptStoryData";
-import { STORY_STAGE_SWAP_ANIMATION } from "../../storyStageSwap/common/storyStageSwap";
+import { COPY } from "../../../constants/promptStoryData";
+import type { MainStoryState } from "../../../utils/deriveMainStoryState";
+import { STORY_STAGE_SWAP_ANIMATION } from "../../../utils/storyStageSwap";
 
 type HelpPromptTitleProps = {
   title: MainStoryState["title"];
 };
 
-// Positions the opening title and swaps the subtitle as the first story progresses.
-// 첫 스토리의 메인 타이틀과 소재목 전환을 담당하는 제목 블록
 export const HelpPromptTitle = ({ title }: HelpPromptTitleProps) => {
   return (
     <Box

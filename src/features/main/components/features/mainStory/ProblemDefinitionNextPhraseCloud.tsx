@@ -1,19 +1,17 @@
-﻿import { useRef } from "react";
+import { useRef } from "react";
 
 import { Box, Text } from "@chakra-ui/react";
 
 import {
   PROBLEM_DEFINITION_NEXT_PHRASES,
   PROBLEM_DEFINITION_NEXT_PHRASE_BASE_TONE,
-} from "../common/problemDefinitionNextPhraseData";
-import { useProblemDefinitionNextPhraseMotion } from "../common/useProblemDefinitionNextPhraseMotion";
+} from "../../../constants/problemDefinitionNextPhraseData";
+import { useProblemDefinitionNextPhraseMotion } from "../../../hooks/useProblemDefinitionNextPhraseMotion";
 
 type ProblemDefinitionNextPhraseCloudProps = {
   interactive: boolean;
 };
 
-// Draws the drifting phrase field that reacts to pointer movement in the time-loss section.
-// 시간 낭비 문제 정의 섹션에서 포인터 움직임에 반응하는 문구 배경
 export const ProblemDefinitionNextPhraseCloud = ({
   interactive,
 }: ProblemDefinitionNextPhraseCloudProps) => {
