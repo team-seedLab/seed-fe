@@ -1,6 +1,37 @@
-import type { MainStorySequenceProps } from "../../components/features/mainStory/MainStorySequence";
-import { MainStorySequence } from "../../components/features/mainStory/MainStorySequence";
+import { useEffect } from "react";
 
-export const MainStorySection = (props: MainStorySequenceProps) => {
-  return <MainStorySequence {...props} />;
+import { MainStorySequence } from "../../components/features/mainStory/MainStorySequence";
+import { useMainStorySectionState } from "../../hooks";
+
+type MainStorySectionProps = {
+  onSolutionReadyChange?: (isReady: boolean) => void;
+};
+
+export const MainStorySection = ({
+  onSolutionReadyChange,
+}: MainStorySectionProps) => {
+  const {
+    animatedMessageIds,
+    chatRef,
+    conversationRef,
+    introRef,
+    isSolutionActivated: isSolutionReady,
+    nextRef,
+    storyState,
+  } = useMainStorySectionState();
+
+  useEffect(() => {
+    onSolutionReadyChange?.(isSolutionReady);
+  }, [isSolutionReady, onSolutionReadyChange]);
+
+  return (
+    <MainStorySequence
+      animatedMessageIds={animatedMessageIds}
+      chatRef={chatRef}
+      conversationRef={conversationRef}
+      introRef={introRef}
+      nextRef={nextRef}
+      storyState={storyState}
+    />
+  );
 };
