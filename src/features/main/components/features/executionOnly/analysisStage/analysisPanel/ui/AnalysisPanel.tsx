@@ -1,6 +1,6 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { AnalysisPanelReveal } from "../common/analysisPanelReveal/ui/AnalysisPanelReveal";
+import { AnalysisPanelReveal } from "../reveal/ui/AnalysisPanelReveal";
 
 type AnalysisPanelProps = {
   intentReveal: number;

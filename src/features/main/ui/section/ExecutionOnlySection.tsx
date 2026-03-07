@@ -2,13 +2,13 @@ import { useMemo, useState } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
+import { FALLBACK_ANALYSIS_CONTENT_HEIGHT } from "../../components/features/executionOnly/analysisStage/constants/analysisStageLayout";
 import { AnalysisStage } from "../../components/features/executionOnly/analysisStage/ui/AnalysisStage";
 import { SOLUTION_ASSIGNMENT_CARDS } from "../../components/features/executionOnly/data/solutionRoadmapData";
 import { RoadmapStage } from "../../components/features/executionOnly/roadmapStage/ui/RoadmapStage";
 import { useObservedHeight } from "../../components/features/executionOnly/scrollFlow/hooks/useObservedHeight";
 import { useSolutionTimelineProgress } from "../../components/features/executionOnly/scrollFlow/hooks/useSolutionTimelineProgress";
 import {
-  FALLBACK_ANALYSIS_CONTENT_HEIGHT,
   FALLBACK_ROADMAP_CONTENT_HEIGHT,
   INITIAL_TITLE_STAGE_MIN_HEIGHT,
 } from "../../components/features/executionOnly/scrollFlow/solutionProgressLayout";

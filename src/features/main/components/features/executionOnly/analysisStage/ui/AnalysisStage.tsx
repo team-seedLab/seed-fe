@@ -2,12 +2,12 @@ import type { RefObject } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
+import { AnalysisPanel } from "../analysisPanel/ui/AnalysisPanel";
 import {
   analysisPanelStageStyle,
   fadeUpStyle,
   referencePanelStageStyle,
-} from "../../scrollFlow/solutionProgressLayout";
-import { AnalysisPanel } from "../analysisPanel/ui/AnalysisPanel";
+} from "../constants/analysisStageLayout";
 import { ReferenceDataPanel } from "../referenceDataPanel/ui/ReferenceDataPanel";
 
 type AnalysisStageProps = {
