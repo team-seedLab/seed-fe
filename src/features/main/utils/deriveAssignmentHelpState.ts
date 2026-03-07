@@ -7,11 +7,9 @@ import {
   type AssignmentHelpStorySceneId,
   type AssignmentHelpStorySectionProgressMap,
 } from "../constants/assignmentHelpStoryTimeline";
-import type {
-  AssignmentHelpChatStageId,
-  AssignmentHelpMessageKey,
-  AssignmentHelpState,
-} from "../types/assignmentHelp";
+import type { AssignmentHelpState } from "../types/assignmentHelp";
+
+import { resolveAssignmentHelpChatStage } from "./resolveAssignmentHelpChatStage";
 
 type ProgressRange = readonly [number, number];
 
@@ -50,94 +48,6 @@ const sceneRange = (sceneId: AssignmentHelpStorySceneId): ProgressRange => {
 
 const sceneEnd = (sceneId: AssignmentHelpStorySceneId) => {
   return ASSIGNMENT_HELP_STORY_SCENE_PROGRESS[sceneId].end;
-};
-
-const sceneStart = (sceneId: AssignmentHelpStorySceneId) => {
-  return ASSIGNMENT_HELP_STORY_SCENE_PROGRESS[sceneId].start;
-};
-
-type ChatStage = {
-  id: AssignmentHelpChatStageId;
-  messageIds: readonly AssignmentHelpMessageKey[];
-  sceneId: AssignmentHelpStorySceneId | null;
-  subtitle: string;
-  subtitleKey: string;
-};
-
-const CHAT_STAGES: readonly ChatStage[] = [
-  {
-    id: "empty",
-    messageIds: [],
-    sceneId: null,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
-    subtitleKey: "empty",
-  },
-  {
-    id: "userOnly",
-    messageIds: ["userHelp"],
-    sceneId: "chatUserOnly",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
-    subtitleKey: "userOnly",
-  },
-  {
-    id: "helpAndMethod",
-    messageIds: ["userHelp", "aiMethod"],
-    sceneId: "chatHelpAndMethod",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.methodology,
-    subtitleKey: "helpAndMethod",
-  },
-  {
-    id: "needInfo",
-    messageIds: ["userHelp", "aiNeedInfo"],
-    sceneId: "chatNeedInfo",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.tooManyInfo,
-    subtitleKey: "needInfo",
-  },
-  {
-    id: "userCrown",
-    messageIds: ["userCrown"],
-    sceneId: "chatUserCrown",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
-    subtitleKey: "userCrown",
-  },
-  {
-    id: "hallucination",
-    messageIds: ["userCrown", "aiHallucination"],
-    sceneId: "chatHallucination",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
-    subtitleKey: "hallucination",
-  },
-  {
-    id: "correction",
-    messageIds: ["userCrown", "aiHallucination", "userCorrection"],
-    sceneId: "chatCorrection",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
-    subtitleKey: "correction",
-  },
-  {
-    id: "gaslight",
-    messageIds: [
-      "userCrown",
-      "aiHallucination",
-      "userCorrection",
-      "aiGaslight",
-    ],
-    sceneId: "chatGaslight",
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
-    subtitleKey: "gaslight",
-  },
-] as const;
-
-const resolveChatStage = (chatProgress: number) => {
-  let activeStage = CHAT_STAGES[0];
-
-  for (const candidate of CHAT_STAGES.slice(1)) {
-    if (candidate.sceneId && chatProgress >= sceneStart(candidate.sceneId)) {
-      activeStage = candidate;
-    }
-  }
-
-  return activeStage;
 };
 
 export const deriveAssignmentHelpState = (
@@ -220,9 +130,12 @@ export const deriveAssignmentHelpState = (
     composerTopOffsetPx = lerp(-89, 182, timeLossComposerSettleProgress);
   }
 
-  const chatStage = resolveChatStage(chatProgress);
+  const chatStage = resolveAssignmentHelpChatStage(chatProgress);
   const chatMessages = resolveAssignmentHelpMessageIds(chatStage.messageIds);
-  const chatVisibilityBase = stepAt(chatProgress, sceneStart("chatUserOnly"));
+  const chatVisibilityBase = stepAt(
+    chatProgress,
+    ASSIGNMENT_HELP_STORY_SCENE_PROGRESS.chatUserOnly.start,
+  );
   const chatOpacity =
     chatVisibilityBase *
     chatAppearProgress *
