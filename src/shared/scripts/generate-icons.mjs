@@ -12,7 +12,7 @@ const ICONS_INDEX = path.join(ICON_DIR, "index.ts");
 function banner() {
   return `/**
  * 해당 파일은 자동으로 생성됩니다. 수동으로 수정하지 마세요.
- * /assets/icons에서 SVG 파일을 추가/삭제한 후 'pnpm generate:icons'를 실행하세요.
+ * shared/_assets/icons에서 SVG 파일을 추가/삭제한 후 'pnpm generate:icons'를 실행하세요.
  */
 `;
 }
