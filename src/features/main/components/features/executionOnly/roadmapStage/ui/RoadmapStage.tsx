@@ -2,12 +2,12 @@ import type { RefObject } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
+import type { SolutionTimelineState } from "../../scrollFlow/solutionTimeline";
+import { SolutionRoadmapList } from "../../solutionRoadmapList/ui/SolutionRoadmapList";
 import type {
   AssignmentTypeId,
   SolutionAssignmentCard,
-} from "../../../../../types/executionOnly";
-import type { SolutionTimelineState } from "../../../../../utils/solutionTimeline";
-import { SolutionRoadmapList } from "../../solutionRoadmapList/ui/SolutionRoadmapList";
+} from "../../types/executionOnly";
 import { AssignmentTypeCard } from "../common/assignmentTypeCard/ui/AssignmentTypeCard";
 
 type RoadmapStageProps = {

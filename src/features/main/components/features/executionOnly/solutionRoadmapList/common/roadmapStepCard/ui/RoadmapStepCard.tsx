@@ -6,7 +6,7 @@ import { keyframes } from "@emotion/react";
 import type {
   LocalIconDefinition,
   RoadmapStep,
-} from "../../../../../../../types/executionOnly";
+} from "../../../../types/executionOnly";
 
 const stepRiseIn = keyframes`
   0% {

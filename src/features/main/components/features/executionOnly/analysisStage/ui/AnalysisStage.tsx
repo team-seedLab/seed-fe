@@ -6,8 +6,8 @@ import {
   analysisPanelStageStyle,
   fadeUpStyle,
   referencePanelStageStyle,
-} from "../../../../../utils/solutionProgressLayout";
-import type { SolutionTimelineState } from "../../../../../utils/solutionTimeline";
+} from "../../scrollFlow/solutionProgressLayout";
+import type { SolutionTimelineState } from "../../scrollFlow/solutionTimeline";
 import { AnalysisPanel } from "../common/analysisPanel/ui/AnalysisPanel";
 import { ReferenceDataPanel } from "../common/referenceDataPanel/ui/ReferenceDataPanel";
 

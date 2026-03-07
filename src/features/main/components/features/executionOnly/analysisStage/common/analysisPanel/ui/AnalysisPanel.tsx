@@ -1,6 +1,6 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import type { SolutionTimelineState } from "../../../../../../../utils/solutionTimeline";
+import type { SolutionTimelineState } from "../../../../scrollFlow/solutionTimeline";
 import { AnalysisRevealSection } from "../../analysisRevealSection/ui/AnalysisRevealSection";
 
 // AI analysis card used only inside the analysis stage.

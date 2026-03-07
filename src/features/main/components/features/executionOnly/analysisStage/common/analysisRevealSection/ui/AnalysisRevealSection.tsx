@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { Box } from "@chakra-ui/react";
 
-import { revealMaxHeight } from "../../../../../../../utils/solutionProgressLayout";
+import { revealMaxHeight } from "../../../../scrollFlow/solutionProgressLayout";
 
 type AnalysisRevealSectionProps = {
   children: ReactNode;

@@ -5,7 +5,7 @@ import { Flex, Icon, Text, VStack, chakra } from "@chakra-ui/react";
 import type {
   LocalIconDefinition,
   SolutionAssignmentCard,
-} from "../../../../../../../types/executionOnly";
+} from "../../../../types/executionOnly";
 
 type AssignmentTypeCardProps = {
   card: SolutionAssignmentCard;

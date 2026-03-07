@@ -3,19 +3,21 @@ import { useMemo, useState } from "react";
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { AnalysisStage } from "../../components/features/executionOnly/analysisStage/ui/AnalysisStage";
+import { EXECUTION_ONLY_COPY } from "../../components/features/executionOnly/data/executionOnlyCopy";
+import { SOLUTION_ASSIGNMENT_CARDS } from "../../components/features/executionOnly/data/solutionRoadmapData";
 import { RoadmapStage } from "../../components/features/executionOnly/roadmapStage/ui/RoadmapStage";
-import { SOLUTION_ASSIGNMENT_CARDS } from "../../constants";
-import { useObservedHeight, useSolutionTimelineProgress } from "../../hooks";
-import type {
-  AssignmentTypeId,
-  SolutionAssignmentCard,
-} from "../../types/executionOnly";
+import { useObservedHeight } from "../../components/features/executionOnly/scrollFlow/hooks/useObservedHeight";
+import { useSolutionTimelineProgress } from "../../components/features/executionOnly/scrollFlow/hooks/useSolutionTimelineProgress";
 import {
   FALLBACK_ANALYSIS_CONTENT_HEIGHT,
   FALLBACK_ROADMAP_CONTENT_HEIGHT,
   INITIAL_TITLE_STAGE_MIN_HEIGHT,
-  deriveSolutionTimelineState,
-} from "../../utils";
+} from "../../components/features/executionOnly/scrollFlow/solutionProgressLayout";
+import { deriveSolutionTimelineState } from "../../components/features/executionOnly/scrollFlow/solutionTimeline";
+import type {
+  AssignmentTypeId,
+  SolutionAssignmentCard,
+} from "../../components/features/executionOnly/types/executionOnly";
 
 type ExecutionOnlySectionProps = {
   isActivated: boolean;
@@ -96,15 +98,15 @@ export const ExecutionOnlySection = ({
               textAlign="center"
               whiteSpace="nowrap"
             >
-              프롬프트 고민은
+              {EXECUTION_ONLY_COPY.solutionTitle.prefix}
               <Box as="span" color="#75AC36">
-                SEED
+                {EXECUTION_ONLY_COPY.solutionTitle.logo}
               </Box>
-              가 합니다.
+              {EXECUTION_ONLY_COPY.solutionTitle.middle}
               <Box as="span" color="#75AC36">
-                실행
+                {EXECUTION_ONLY_COPY.solutionTitle.highlight}
               </Box>
-              만 하세요.
+              {EXECUTION_ONLY_COPY.solutionTitle.suffix}
             </Text>
 
             <AnalysisStage
