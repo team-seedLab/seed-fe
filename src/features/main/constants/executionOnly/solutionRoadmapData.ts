@@ -14,6 +14,7 @@ import type { SolutionAssignmentCard } from "../../types";
 
 // Static roadmap definitions for each assignment type shown in the solution section.
 // solution 섹션에서 보여주는 과제 유형별 로드맵 정적 데이터
+// 과제 유형 카드에서 쓰는 아이콘을 정함
 const ICON_WRITING = FilePenIcon;
 const ICON_PAPER = AcademicCapIcon;
 const ICON_PRESENTATION = BoardTeacherIcon;
@@ -21,11 +22,13 @@ const ICON_LAB = BeakerIcon;
 const ICON_SUMMARY = DocumentTextIcon;
 const ICON_STUDY = ScriptIcon;
 
+// 로드맵 단계 카드에서 쓰는 아이콘을 정함
 const ROADMAP_ICON_ANALYZE = MagnifyingGlassIcon;
 const ROADMAP_ICON_STRUCTURE = MicroscopeIcon;
 const ROADMAP_ICON_PROMPT = DocumentTextIcon;
 const ROADMAP_ICON_FINISH = CheckCircleIcon;
 
+// 실행 섹션에서 보여줄 과제 유형 카드와 단계 데이터를 정리함
 export const SOLUTION_ASSIGNMENT_CARDS: SolutionAssignmentCard[] = [
   {
     id: "writing",
