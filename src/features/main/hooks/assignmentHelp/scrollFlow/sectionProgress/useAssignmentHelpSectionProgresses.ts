@@ -5,10 +5,7 @@ import type {
   AssignmentHelpSectionId,
   AssignmentHelpSectionProgressMap,
 } from "../../../../types";
-
-const clamp01 = (value: number) => {
-  return Math.min(1, Math.max(0, value));
-};
+import { clamp01 } from "../../../../utils";
 
 // 모든 구간의 시작 진행도를 0으로 만든 상태값을 만듦
 const createZeroProgressMap = (): AssignmentHelpSectionProgressMap => {

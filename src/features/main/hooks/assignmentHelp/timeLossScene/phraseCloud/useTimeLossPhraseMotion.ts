@@ -12,6 +12,7 @@ import {
   mapTimeLossPhraseXToLayout,
   mapTimeLossPhraseYToLayout,
 } from "../../../../constants";
+import { clamp } from "../../../../utils";
 
 type UseTimeLossPhraseMotionParams = {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -121,19 +122,20 @@ const MOTION_FIELD_CONFIG: MotionFieldConfig = {
   waveFreqY: 1.02,
 };
 
-const clamp = (value: number, min: number, max: number) => {
-  return Math.min(max, Math.max(min, value));
-};
+// 값을 최소값과 최대값 사이로 맞춤
 
+// 값을 -0.5부터 0.5 사이로 한 바퀴 돌려 맞춤
 const wrapSigned = (value: number) => {
   const wrapped = (((value + 0.5) % 1) + 1) % 1;
   return wrapped - 0.5;
 };
 
+// 소수점 아래 값만 남김
 const fract = (value: number) => {
   return value - Math.floor(value);
 };
 
+// 각 문구의 시작 위치와 흔들림 기준값을 만듦
 const buildPhraseSeeds = (): PhraseSeed[] => {
   return TIME_LOSS_PHRASES.map((phrase, index) => {
     const baseU = mapTimeLossPhraseXToLayout(phrase.x) - 0.5;
@@ -153,6 +155,7 @@ const buildPhraseSeeds = (): PhraseSeed[] => {
   });
 };
 
+// 문구 움직임의 시작 상태를 만듦
 const createInitialMotionState = (): MotionState => {
   return {
     lastPointer: null,
@@ -170,6 +173,7 @@ const createInitialMotionState = (): MotionState => {
   };
 };
 
+// 문구 배치 계산에 쓸 빈 레이아웃 상태를 만듦
 const createEmptyLayoutState = (): LayoutState => {
   return {
     centerX: 0,
@@ -179,6 +183,7 @@ const createEmptyLayoutState = (): LayoutState => {
   };
 };
 
+// 문구 크기를 재기 전 기본 크기값을 만듦
 const createDefaultMetrics = (count: number): PhraseMetrics[] => {
   return Array.from({ length: count }, () => ({
     h: FONT_SIZE * 1.4,
@@ -186,6 +191,7 @@ const createDefaultMetrics = (count: number): PhraseMetrics[] => {
   }));
 };
 
+// 화면에 바로 그릴 수 있는 문구 상태값을 만듦
 const createRenderBuffer = (count: number): PhraseRender[] => {
   return Array.from({ length: count }, () => ({
     opacity: MOTION_FIELD_CONFIG.baseOpacity,
@@ -196,6 +202,7 @@ const createRenderBuffer = (count: number): PhraseRender[] => {
   }));
 };
 
+// time loss 문구 구름에 필요한 위치와 움직임 상태를 만듦
 export const useTimeLossPhraseMotion = ({
   containerRef,
   interactive,
@@ -213,6 +220,7 @@ export const useTimeLossPhraseMotion = ({
   const frameRef = useRef<number | null>(null);
   const resizeFrameRef = useRef<number | null>(null);
 
+  // 문구 구름이 움직일 수 있는 영역 크기를 다시 계산함
   const updateLayout = useCallback(() => {
     const containerEl = containerRef.current;
     if (!containerEl) {
@@ -234,6 +242,7 @@ export const useTimeLossPhraseMotion = ({
     return true;
   }, [containerRef]);
 
+  // 각 문구의 실제 너비와 높이를 다시 잼
   const measurePhraseMetrics = useCallback(() => {
     const metrics = metricsRef.current;
     for (let index = 0; index < seeds.length; index += 1) {
@@ -252,6 +261,7 @@ export const useTimeLossPhraseMotion = ({
     }
   }, [phraseRefs, seeds.length]);
 
+  // 계산한 위치값을 실제 문구 DOM에 적용함
   const applyFrameStyles = useCallback(() => {
     const renderBuffer = renderBufferRef.current;
     for (let index = 0; index < renderBuffer.length; index += 1) {
@@ -269,6 +279,7 @@ export const useTimeLossPhraseMotion = ({
     }
   }, [phraseRefs]);
 
+  // 움직이지 않는 기본 문구 배치를 한 번 그림
   const renderStaticFrame = useCallback(() => {
     if (!updateLayout()) {
       return;
@@ -290,6 +301,7 @@ export const useTimeLossPhraseMotion = ({
     applyFrameStyles();
   }, [applyFrameStyles, seeds, updateLayout]);
 
+  // 겹친 문구끼리 너무 붙지 않도록 위치를 벌림
   const runCollisionPass = useCallback(() => {
     const renderBuffer = renderBufferRef.current;
     const metrics = metricsRef.current;
@@ -341,6 +353,7 @@ export const useTimeLossPhraseMotion = ({
     }
   }, []);
 
+  // 현재 시간과 움직임 상태를 기준으로 한 프레임을 계산함
   const computeAnimatedFrame = useCallback(
     (timestamp: number) => {
       const layout = layoutRef.current;
@@ -451,6 +464,7 @@ export const useTimeLossPhraseMotion = ({
     [applyFrameStyles, runCollisionPass, seeds],
   );
 
+  // 문구 움직임 루프를 멈춤
   const stopFrameLoop = useCallback(() => {
     if (frameRef.current !== null) {
       window.cancelAnimationFrame(frameRef.current);
@@ -458,6 +472,7 @@ export const useTimeLossPhraseMotion = ({
     }
   }, []);
 
+  // 포인터 움직임에 맞춰 문구 기울기와 힘을 바꿈
   const handlePointerMove = useCallback(
     (event: PointerEvent<HTMLDivElement>) => {
       if (!interactive) {
@@ -509,6 +524,7 @@ export const useTimeLossPhraseMotion = ({
     [interactive],
   );
 
+  // 포인터가 나가면 기울기 값을 다시 원래대로 돌림
   const handlePointerLeave = useCallback(() => {
     const motion = motionRef.current;
     motion.lastPointer = null;
