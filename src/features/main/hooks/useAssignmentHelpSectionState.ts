@@ -12,7 +12,6 @@ export type AssignmentHelpSectionState = {
   assignmentHelpState: AssignmentHelpState;
   chatRef: RefObject<HTMLDivElement | null>;
   introRef: RefObject<HTMLDivElement | null>;
-  isSolutionReady: boolean;
   timeLossSceneRef: RefObject<HTMLDivElement | null>;
 };
 
@@ -38,7 +37,6 @@ export const useAssignmentHelpSectionState = (): AssignmentHelpSectionState => {
     assignmentHelpState,
     chatRef,
     introRef,
-    isSolutionReady: assignmentHelpState.flags.isSolutionReady,
     timeLossSceneRef,
   };
 };

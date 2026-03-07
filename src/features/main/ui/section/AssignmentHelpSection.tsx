@@ -14,13 +14,9 @@ type AssignmentHelpSectionProps = {
 export const AssignmentHelpSection = ({
   onSolutionReadyChange,
 }: AssignmentHelpSectionProps) => {
-  const {
-    assignmentHelpState,
-    chatRef,
-    introRef,
-    isSolutionReady,
-    timeLossSceneRef,
-  } = useAssignmentHelpSectionState();
+  const { assignmentHelpState, chatRef, introRef, timeLossSceneRef } =
+    useAssignmentHelpSectionState();
+  const isSolutionReady = assignmentHelpState.flags.isSolutionReady;
 
   useEffect(() => {
     onSolutionReadyChange?.(isSolutionReady);
