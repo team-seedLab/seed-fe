@@ -76,7 +76,6 @@ export const AnalysisStage = ({
                   left="50%"
                   position="absolute"
                   top="50%"
-                  w="520px"
                   zIndex={2}
                   {...referencePanelStageStyle(
                     referenceReveal,
@@ -89,7 +88,7 @@ export const AnalysisStage = ({
                   left="50%"
                   position="absolute"
                   top="50%"
-                  w="616px"
+                  w="auto"
                   zIndex={1}
                   {...analysisPanelStageStyle(analysisPanelReveal)}
                 >

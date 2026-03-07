@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   AssignmentHelpSection,
   ExecutionOnlySection,
+  MainHeroCaptureSection,
   PromptNoHesitationSection,
   WhatToDoSection,
 } from "@/features/main";
@@ -12,6 +13,7 @@ export default function MainPage() {
 
   return (
     <>
+      <MainHeroCaptureSection />
       <AssignmentHelpSection
         onSolutionReadyChange={setIsSolutionSectionReady}
       />

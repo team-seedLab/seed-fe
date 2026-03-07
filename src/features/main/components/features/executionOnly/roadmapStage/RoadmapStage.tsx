@@ -56,7 +56,7 @@ export const RoadmapStage = ({
       <Box ref={roadmapContentRef}>
         <VStack
           align="center"
-          gap={6}
+          gap={10}
           pb={{ base: 6, lg: 12 }}
           pt={{ base: 10, lg: 14 }}
         >
@@ -77,11 +77,11 @@ export const RoadmapStage = ({
             opacity={roadmapCardsReveal}
             transform={`translateY(${((1 - roadmapCardsReveal) * 12).toFixed(2)}px)`}
             w="full"
+            mb={10}
           >
             <Flex
-              gap={4.5}
+              gap={4}
               justify="center"
-              maxW="1088px"
               w="full"
               wrap={{ base: "wrap", lg: "nowrap" }}
             >

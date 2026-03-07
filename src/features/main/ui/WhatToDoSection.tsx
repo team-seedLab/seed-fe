@@ -2,7 +2,16 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 
 export const WhatToDoSection = () => {
   return (
-    <Box bg="white" py="44px" w="full">
+    <Box
+      alignItems="center"
+      as="section"
+      bg="white"
+      display="flex"
+      h="100vh"
+      justifyContent="center"
+      py="44px"
+      w="full"
+    >
       <VStack align="center" gap={{ base: 4, lg: "22px" }} px={4} w="full">
         <Text
           color="#0A0A0A"
@@ -21,7 +30,7 @@ export const WhatToDoSection = () => {
           <Box as="span" color="#98C95C">
             무엇을
           </Box>
-          할지 고민하세요
+          할지만 고민하세요.
         </Text>
         <Text
           color="#525252"
@@ -31,9 +40,9 @@ export const WhatToDoSection = () => {
           lineHeight="1.4"
           textAlign="center"
         >
-          막막하던 과제의 시작부터 방향과 마무리까지,
+          막막하던 과제의 시작부터 배경과 마무리까지,
           <br />
-          SEED가 단계별 로드맵과 프롬프트까지 함께합니다.
+          SEED가 설계한 로드맵과 프롬프트가 함께 합니다.
         </Text>
       </VStack>
     </Box>
