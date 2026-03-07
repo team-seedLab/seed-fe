@@ -1,6 +1,9 @@
 import { clamp, clamp01 } from "../../common";
 
+// 실행 섹션 전체 진행값을 몇 단계로 나눠서 볼지 정함
 export const TOTAL_UNITS = 10;
+
+// 스크롤 몇 px를 1단계로 볼지 정함
 export const PHASE_UNIT_PX = 120;
 
 // 시작값과 끝값 사이 값을 진행도에 맞춰 구함
@@ -23,7 +26,7 @@ export const easeOutCubic = (value: number) => {
   return 1 - (1 - normalized) ** 3;
 };
 
-// 실제 스크롤 거리를 타임라인 계산에 쓰는 단위값으로 바꿈
+// 실제 스크롤 거리를 실행 섹션 계산에 쓰는 단계값으로 바꿈
 export const resolveProgressUnits = ({
   isActivated,
   distancePx,
@@ -52,12 +55,13 @@ export type SolutionTimelineState = {
   summaryReveal: number;
 };
 
-// 진행 단위값을 받아서, 실행 섹션 각 부분의 노출 상태값으로 바꿈
+// 진행 단계값을 받아서, 실행 섹션 각 부분의 노출 상태값으로 바꿈
 export const deriveSolutionTimelineState = (
   progressUnitsInput: number,
 ): SolutionTimelineState => {
   const progressUnits = clamp(progressUnitsInput, 0, TOTAL_UNITS);
 
+  // 분석 단계가 순서대로 열리는 구간
   const analysisStageReveal = easeOutCubic(
     windowedProgress(progressUnits, 0, 1.4),
   );
@@ -71,6 +75,7 @@ export const deriveSolutionTimelineState = (
   const summaryReveal = easeOutCubic(windowedProgress(progressUnits, 3.1, 4.1));
   const intentReveal = easeOutCubic(windowedProgress(progressUnits, 4.1, 5.1));
 
+  // 로드맵 단계가 순서대로 열리는 구간
   const roadmapContainerReveal = easeOutCubic(
     windowedProgress(progressUnits, 6.2, 7.2),
   );
