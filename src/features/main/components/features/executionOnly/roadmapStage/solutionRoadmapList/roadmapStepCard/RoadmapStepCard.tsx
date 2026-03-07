@@ -1,9 +1,11 @@
 import { useState } from "react";
 
-import { Box, Flex, Icon, Text, VStack, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack, useMediaQuery } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 
-import type { LocalIconDefinition, RoadmapStep } from "../../../../../../types";
+import { SparklesIcon } from "@/shared/_assets/icons";
+
+import type { RoadmapStep } from "../../../../../../types";
 
 const stepRiseIn = keyframes`
   0% {
@@ -16,47 +18,6 @@ const stepRiseIn = keyframes`
   }
 `;
 
-const tagSparkIcon: LocalIconDefinition = {
-  paths: [
-    "M12 3v3",
-    "M12 18v3",
-    "M3 12h3",
-    "M18 12h3",
-    "M5.6 5.6l2.1 2.1",
-    "M16.3 16.3l2.1 2.1",
-  ],
-};
-
-const StrokeIcon = ({
-  icon,
-  boxSize,
-  color,
-  strokeWidth = 1.8,
-}: {
-  boxSize: string;
-  color: string;
-  icon: LocalIconDefinition;
-  strokeWidth?: number;
-}) => {
-  return (
-    <Icon boxSize={boxSize} color={color} viewBox={icon.viewBox ?? "0 0 24 24"}>
-      {icon.paths.map((path) => {
-        return (
-          <path
-            d={path}
-            fill="none"
-            key={path}
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={strokeWidth}
-          />
-        );
-      })}
-    </Icon>
-  );
-};
-
 export const RoadmapStepCard = ({
   animationDelayMs,
   step,
@@ -64,10 +25,9 @@ export const RoadmapStepCard = ({
   animationDelayMs: number;
   step: RoadmapStep;
 }) => {
-  // Individual roadmap step card with hover emphasis and staggered reveal timing.
-  // hover 강조와 순차 등장 타이밍을 가진 개별 로드맵 단계 카드
   const [reduceMotion] = useMediaQuery(["(prefers-reduced-motion: reduce)"]);
   const [isHovering, setIsHovering] = useState(false);
+  const StepIcon = step.icon;
 
   return (
     <VStack
@@ -130,11 +90,7 @@ export const RoadmapStepCard = ({
                 position="absolute"
                 transition="opacity 220ms ease"
               />
-              <StrokeIcon
-                boxSize="7"
-                color={isHovering ? "white" : "#75AC36"}
-                icon={step.icon}
-              />
+              <StepIcon boxSize="7" color={isHovering ? "white" : "#75AC36"} />
             </Flex>
           </Flex>
 
@@ -227,11 +183,9 @@ export const RoadmapStepCard = ({
             py={1.5}
             transition="background-color 220ms ease"
           >
-            <StrokeIcon
+            <SparklesIcon
               boxSize="3"
               color={isHovering ? "#98C95C" : "#A1A1A1"}
-              icon={tagSparkIcon}
-              strokeWidth={1.7}
             />
             <Text
               color={isHovering ? "#98C95C" : "#A1A1A1"}

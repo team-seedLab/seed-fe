@@ -1,4 +1,8 @@
-﻿export type AssignmentTypeId =
+import type { ComponentType } from "react";
+
+import type { IconProps } from "@chakra-ui/react";
+
+export type AssignmentTypeId =
   | "writing"
   | "paper"
   | "presentation"
@@ -6,14 +10,11 @@
   | "summary"
   | "study";
 
-export type LocalIconDefinition = {
-  paths: string[];
-  viewBox?: string;
-};
+export type SharedIconComponent = ComponentType<IconProps>;
 
 export type RoadmapStep = {
   description: string;
-  icon: LocalIconDefinition;
+  icon: SharedIconComponent;
   stepNumber: number;
   tagLabel: string;
   title: string;
@@ -21,7 +22,7 @@ export type RoadmapStep = {
 
 export type SolutionAssignmentCard = {
   description: string;
-  icon: LocalIconDefinition;
+  icon: SharedIconComponent;
   id: AssignmentTypeId;
   roadmapSteps: RoadmapStep[];
   title: string;

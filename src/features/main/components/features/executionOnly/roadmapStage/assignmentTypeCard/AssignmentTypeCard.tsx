@@ -1,11 +1,8 @@
 import { useState } from "react";
 
-import { Flex, Icon, Text, VStack, chakra } from "@chakra-ui/react";
+import { Flex, Text, VStack, chakra } from "@chakra-ui/react";
 
-import type {
-  LocalIconDefinition,
-  SolutionAssignmentCard,
-} from "../../../../../types";
+import type { SolutionAssignmentCard } from "../../../../../types";
 
 type AssignmentTypeCardProps = {
   card: SolutionAssignmentCard;
@@ -14,38 +11,8 @@ type AssignmentTypeCardProps = {
   onSelect: (cardId: SolutionAssignmentCard["id"]) => void;
 };
 
-const AssignmentIcon = ({
-  icon,
-  isActive,
-}: {
-  icon: LocalIconDefinition;
-  isActive: boolean;
-}) => {
-  return (
-    <Icon
-      boxSize={5}
-      color={isActive ? "#98C95C" : "#191F28"}
-      viewBox={icon.viewBox ?? "0 0 24 24"}
-    >
-      {icon.paths.map((path) => {
-        return (
-          <path
-            d={path}
-            fill="none"
-            key={path}
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.8"
-          />
-        );
-      })}
-    </Icon>
-  );
-};
-
 // Selectable card used to switch between roadmap variants in the solution section.
-// solution 섹션에서 로드맵 유형을 전환할 때 사용하는 선택 카드
+// solution ?뱀뀡?먯꽌 濡쒕뱶留??좏삎???꾪솚?????ъ슜?섎뒗 ?좏깮 移대뱶
 export const AssignmentTypeCard = ({
   card,
   isActive,
@@ -54,6 +21,7 @@ export const AssignmentTypeCard = ({
 }: AssignmentTypeCardProps) => {
   const [isHovering, setIsHovering] = useState(false);
   const isHighlighted = isActive || (isInteractive && isHovering);
+  const CardIcon = card.icon;
 
   return (
     <chakra.button
@@ -104,7 +72,7 @@ export const AssignmentTypeCard = ({
           transition="background-color 200ms ease"
           w={12}
         >
-          <AssignmentIcon icon={card.icon} isActive={isHighlighted} />
+          <CardIcon boxSize={5} color={isHighlighted ? "#98C95C" : "#191F28"} />
         </Flex>
         <VStack align="center" gap={1}>
           <Text

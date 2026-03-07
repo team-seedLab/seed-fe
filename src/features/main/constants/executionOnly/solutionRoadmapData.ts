@@ -1,70 +1,30 @@
+import {
+  AcademicCapIcon,
+  BeakerIcon,
+  BoardTeacherIcon,
+  CheckCircleIcon,
+  DocumentTextIcon,
+  FilePenIcon,
+  MagnifyingGlassIcon,
+  MicroscopeIcon,
+  ScriptIcon,
+} from "@/shared/_assets/icons";
+
 import type { SolutionAssignmentCard } from "../../types";
 
 // Static roadmap definitions for each assignment type shown in the solution section.
 // solution 섹션에서 보여주는 과제 유형별 로드맵 정적 데이터
-const ICON_WRITING = {
-  paths: [
-    "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z",
-    "M14 2v6h6",
-    "M9 15l2 2 4-4",
-  ],
-};
+const ICON_WRITING = FilePenIcon;
+const ICON_PAPER = AcademicCapIcon;
+const ICON_PRESENTATION = BoardTeacherIcon;
+const ICON_LAB = BeakerIcon;
+const ICON_SUMMARY = DocumentTextIcon;
+const ICON_STUDY = ScriptIcon;
 
-const ICON_PAPER = {
-  paths: ["M3 10l9-5 9 5-9 5-9-5z", "M7 12v4a5 5 0 0 0 10 0v-4", "M21 10v5"],
-};
-
-const ICON_PRESENTATION = {
-  paths: ["M3 4h18v12H3z", "M12 16v4", "M8 20h8", "M8 8h8", "M8 11h5"],
-};
-
-const ICON_LAB = {
-  paths: ["M10 2v5l-5 8a4 4 0 0 0 3.4 6h7.2A4 4 0 0 0 19 15l-5-8V2", "M8 7h8"],
-};
-
-const ICON_SUMMARY = {
-  paths: [
-    "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z",
-    "M14 2v6h6",
-    "M8 13h8",
-    "M8 17h8",
-  ],
-};
-
-const ICON_STUDY = {
-  paths: [
-    "M4 4h7a3 3 0 0 1 3 3v13a3 3 0 0 0-3-3H4z",
-    "M20 4h-7a3 3 0 0 0-3 3v13a3 3 0 0 1 3-3h7z",
-  ],
-};
-
-const ROADMAP_ICON_ANALYZE = {
-  paths: ["M11 18a7 7 0 1 1 4.95-2.05L21 21"],
-};
-
-const ROADMAP_ICON_STRUCTURE = {
-  paths: [
-    "M4 5h6v4H4z",
-    "M14 5h6v4h-6z",
-    "M9 17h6v4H9z",
-    "M7 9v3",
-    "M17 9v3",
-    "M12 12v5",
-  ],
-};
-
-const ROADMAP_ICON_PROMPT = {
-  paths: [
-    "M6 3v12",
-    "M6 9h10",
-    "M16 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
-    "M6 17a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
-  ],
-};
-
-const ROADMAP_ICON_FINISH = {
-  paths: ["M20 6L9 17l-5-5"],
-};
+const ROADMAP_ICON_ANALYZE = MagnifyingGlassIcon;
+const ROADMAP_ICON_STRUCTURE = MicroscopeIcon;
+const ROADMAP_ICON_PROMPT = DocumentTextIcon;
+const ROADMAP_ICON_FINISH = CheckCircleIcon;
 
 export const SOLUTION_ASSIGNMENT_CARDS: SolutionAssignmentCard[] = [
   {

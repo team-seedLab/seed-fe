@@ -1,25 +1,9 @@
-import { Box, Flex, Icon, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+
+import { SendIcon } from "@/shared/_assets/icons";
 
 import { ASSIGNMENT_HELP_COPY } from "../../../../../constants";
 import type { AssignmentHelpState } from "../../../../../types";
-
-const sendIconPath =
-  "M20.9998 3L10.9998 13M20.9998 3L14.4998 21L10.9998 13M20.9998 3L2.99976 9.5L10.9998 13";
-
-const SendIcon = () => {
-  return (
-    <Icon boxSize={6} color="neutral.900" viewBox="0 0 24 24">
-      <path
-        d={sendIconPath}
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.75"
-      />
-    </Icon>
-  );
-};
 
 type AssignmentHelpComposerProps = {
   composer: AssignmentHelpState["composer"];
@@ -106,7 +90,7 @@ export const AssignmentHelpComposer = ({
             >
               +
             </Text>
-            <SendIcon />
+            <SendIcon boxSize={6} color="neutral.900" />
           </Flex>
         </Box>
       </Box>
