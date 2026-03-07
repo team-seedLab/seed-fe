@@ -15,11 +15,13 @@ export type AssignmentHelpSectionState = {
   timeLossSceneRef: RefObject<HTMLDivElement | null>;
 };
 
+// 과제 도와줘 섹션에 필요한 ref와 상태값을 한 번에 만듦
 export const useAssignmentHelpSectionState = (): AssignmentHelpSectionState => {
   const introRef = useRef<HTMLDivElement | null>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const timeLossSceneRef = useRef<HTMLDivElement | null>(null);
 
+  // 각 구간 ref를 진행도 계산에 쓸 수 있는 형태로 묶음
   const sectionRefs = useMemo<AssignmentHelpSectionRefs>(() => {
     return {
       intro: introRef as RefObject<HTMLElement | null>,
