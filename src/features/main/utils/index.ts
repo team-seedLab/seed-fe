@@ -1,6 +1,5 @@
 export { deriveAssignmentHelpState } from "./deriveAssignmentHelpState";
 export { ASSIGNMENT_HELP_STAGE_SWAP_ANIMATION } from "./assignmentHelpStageSwap";
-export { resolveAssignmentHelpChatStage } from "./resolveAssignmentHelpChatStage";
 export {
   FALLBACK_ANALYSIS_CONTENT_HEIGHT,
   FALLBACK_ROADMAP_CONTENT_HEIGHT,
