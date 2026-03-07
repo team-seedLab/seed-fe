@@ -1,19 +1,135 @@
 import {
   ASSIGNMENT_HELP_COPY,
   ASSIGNMENT_HELP_MESSAGE_BANK,
-} from "../data/assignmentHelpStoryData";
+} from "../../data/assignmentHelpStoryData";
 import type {
+  AssignmentHelpChatStageId,
+  AssignmentHelpMessageKey,
   AssignmentHelpSectionProgressMap,
   AssignmentHelpState,
-} from "../types/assignmentHelp";
+} from "../../types/assignmentHelp";
 
-import {
-  ASSIGNMENT_HELP_CHAT_PROGRESS_RANGES,
-  ASSIGNMENT_HELP_INTRO_PROGRESS_RANGES,
-  ASSIGNMENT_HELP_TIME_LOSS_PROGRESS_RANGES,
-} from "./constants/transitionRanges";
-import { clamp01, lerp, rangeProgress } from "./utils/progressMath";
-import { resolveChatStage } from "./utils/resolveChatStage";
+type ProgressRange = readonly [number, number];
+
+type AssignmentHelpChatStage = {
+  id: AssignmentHelpChatStageId;
+  messageIds: readonly AssignmentHelpMessageKey[];
+  startAt: number;
+  subtitle: string;
+  subtitleKey: string;
+};
+
+const ASSIGNMENT_HELP_INTRO_PROGRESS_RANGES = {
+  composerReveal: [0.25, 0.5] as ProgressRange,
+  composerRevealEnd: 0.5,
+  dotHoldEnd: 0.25,
+  promptFill: [0.75, 1] as ProgressRange,
+} as const;
+
+const ASSIGNMENT_HELP_CHAT_PROGRESS_RANGES = {
+  dock: [0, 0.0238] as ProgressRange,
+  promptExit: [0.0238, 0.1429] as ProgressRange,
+  userOnly: [0.1429, 0.2619] as ProgressRange,
+} as const;
+
+const ASSIGNMENT_HELP_TIME_LOSS_PROGRESS_RANGES = {
+  backdropReveal: [0.3333, 0.6667] as ProgressRange,
+  backdropRevealEnd: 0.6667,
+  composerSettle: [0, 0.3333] as ProgressRange,
+  holdEnd: 1,
+} as const;
+
+const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
+  {
+    id: "empty",
+    messageIds: [],
+    startAt: 0,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
+    subtitleKey: "empty",
+  },
+  {
+    id: "userOnly",
+    messageIds: ["userHelp"],
+    startAt: 0.1429,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
+    subtitleKey: "userOnly",
+  },
+  {
+    id: "helpAndMethod",
+    messageIds: ["userHelp", "aiMethod"],
+    startAt: 0.2619,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.methodology,
+    subtitleKey: "helpAndMethod",
+  },
+  {
+    id: "needInfo",
+    messageIds: ["userHelp", "aiNeedInfo"],
+    startAt: 0.381,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.tooManyInfo,
+    subtitleKey: "needInfo",
+  },
+  {
+    id: "userCrown",
+    messageIds: ["userCrown"],
+    startAt: 0.5,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
+    subtitleKey: "userCrown",
+  },
+  {
+    id: "hallucination",
+    messageIds: ["userCrown", "aiHallucination"],
+    startAt: 0.619,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
+    subtitleKey: "hallucination",
+  },
+  {
+    id: "correction",
+    messageIds: ["userCrown", "aiHallucination", "userCorrection"],
+    startAt: 0.7381,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
+    subtitleKey: "correction",
+  },
+  {
+    id: "gaslight",
+    messageIds: [
+      "userCrown",
+      "aiHallucination",
+      "userCorrection",
+      "aiGaslight",
+    ],
+    startAt: 0.8571,
+    subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
+    subtitleKey: "gaslight",
+  },
+] as const;
+
+const clamp01 = (value: number) => {
+  return Math.min(1, Math.max(0, value));
+};
+
+const lerp = (start: number, end: number, progress: number) => {
+  return start + (end - start) * progress;
+};
+
+const rangeProgress = (value: number, [start, end]: ProgressRange) => {
+  if (start === end) {
+    return 0;
+  }
+
+  return clamp01((value - start) / (end - start));
+};
+
+const resolveChatStage = (chatProgress: number) => {
+  let activeStage = ASSIGNMENT_HELP_CHAT_STAGES[0];
+
+  for (const candidate of ASSIGNMENT_HELP_CHAT_STAGES.slice(1)) {
+    if (chatProgress >= candidate.startAt) {
+      activeStage = candidate;
+    }
+  }
+
+  return activeStage;
+};
 
 export const deriveAssignmentHelpState = (
   sectionProgresses: AssignmentHelpSectionProgressMap,

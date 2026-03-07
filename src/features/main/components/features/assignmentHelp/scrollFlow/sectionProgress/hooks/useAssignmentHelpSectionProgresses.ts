@@ -3,9 +3,12 @@ import { type RefObject, useEffect, useState } from "react";
 import type {
   AssignmentHelpSectionId,
   AssignmentHelpSectionProgressMap,
-} from "../../types/assignmentHelp";
+} from "../../../types/assignmentHelp";
 import { ASSIGNMENT_HELP_SECTION_ORDER } from "../constants/sectionScrollConfig";
-import { clamp01 } from "../utils/progressMath";
+
+const clamp01 = (value: number) => {
+  return Math.min(1, Math.max(0, value));
+};
 
 const createZeroProgressMap = (): AssignmentHelpSectionProgressMap => {
   return {
