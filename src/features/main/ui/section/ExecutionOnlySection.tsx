@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { AnalysisStage } from "../../components/features/executionOnly/analysisStage/ui/AnalysisStage";
-import { EXECUTION_ONLY_COPY } from "../../components/features/executionOnly/data/executionOnlyCopy";
 import { SOLUTION_ASSIGNMENT_CARDS } from "../../components/features/executionOnly/data/solutionRoadmapData";
 import { RoadmapStage } from "../../components/features/executionOnly/roadmapStage/ui/RoadmapStage";
 import { useObservedHeight } from "../../components/features/executionOnly/scrollFlow/hooks/useObservedHeight";
@@ -22,6 +21,14 @@ import type {
 type ExecutionOnlySectionProps = {
   isActivated: boolean;
 };
+
+const EXECUTION_ONLY_TITLE_COPY = {
+  highlight: "실행",
+  logo: "SEED",
+  middle: "가 합니다. ",
+  prefix: "프롬프트 고민은 ",
+  suffix: "만 하세요.",
+} as const;
 
 const fallbackCardId = (cards: SolutionAssignmentCard[]) => {
   return cards[0]?.id ?? "writing";
@@ -98,15 +105,15 @@ export const ExecutionOnlySection = ({
               textAlign="center"
               whiteSpace="nowrap"
             >
-              {EXECUTION_ONLY_COPY.solutionTitle.prefix}
+              {EXECUTION_ONLY_TITLE_COPY.prefix}
               <Box as="span" color="#75AC36">
-                {EXECUTION_ONLY_COPY.solutionTitle.logo}
+                {EXECUTION_ONLY_TITLE_COPY.logo}
               </Box>
-              {EXECUTION_ONLY_COPY.solutionTitle.middle}
+              {EXECUTION_ONLY_TITLE_COPY.middle}
               <Box as="span" color="#75AC36">
-                {EXECUTION_ONLY_COPY.solutionTitle.highlight}
+                {EXECUTION_ONLY_TITLE_COPY.highlight}
               </Box>
-              {EXECUTION_ONLY_COPY.solutionTitle.suffix}
+              {EXECUTION_ONLY_TITLE_COPY.suffix}
             </Text>
 
             <AnalysisStage
