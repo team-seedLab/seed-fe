@@ -5,10 +5,11 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
+    "jsxImportSource": "@emotion/react",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vite/client"]
   }
 }
