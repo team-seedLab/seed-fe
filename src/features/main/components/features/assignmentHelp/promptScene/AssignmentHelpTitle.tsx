@@ -1,8 +1,8 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import { ASSIGNMENT_HELP_COPY } from "../../../../constants/assignmentHelpStoryData";
-import type { AssignmentHelpState } from "../../../../types/assignmentHelp";
 import { ASSIGNMENT_HELP_STAGE_SWAP_ANIMATION } from "../../../../utils/assignmentHelpStageSwap";
+import { ASSIGNMENT_HELP_COPY } from "../data/assignmentHelpStoryData";
+import type { AssignmentHelpState } from "../types/assignmentHelp";
 
 type AssignmentHelpTitleProps = {
   title: AssignmentHelpState["title"];

@@ -1,8 +1,8 @@
-import { ASSIGNMENT_HELP_COPY } from "../../../../../constants/assignmentHelpStoryData";
+import { ASSIGNMENT_HELP_COPY } from "../../data/assignmentHelpStoryData";
 import type {
   AssignmentHelpChatStageId,
   AssignmentHelpMessageKey,
-} from "../../../../../types/assignmentHelp";
+} from "../../types/assignmentHelp";
 
 export type AssignmentHelpChatStage = {
   id: AssignmentHelpChatStageId;

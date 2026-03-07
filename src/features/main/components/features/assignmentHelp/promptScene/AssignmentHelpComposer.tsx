@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Text } from "@chakra-ui/react";
 
-import { ASSIGNMENT_HELP_COPY } from "../../../../constants/assignmentHelpStoryData";
-import type { AssignmentHelpState } from "../../../../types/assignmentHelp";
+import { ASSIGNMENT_HELP_COPY } from "../data/assignmentHelpStoryData";
+import type { AssignmentHelpState } from "../types/assignmentHelp";
 
 const sendIconPath =
   "M20.9998 3L10.9998 13M20.9998 3L14.4998 21L10.9998 13M20.9998 3L2.99976 9.5L10.9998 13";

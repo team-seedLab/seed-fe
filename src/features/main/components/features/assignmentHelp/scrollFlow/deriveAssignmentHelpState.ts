@@ -1,11 +1,11 @@
 import {
   ASSIGNMENT_HELP_COPY,
   ASSIGNMENT_HELP_MESSAGE_BANK,
-} from "../../../../constants/assignmentHelpStoryData";
+} from "../data/assignmentHelpStoryData";
 import type {
   AssignmentHelpSectionProgressMap,
   AssignmentHelpState,
-} from "../../../../types/assignmentHelp";
+} from "../types/assignmentHelp";
 
 import {
   ASSIGNMENT_HELP_CHAT_PROGRESS_RANGES,

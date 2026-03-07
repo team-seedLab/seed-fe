@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 
-import { ASSIGNMENT_HELP_COPY } from "../../../../constants/assignmentHelpStoryData";
-import type { AssignmentHelpState } from "../../../../types/assignmentHelp";
+import { ASSIGNMENT_HELP_COPY } from "../data/assignmentHelpStoryData";
+import type { AssignmentHelpState } from "../types/assignmentHelp";
 
 import { TimeLossPhraseCloud } from "./TimeLossPhraseCloud";
 

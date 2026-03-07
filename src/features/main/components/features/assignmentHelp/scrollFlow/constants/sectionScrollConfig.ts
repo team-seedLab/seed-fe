@@ -1,4 +1,4 @@
-import type { AssignmentHelpSectionId } from "../../../../../types/assignmentHelp";
+import type { AssignmentHelpSectionId } from "../../types/assignmentHelp";
 
 export const ASSIGNMENT_HELP_SECTION_ORDER: readonly AssignmentHelpSectionId[] =
   ["intro", "chat", "timeLoss"];

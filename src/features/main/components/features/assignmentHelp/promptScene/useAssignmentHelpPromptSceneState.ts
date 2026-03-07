@@ -11,7 +11,7 @@ import type {
   AssignmentHelpChatMessage,
   AssignmentHelpMessageKey,
   AssignmentHelpState,
-} from "../../../../types/assignmentHelp";
+} from "../types/assignmentHelp";
 
 type UseAssignmentHelpPromptSceneStateParams = {
   chat: AssignmentHelpState["chat"];

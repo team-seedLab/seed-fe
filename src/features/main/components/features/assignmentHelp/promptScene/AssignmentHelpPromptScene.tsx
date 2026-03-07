@@ -1,4 +1,4 @@
-import type { AssignmentHelpState } from "../../../../types/assignmentHelp";
+import type { AssignmentHelpState } from "../types/assignmentHelp";
 
 import { AssignmentHelpComposer } from "./AssignmentHelpComposer";
 import { AssignmentHelpConversation } from "./AssignmentHelpConversation";
