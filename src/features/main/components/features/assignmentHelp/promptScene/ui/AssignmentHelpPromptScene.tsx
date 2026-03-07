@@ -1,8 +1,8 @@
 import type { AssignmentHelpState } from "../../types/assignmentHelp";
-import { AssignmentHelpComposer } from "../composer/AssignmentHelpComposer";
-import { AssignmentHelpConversation } from "../conversation/AssignmentHelpConversation";
+import { AssignmentHelpComposer } from "../composer/ui/AssignmentHelpComposer";
+import { AssignmentHelpConversation } from "../conversation/ui/AssignmentHelpConversation";
 import { useAssignmentHelpPromptSceneState } from "../hooks/useAssignmentHelpPromptSceneState";
-import { AssignmentHelpTitle } from "../title/AssignmentHelpTitle";
+import { AssignmentHelpTitle } from "../title/ui/AssignmentHelpTitle";
 
 type AssignmentHelpPromptSceneProps = {
   chat: AssignmentHelpState["chat"];

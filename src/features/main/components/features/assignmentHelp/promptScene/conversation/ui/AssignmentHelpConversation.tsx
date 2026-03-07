@@ -2,9 +2,8 @@ import type { RefObject } from "react";
 
 import { Box, VStack } from "@chakra-ui/react";
 
-import type { AssignmentHelpState } from "../../types/assignmentHelp";
-
-import { AssignmentHelpMessage } from "./AssignmentHelpMessage";
+import type { AssignmentHelpState } from "../../../types/assignmentHelp";
+import { AssignmentHelpMessage } from "../message/ui/AssignmentHelpMessage";
 
 type AssignmentHelpConversationProps = {
   animatedMessageIds: ReadonlySet<string>;
