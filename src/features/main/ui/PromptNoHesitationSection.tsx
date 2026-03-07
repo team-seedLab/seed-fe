@@ -1,7 +1,6 @@
 import { Box, Flex, VStack } from "@chakra-ui/react";
 
-import { ActionableOutputPanel } from "../components/features/promptNoHesitation/ActionableOutputPanel";
-import { PromptPreviewCard } from "../components/features/promptNoHesitation/PromptPreviewCard";
+import { ActionableOutputPanel, PromptPreviewCard } from "../components";
 
 export const PromptNoHesitationSection = () => {
   return (
