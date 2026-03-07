@@ -6,7 +6,6 @@ type UseAssignmentHelpConversationScrollParams = {
 };
 
 // Keeps the chat viewport pinned to the latest visible message whenever the story stage changes.
-// ?ㅽ넗由??④퀎媛 諛붾??뚮쭏??梨꾪똿 ?ㅽ겕濡ㅼ쓣 理쒖떊 硫붿떆吏 ?꾩튂??留욎떠 ?좎?
 export const useAssignmentHelpConversationScroll = ({
   conversationRef,
   stageKey,

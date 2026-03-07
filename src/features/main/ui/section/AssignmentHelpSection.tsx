@@ -16,9 +16,7 @@ export const AssignmentHelpSection = ({
 }: AssignmentHelpSectionProps) => {
   const {
     assignmentHelpState,
-    animatedMessageIds,
     chatRef,
-    conversationRef,
     introRef,
     isSolutionReady,
     timeLossSceneRef,
@@ -40,11 +38,12 @@ export const AssignmentHelpSection = ({
           <Box h="full" position="relative" w="full">
             <Box inset={0} position="absolute" w="full" zIndex={2}>
               <AssignmentHelpPromptScene
-                assignmentHelpState={assignmentHelpState}
-                animatedMessageIds={animatedMessageIds}
-                conversationRef={conversationRef}
+                chat={assignmentHelpState.chat}
+                composer={assignmentHelpState.composer}
+                isChatVisible={assignmentHelpState.flags.isChatVisible}
+                title={assignmentHelpState.title}
               />
-              <TimeLossScene assignmentHelpState={assignmentHelpState} />
+              <TimeLossScene timeLoss={assignmentHelpState.timeLoss} />
             </Box>
           </Box>
         </Box>

@@ -6,7 +6,8 @@ import {
   TIME_LOSS_PHRASES,
   TIME_LOSS_PHRASE_BASE_TONE,
 } from "../../../../constants/timeLossPhraseData";
-import { useTimeLossPhraseMotion } from "../../../../hooks/useTimeLossPhraseMotion";
+
+import { useTimeLossPhraseMotion } from "./useTimeLossPhraseMotion";
 
 type TimeLossPhraseCloudProps = {
   interactive: boolean;

@@ -6,16 +6,16 @@ import type { AssignmentHelpState } from "../../../../types/assignmentHelp";
 import { TimeLossPhraseCloud } from "./TimeLossPhraseCloud";
 
 type TimeLossSceneProps = {
-  assignmentHelpState: AssignmentHelpState;
+  timeLoss: AssignmentHelpState["timeLoss"];
 };
 
-export const TimeLossScene = ({ assignmentHelpState }: TimeLossSceneProps) => {
+export const TimeLossScene = ({ timeLoss }: TimeLossSceneProps) => {
   return (
     <>
       <Box inset={0} pointerEvents="none" position="absolute" zIndex={5}>
         <Box
           left="50%"
-          opacity={assignmentHelpState.timeLoss.titleOpacity}
+          opacity={timeLoss.titleOpacity}
           position="absolute"
           top="50%"
           transform="translate(-50%, -50%)"
@@ -46,16 +46,14 @@ export const TimeLossScene = ({ assignmentHelpState }: TimeLossSceneProps) => {
 
       <Box
         inset={0}
-        pointerEvents={
-          assignmentHelpState.timeLoss.interactive ? "auto" : "none"
-        }
+        pointerEvents={timeLoss.interactive ? "auto" : "none"}
         position="absolute"
         zIndex={3}
       >
         <Box
           h="full"
           left={0}
-          opacity={assignmentHelpState.timeLoss.backdropOpacity}
+          opacity={timeLoss.backdropOpacity}
           overflow="hidden"
           position="absolute"
           top={0}
@@ -65,13 +63,11 @@ export const TimeLossScene = ({ assignmentHelpState }: TimeLossSceneProps) => {
         >
           <Box
             h="full"
-            opacity={assignmentHelpState.timeLoss.phraseOpacity}
+            opacity={timeLoss.phraseOpacity}
             transition="opacity 220ms ease"
             w="full"
           >
-            <TimeLossPhraseCloud
-              interactive={assignmentHelpState.timeLoss.interactive}
-            />
+            <TimeLossPhraseCloud interactive={timeLoss.interactive} />
           </Box>
         </Box>
       </Box>

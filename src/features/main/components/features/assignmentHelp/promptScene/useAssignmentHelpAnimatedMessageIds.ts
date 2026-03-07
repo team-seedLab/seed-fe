@@ -3,7 +3,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type {
   AssignmentHelpChatMessage,
   AssignmentHelpMessageKey,
-} from "../types/assignmentHelp";
+} from "../../../../types/assignmentHelp";
 
 type UseAssignmentHelpAnimatedMessageIdsParams = {
   chatStageKey: string;
@@ -12,7 +12,6 @@ type UseAssignmentHelpAnimatedMessageIdsParams = {
 };
 
 // Marks only the newly introduced chat messages so existing bubbles do not re-animate on every stage swap.
-// ?덈줈 ?깆옣??硫붿떆吏留??쒖떆?댁꽌 湲곗〈 留먰뭾?좎씠 ?④퀎 ?꾪솚留덈떎 ?ㅼ떆 ?좊땲硫붿씠?섎릺吏 ?딄쾶 ??
 export const useAssignmentHelpAnimatedMessageIds = ({
   chatStageKey,
   messageIds,

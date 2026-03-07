@@ -4,10 +4,7 @@ import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { AnalysisStage } from "../../components/features/executionOnly/analysisStage/ui/AnalysisStage";
 import { RoadmapStage } from "../../components/features/executionOnly/roadmapStage/ui/RoadmapStage";
-import {
-  EXECUTION_ONLY_COPY,
-  SOLUTION_ASSIGNMENT_CARDS,
-} from "../../constants";
+import { SOLUTION_ASSIGNMENT_CARDS } from "../../constants";
 import { useObservedHeight, useSolutionTimelineProgress } from "../../hooks";
 import type {
   AssignmentTypeId,
@@ -99,15 +96,15 @@ export const ExecutionOnlySection = ({
               textAlign="center"
               whiteSpace="nowrap"
             >
-              {EXECUTION_ONLY_COPY.solutionTitle.prefix}
+              프롬프트 고민은
               <Box as="span" color="#75AC36">
-                {EXECUTION_ONLY_COPY.solutionTitle.logo}
+                SEED
               </Box>
-              {EXECUTION_ONLY_COPY.solutionTitle.middle}
+              가 합니다.
               <Box as="span" color="#75AC36">
-                {EXECUTION_ONLY_COPY.solutionTitle.highlight}
+                실행
               </Box>
-              {EXECUTION_ONLY_COPY.solutionTitle.suffix}
+              만 하세요.
             </Text>
 
             <AnalysisStage

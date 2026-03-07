@@ -1,32 +1,38 @@
-import type { RefObject } from "react";
-
 import type { AssignmentHelpState } from "../../../../types/assignmentHelp";
 
 import { AssignmentHelpComposer } from "./AssignmentHelpComposer";
 import { AssignmentHelpConversation } from "./AssignmentHelpConversation";
 import { AssignmentHelpTitle } from "./AssignmentHelpTitle";
+import { useAssignmentHelpPromptSceneState } from "./useAssignmentHelpPromptSceneState";
 
 type AssignmentHelpPromptSceneProps = {
-  assignmentHelpState: AssignmentHelpState;
-  animatedMessageIds: ReadonlySet<string>;
-  conversationRef: RefObject<HTMLDivElement | null>;
+  chat: AssignmentHelpState["chat"];
+  composer: AssignmentHelpState["composer"];
+  isChatVisible: AssignmentHelpState["flags"]["isChatVisible"];
+  title: AssignmentHelpState["title"];
 };
 
 export const AssignmentHelpPromptScene = ({
-  assignmentHelpState,
-  animatedMessageIds,
-  conversationRef,
+  chat,
+  composer,
+  isChatVisible,
+  title,
 }: AssignmentHelpPromptSceneProps) => {
+  const { animatedMessageIds, conversationRef } =
+    useAssignmentHelpPromptSceneState({
+      chat,
+    });
+
   return (
     <>
-      <AssignmentHelpTitle title={assignmentHelpState.title} />
+      <AssignmentHelpTitle title={title} />
       <AssignmentHelpConversation
         animatedMessageIds={animatedMessageIds}
-        chat={assignmentHelpState.chat}
+        chat={chat}
         conversationRef={conversationRef}
-        isChatVisible={assignmentHelpState.flags.isChatVisible}
+        isChatVisible={isChatVisible}
       />
-      <AssignmentHelpComposer composer={assignmentHelpState.composer} />
+      <AssignmentHelpComposer composer={composer} />
     </>
   );
 };
