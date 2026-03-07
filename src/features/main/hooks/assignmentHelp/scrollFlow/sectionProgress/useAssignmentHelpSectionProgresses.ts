@@ -10,6 +10,7 @@ const clamp01 = (value: number) => {
   return Math.min(1, Math.max(0, value));
 };
 
+// 모든 구간의 시작 진행도를 0으로 만든 상태값을 만듦
 const createZeroProgressMap = (): AssignmentHelpSectionProgressMap => {
   return {
     intro: 0,
@@ -18,6 +19,7 @@ const createZeroProgressMap = (): AssignmentHelpSectionProgressMap => {
   };
 };
 
+// 한 구간의 스크롤 진행도를 0부터 1 사이 값으로 계산함
 const calculateSectionProgress = (section: HTMLElement | null) => {
   if (!section) {
     return 0;
@@ -33,6 +35,7 @@ const calculateSectionProgress = (section: HTMLElement | null) => {
   return clamp01(-rect.top / travel);
 };
 
+// 이전 진행도와 새 진행도가 같은지 확인함
 const isProgressMapEqual = (
   left: AssignmentHelpSectionProgressMap,
   right: AssignmentHelpSectionProgressMap,
@@ -47,6 +50,7 @@ export type AssignmentHelpSectionRefs = Record<
   RefObject<HTMLElement | null>
 >;
 
+// 각 구간 ref를 기준으로 현재 스크롤 진행도를 구함
 export const useAssignmentHelpSectionProgresses = (
   sectionRefs: AssignmentHelpSectionRefs,
 ) => {
