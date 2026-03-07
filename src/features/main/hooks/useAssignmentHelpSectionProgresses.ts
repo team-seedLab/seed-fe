@@ -1,16 +1,21 @@
 import { type RefObject, useEffect, useState } from "react";
 
-import {
-  ASSIGNMENT_HELP_STORY_SECTION_ORDER,
-  type AssignmentHelpStorySectionId,
-  type AssignmentHelpStorySectionProgressMap,
-} from "../components/features/assignmentHelp/assignmentHelpStoryTimeline";
+import type {
+  AssignmentHelpSectionId,
+  AssignmentHelpSectionProgressMap,
+} from "../types/assignmentHelp";
+
+const ASSIGNMENT_HELP_SECTION_ORDER: AssignmentHelpSectionId[] = [
+  "intro",
+  "chat",
+  "timeLoss",
+];
 
 const clamp01 = (value: number) => {
   return Math.min(1, Math.max(0, value));
 };
 
-const createZeroProgressMap = (): AssignmentHelpStorySectionProgressMap => {
+const createZeroProgressMap = (): AssignmentHelpSectionProgressMap => {
   return {
     intro: 0,
     chat: 0,
@@ -34,16 +39,16 @@ const calculateSectionProgress = (section: HTMLElement | null) => {
 };
 
 const isProgressMapEqual = (
-  left: AssignmentHelpStorySectionProgressMap,
-  right: AssignmentHelpStorySectionProgressMap,
+  left: AssignmentHelpSectionProgressMap,
+  right: AssignmentHelpSectionProgressMap,
 ) => {
-  return ASSIGNMENT_HELP_STORY_SECTION_ORDER.every((sectionId) => {
+  return ASSIGNMENT_HELP_SECTION_ORDER.every((sectionId) => {
     return Math.abs(left[sectionId] - right[sectionId]) < 0.0001;
   });
 };
 
 export type AssignmentHelpSectionRefs = Record<
-  AssignmentHelpStorySectionId,
+  AssignmentHelpSectionId,
   RefObject<HTMLElement | null>
 >;
 
@@ -51,14 +56,14 @@ export const useAssignmentHelpSectionProgresses = (
   sectionRefs: AssignmentHelpSectionRefs,
 ) => {
   const [progresses, setProgresses] =
-    useState<AssignmentHelpStorySectionProgressMap>(createZeroProgressMap);
+    useState<AssignmentHelpSectionProgressMap>(createZeroProgressMap);
 
   useEffect(() => {
     let frameId: number | null = null;
 
     const calculate = () => {
       const nextProgress =
-        ASSIGNMENT_HELP_STORY_SECTION_ORDER.reduce<AssignmentHelpStorySectionProgressMap>(
+        ASSIGNMENT_HELP_SECTION_ORDER.reduce<AssignmentHelpSectionProgressMap>(
           (acc, sectionId) => {
             acc[sectionId] = calculateSectionProgress(
               sectionRefs[sectionId].current,

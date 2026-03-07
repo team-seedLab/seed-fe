@@ -1,7 +1,3 @@
-import {
-  ASSIGNMENT_HELP_STORY_SCENE_PROGRESS,
-  type AssignmentHelpStorySceneId,
-} from "../components/features/assignmentHelp/assignmentHelpStoryTimeline";
 import { ASSIGNMENT_HELP_COPY } from "../constants/assignmentHelpStoryData";
 import type {
   AssignmentHelpChatStageId,
@@ -11,62 +7,58 @@ import type {
 type AssignmentHelpChatStage = {
   id: AssignmentHelpChatStageId;
   messageIds: readonly AssignmentHelpMessageKey[];
-  sceneId: AssignmentHelpStorySceneId | null;
+  startAt: number;
   subtitle: string;
   subtitleKey: string;
-};
-
-const sceneStart = (sceneId: AssignmentHelpStorySceneId) => {
-  return ASSIGNMENT_HELP_STORY_SCENE_PROGRESS[sceneId].start;
 };
 
 const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
   {
     id: "empty",
     messageIds: [],
-    sceneId: null,
+    startAt: 0,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
     subtitleKey: "empty",
   },
   {
     id: "userOnly",
     messageIds: ["userHelp"],
-    sceneId: "chatUserOnly",
+    startAt: 0.1429,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
     subtitleKey: "userOnly",
   },
   {
     id: "helpAndMethod",
     messageIds: ["userHelp", "aiMethod"],
-    sceneId: "chatHelpAndMethod",
+    startAt: 0.2619,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.methodology,
     subtitleKey: "helpAndMethod",
   },
   {
     id: "needInfo",
     messageIds: ["userHelp", "aiNeedInfo"],
-    sceneId: "chatNeedInfo",
+    startAt: 0.381,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.tooManyInfo,
     subtitleKey: "needInfo",
   },
   {
     id: "userCrown",
     messageIds: ["userCrown"],
-    sceneId: "chatUserCrown",
+    startAt: 0.5,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
     subtitleKey: "userCrown",
   },
   {
     id: "hallucination",
     messageIds: ["userCrown", "aiHallucination"],
-    sceneId: "chatHallucination",
+    startAt: 0.619,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
     subtitleKey: "hallucination",
   },
   {
     id: "correction",
     messageIds: ["userCrown", "aiHallucination", "userCorrection"],
-    sceneId: "chatCorrection",
+    startAt: 0.7381,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
     subtitleKey: "correction",
   },
@@ -78,7 +70,7 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
       "userCorrection",
       "aiGaslight",
     ],
-    sceneId: "chatGaslight",
+    startAt: 0.8571,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
     subtitleKey: "gaslight",
   },
@@ -88,7 +80,7 @@ export const resolveAssignmentHelpChatStage = (chatProgress: number) => {
   let activeStage = ASSIGNMENT_HELP_CHAT_STAGES[0];
 
   for (const candidate of ASSIGNMENT_HELP_CHAT_STAGES.slice(1)) {
-    if (candidate.sceneId && chatProgress >= sceneStart(candidate.sceneId)) {
+    if (chatProgress >= candidate.startAt) {
       activeStage = candidate;
     }
   }

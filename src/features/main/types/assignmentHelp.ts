@@ -23,6 +23,13 @@ export type AssignmentHelpMessageKey =
   | "userCorrection"
   | "aiGaslight";
 
+export type AssignmentHelpSectionId = "intro" | "chat" | "timeLoss";
+
+export type AssignmentHelpSectionProgressMap = Record<
+  AssignmentHelpSectionId,
+  number
+>;
+
 export type AssignmentHelpChatStageId =
   | "empty"
   | "userOnly"
