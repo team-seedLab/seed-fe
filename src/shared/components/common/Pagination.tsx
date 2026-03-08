@@ -1,6 +1,6 @@
 import { Flex, HStack, IconButton, Text } from "@chakra-ui/react";
 
-import { ArrowLeftIcon, ArrowRightIcon } from "@/shared/_assets/icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/shared/_assets/icons";
 
 type Props = {
   currentPage: number;
@@ -39,7 +39,7 @@ export const Pagination = ({
         minW={8}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        <ArrowLeftIcon boxSize={2.5} color="neutral.900" />
+        <ChevronLeftIcon boxSize={2.5} color="neutral.900" />
       </IconButton>
 
       {visiblePages.map((page) => (
@@ -80,7 +80,7 @@ export const Pagination = ({
         minW={8}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        <ArrowRightIcon boxSize={2.5} color="neutral.900" />
+        <ChevronRightIcon boxSize={2.5} color="neutral.900" />
       </IconButton>
     </HStack>
   );
