@@ -37,7 +37,7 @@ export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
           <DocumentTextIcon color="seed" w={4} h={5} />
         </Flex>
         <Flex flexDir="column" align="flex-start">
-          <Text color="text.DEFAULT" fontSize="lg" fontWeight="bold">
+          <Text color="text" fontSize="lg" fontWeight="bold">
             {name}
           </Text>
           <Text color="text.secondary" fontSize="xs">
