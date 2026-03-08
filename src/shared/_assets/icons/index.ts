@@ -10,6 +10,7 @@ import _BeakerIcon from "@/shared/_assets/icons/beaker.svg?react";
 import _BoardTeacherIcon from "@/shared/_assets/icons/board-teacher.svg?react";
 import _CheckCheckIcon from "@/shared/_assets/icons/check-check.svg?react";
 import _CheckCircleIcon from "@/shared/_assets/icons/check-circle.svg?react";
+import _ChevronLeftIcon from "@/shared/_assets/icons/chevron-left.svg?react";
 import _ChevronRightIcon from "@/shared/_assets/icons/chevron-right.svg?react";
 import _ClipboardCheckIcon from "@/shared/_assets/icons/clipboard-check.svg?react";
 import _CopyIcon from "@/shared/_assets/icons/copy.svg?react";
@@ -46,6 +47,7 @@ export const BoardTeacherIcon = createIcon(
 );
 export const CheckCheckIcon = createIcon(_CheckCheckIcon, "CheckCheckIcon");
 export const CheckCircleIcon = createIcon(_CheckCircleIcon, "CheckCircleIcon");
+export const ChevronLeftIcon = createIcon(_ChevronLeftIcon, "ChevronLeftIcon");
 export const ChevronRightIcon = createIcon(
   _ChevronRightIcon,
   "ChevronRightIcon",
