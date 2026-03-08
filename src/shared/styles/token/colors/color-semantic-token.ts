@@ -12,17 +12,14 @@ export const colorSemanticToken = {
   },
   "button.bg": {
     DEFAULT: { value: "{colors.seed.400}" },
-    primary: { value: "{colors.seed.400}" },
-    secondary: { value: "{colors.neutral.100}" },
+    secondary: { value: "{colors.neutral.50}" },
   },
   "button.border": {
     DEFAULT: { value: "{colors.seed.400}" },
-    primary: { value: "{colors.seed.400}" },
-    secondary: { value: "{colors.neutral.100}" },
+    secondary: { value: "{colors.neutral.200}" },
   },
-  "button.fg": {
+  "button.foreground": {
     DEFAULT: { value: "{colors.neutral.50}" },
-    primary: { value: "{colors.neutral.50}" },
     secondary: { value: "{colors.neutral.900}" },
   },
   "container.bg": {
@@ -30,7 +27,7 @@ export const colorSemanticToken = {
     card: { value: "{colors.neutral.100}" },
   },
   "container.border": {
-    DEFAULT: { value: "{colors.neutral.50}" },
+    DEFAULT: { value: "{colors.neutral.200}" },
     card: { value: "{colors.neutral.100}" },
     dashed: { value: "{colors.neutral.600}" },
   },

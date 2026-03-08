@@ -39,7 +39,7 @@ export const Pagination = ({
         minW={8}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        <ChevronLeftIcon boxSize={2.5} color="text.DEFAULT" />
+        <ChevronLeftIcon boxSize={2.5} color="text" />
       </IconButton>
 
       {visiblePages.map((page) => (
@@ -64,7 +64,11 @@ export const Pagination = ({
           onClick={() => onPageChange(page)}
         >
           <Text
-            color={currentPage === page ? "white" : "button.fg.secondary"}
+            color={
+              currentPage === page
+                ? "button.foreground"
+                : "button.foreground.secondary"
+            }
             fontSize="sm"
             fontWeight={currentPage === page ? "semibold" : "medium"}
           >
