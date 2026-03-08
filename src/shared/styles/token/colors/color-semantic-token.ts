@@ -9,7 +9,31 @@ export const colorSemanticToken = {
   },
   pdf: {
     DEFAULT: { value: "{colors.red.500}" },
-    solid: { value: "{colors.red.100}" },
+    bg: { value: "{colors.red.100}" },
+  },
+  "button.bg": {
+    DEFAULT: { value: "{colors.seed.400}" },
+    primary: { value: "{colors.seed.400}" },
+    secondary: { value: "{colors.neutral.100}" },
+  },
+  "button.border": {
+    DEFAULT: { value: "{colors.seed.400}" },
+    primary: { value: "{colors.seed.400}" },
+    secondary: { value: "{colors.neutral.100}" },
+  },
+  "button.fg": {
+    DEFAULT: { value: "{colors.neutral.50}" },
+    primary: { value: "{colors.neutral.50}" },
+    secondary: { value: "{colors.neutral.900}" },
+  },
+  "container.bg": {
+    DEFAULT: { value: "{colors.neutral.0}" },
+    card: { value: "{colors.neutral.100}" },
+  },
+  "container.border": {
+    DEFAULT: { value: "{colors.neutral.50}" },
+    card: { value: "{colors.neutral.100}" },
+    dashed: { value: "{colors.neutral.600}" },
   },
   text: {
     DEFAULT: { value: "{colors.neutral.900}" },
