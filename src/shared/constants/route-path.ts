@@ -2,6 +2,7 @@
 export const ROUTE_PATHS = {
   ROOT: "/",
   MAIN: "/",
+  MYPAGE: "/mypage",
   NOT_FOUND: "*",
 };
 
