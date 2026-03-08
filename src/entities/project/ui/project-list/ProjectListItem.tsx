@@ -11,9 +11,9 @@ type Props = {
 export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
   return (
     <Flex
-      bg="white"
+      bg="container.bg"
       border="1px solid"
-      borderColor="neutral.50"
+      borderColor="container.border"
       borderRadius="2xl"
       boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
       p="25px"
@@ -27,7 +27,7 @@ export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
     >
       <Flex gap={5} align="center">
         <Flex
-          bg="#F4FAEB"
+          bg="seed.subtle"
           borderRadius="xl"
           boxSize={12}
           align="center"
@@ -37,10 +37,10 @@ export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
           <DocumentTextIcon color="seed" w={4} h={5} />
         </Flex>
         <Flex flexDir="column" align="flex-start">
-          <Text color="neutral.900" fontSize="lg" fontWeight="bold">
+          <Text color="text" fontSize="lg" fontWeight="bold">
             {name}
           </Text>
-          <Text color="neutral.600" fontSize="xs">
+          <Text color="text.secondary" fontSize="xs">
             {updatedAt}
           </Text>
         </Flex>

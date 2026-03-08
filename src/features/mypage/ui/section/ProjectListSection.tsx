@@ -17,7 +17,7 @@ export const ProjectListSection = () => {
   return (
     <VStack gap={6} align="flex-start" pt={4} w="full">
       <Flex w="full" align="center" justify="space-between" px={2}>
-        <Text color="neutral.900" fontSize="xl" fontWeight="bold">
+        <Text color="text" fontSize="xl" fontWeight="bold">
           내 프로젝트 목록
         </Text>
         <ProjectListToolbar
@@ -40,7 +40,7 @@ export const ProjectListSection = () => {
         <Flex
           bg="white"
           border="1px dashed"
-          borderColor="neutral.600"
+          borderColor="container.border.dashed"
           borderRadius="2xl"
           boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
           h={24}
@@ -52,7 +52,7 @@ export const ProjectListSection = () => {
           transition="background 0.15s"
         >
           <Flex
-            bg="#F4FAEB"
+            bg="seed.subtle"
             borderRadius="full"
             boxSize={10}
             align="center"

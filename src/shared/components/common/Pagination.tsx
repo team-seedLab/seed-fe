@@ -39,7 +39,7 @@ export const Pagination = ({
         minW={8}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        <ChevronLeftIcon boxSize={2.5} color="neutral.900" />
+        <ChevronLeftIcon boxSize={2.5} color="text" />
       </IconButton>
 
       {visiblePages.map((page) => (
@@ -50,19 +50,25 @@ export const Pagination = ({
           boxSize={8}
           borderRadius="lg"
           aria-label={`Page ${page}`}
-          bg={currentPage === page ? "seed" : "transparent"}
+          bg={currentPage === page ? "button.bg" : "transparent"}
           boxShadow={
             currentPage === page
               ? "0px 1px 2px 0px rgba(0,0,0,0.05)"
               : undefined
           }
           cursor="pointer"
-          _hover={currentPage !== page ? { bg: "neutral.100" } : undefined}
+          _hover={
+            currentPage !== page ? { bg: "button.bg.secondary" } : undefined
+          }
           transition="background 0.15s"
           onClick={() => onPageChange(page)}
         >
           <Text
-            color={currentPage === page ? "white" : "neutral.600"}
+            color={
+              currentPage === page
+                ? "button.foreground"
+                : "button.foreground.secondary"
+            }
             fontSize="sm"
             fontWeight={currentPage === page ? "semibold" : "medium"}
           >
@@ -80,7 +86,7 @@ export const Pagination = ({
         minW={8}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        <ChevronRightIcon boxSize={2.5} color="neutral.900" />
+        <ChevronRightIcon boxSize={2.5} color="text.DEFAULT" />
       </IconButton>
     </HStack>
   );
