@@ -2,11 +2,10 @@ import React, { useState } from "react";
 
 import { Flex, Text, VStack } from "@chakra-ui/react";
 
-import { PROJECT_LIST_MOCK, type Project } from "@/entities/project/mock/data";
-import { PlusIcon } from "@/shared";
-import { Pagination } from "@/shared/components";
+import { PROJECT_LIST_MOCK, type Project, ProjectListItem } from "@/entities";
+import { Pagination, PlusIcon } from "@/shared";
 
-import { ProjectListItem, ProjectListToolbar } from "../../components";
+import { ProjectListToolbar } from "../../components";
 
 type Props = {
   filterActive: boolean;
