@@ -14,7 +14,7 @@ export default function MainPage() {
   const [isSolutionSectionReady, setIsSolutionSectionReady] = useState(false);
 
   return (
-    <Flex>
+    <Flex flexDir="column" align="center" bg="white">
       <MainHeroCaptureSection />
       <AssignmentHelpSection
         onSolutionReadyChange={setIsSolutionSectionReady}
