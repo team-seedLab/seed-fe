@@ -1,6 +1,6 @@
 /**
  * 해당 파일은 자동으로 생성됩니다. 수동으로 수정하지 마세요.
- * /assets/icons에서 SVG 파일을 추가/삭제한 후 'pnpm generate:icons'를 실행하세요.
+ * shared/_assets/icons에서 SVG 파일을 추가/삭제한 후 'pnpm generate:icons'를 실행하세요.
  */
 import _AcademicCapIcon from "@/shared/_assets/icons/academic-cap.svg?react";
 import _AdjustmentsVerticalIcon from "@/shared/_assets/icons/adjustments-vertical.svg?react";
@@ -24,13 +24,13 @@ import _PictureIcon from "@/shared/_assets/icons/picture.svg?react";
 import _PlusCircleIcon from "@/shared/_assets/icons/plus-circle.svg?react";
 import _PlusIcon from "@/shared/_assets/icons/plus.svg?react";
 import _ScriptIcon from "@/shared/_assets/icons/script.svg?react";
+import _SendIcon from "@/shared/_assets/icons/send.svg?react";
 import _SettingIcon from "@/shared/_assets/icons/setting.svg?react";
 import _SparklesIcon from "@/shared/_assets/icons/sparkles.svg?react";
 import _SquarePlayIcon from "@/shared/_assets/icons/square-play.svg?react";
 import _TerminalIcon from "@/shared/_assets/icons/terminal.svg?react";
 import _XMarkIcon from "@/shared/_assets/icons/x-mark.svg?react";
-
-import { createIcon } from "../../components";
+import { createIcon } from "@/shared/components/features/CreateIcon";
 
 export const AcademicCapIcon = createIcon(_AcademicCapIcon, "AcademicCapIcon");
 export const AdjustmentsVerticalIcon = createIcon(
@@ -72,6 +72,7 @@ export const PictureIcon = createIcon(_PictureIcon, "PictureIcon");
 export const PlusCircleIcon = createIcon(_PlusCircleIcon, "PlusCircleIcon");
 export const PlusIcon = createIcon(_PlusIcon, "PlusIcon");
 export const ScriptIcon = createIcon(_ScriptIcon, "ScriptIcon");
+export const SendIcon = createIcon(_SendIcon, "SendIcon");
 export const SettingIcon = createIcon(_SettingIcon, "SettingIcon");
 export const SparklesIcon = createIcon(_SparklesIcon, "SparklesIcon");
 export const SquarePlayIcon = createIcon(_SquarePlayIcon, "SquarePlayIcon");

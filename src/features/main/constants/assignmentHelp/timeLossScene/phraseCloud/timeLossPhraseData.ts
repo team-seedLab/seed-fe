@@ -1,0 +1,99 @@
+export type TimeLossPhrase = {
+  text: string;
+  x: number;
+  y: number;
+};
+
+// Seed positions for the phrase cloud, normalized from the original design layout.
+// 문구 클라우드의 초기 배치 좌표를 원본 디자인 기준으로 정규화해 둔 데이터
+export const TIME_LOSS_PHRASE_BASE_TONE = 176;
+export const TIME_LOSS_PHRASES: TimeLossPhrase[] = [
+  { text: "라바돈의 죽음모자", x: 157.5 / 1341, y: 74 / 644 },
+  { text: "관련 근거 검색", x: 427.5 / 1341, y: 74 / 644 },
+  { text: "과제물에서만 근거를 찾아", x: 647.5 / 1341, y: 74 / 644 },
+  { text: "헛소리 하지마", x: 1004.5 / 1341, y: 74 / 644 },
+  { text: "거짓말 하지마", x: 124 / 1341, y: 136 / 644 },
+  { text: "팩트 체크", x: 339 / 1341, y: 136 / 644 },
+  { text: "교수님이 좋아하는 말투로", x: 499 / 1341, y: 136 / 644 },
+  { text: "엉터리 대답 하지 않고", x: 856 / 1341, y: 136 / 644 },
+  { text: "명확한 근거를 찾아", x: 181 / 1341, y: 198 / 644 },
+  { text: "논문 수준의 어휘 사용", x: 456 / 1341, y: 198 / 644 },
+  { text: "대학생이 쓴 것처럼", x: 763 / 1341, y: 198 / 644 },
+  { text: "출처 확실한 것만 가져와", x: 1038 / 1341, y: 198 / 644 },
+  { text: "모르면 모른다고 해", x: 77 / 1341, y: 260 / 644 },
+  { text: "너무 AI 티 안 나게", x: 352 / 1341, y: 260 / 644 },
+  { text: "한 번에 제대로 좀 말해줘", x: 609 / 1341, y: 260 / 644 },
+  { text: "뭘 요구해야하지?", x: 948 / 1341, y: 260 / 644 },
+  { text: "깔끔하게 서론-본론-결론", x: 165 / 1341, y: 322 / 644 },
+  { text: "첫 문장 어떻게 시작해", x: 515 / 1341, y: 322 / 644 },
+  { text: "딴 길로 새지 마", x: 822 / 1341, y: 322 / 644 },
+  { text: "데이터 조작하지 마", x: 1046 / 1341, y: 322 / 644 },
+  { text: "소설 쓰지 말고 사실만", x: 32 / 1341, y: 384 / 644 },
+  {
+    text: "검색을 통해 근거를 뒷받침할 자료를 찾아",
+    x: 339 / 1341,
+    y: 384 / 644,
+  },
+  { text: "막막하다", x: 875 / 1341, y: 384 / 644 },
+  { text: "최신 자료로 찾아", x: 1030 / 1341, y: 384 / 644 },
+  { text: "학술지에서 나온", x: 229 / 1341, y: 446 / 644 },
+  { text: "너무 딱딱하지 않게", x: 471 / 1341, y: 446 / 644 },
+  { text: "전문 용어 사용", x: 746 / 1341, y: 446 / 644 },
+  { text: "그냥 다 써줘", x: 966 / 1341, y: 446 / 644 },
+  { text: "방향을 잡아줘", x: 1158 / 1341, y: 446 / 644 },
+  { text: "네 생각 넣지 말고", x: 92 / 1341, y: 508 / 644 },
+  { text: "주장이랑 근거가 연결되게", x: 344 / 1341, y: 508 / 644 },
+  { text: "반론도 같이", x: 701 / 1341, y: 508 / 644 },
+  { text: "구체적인 사례를 들어", x: 888 / 1341, y: 508 / 644 },
+  { text: "교수님이 강조한 건", x: 198 / 1341, y: 570 / 644 },
+  { text: "어색하지 않게", x: 473 / 1341, y: 570 / 644 },
+  { text: "같은 단어 반복하지 않고", x: 688 / 1341, y: 570 / 644 },
+  { text: "접속사 자연스럽게", x: 1022 / 1341, y: 570 / 644 },
+];
+
+const TIME_LOSS_PHRASE_X_MIN_MARGIN = 0.06;
+const TIME_LOSS_PHRASE_X_MAX_MARGIN = 0.94;
+const TIME_LOSS_PHRASE_Y_MIN_MARGIN = 0.08;
+const TIME_LOSS_PHRASE_Y_MAX_MARGIN = 0.92;
+const TIME_LOSS_PHRASE_RAW_X_MIN = Math.min(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.x),
+);
+const TIME_LOSS_PHRASE_RAW_X_MAX = Math.max(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.x),
+);
+const TIME_LOSS_PHRASE_RAW_Y_MIN = Math.min(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.y),
+);
+const TIME_LOSS_PHRASE_RAW_Y_MAX = Math.max(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.y),
+);
+const TIME_LOSS_PHRASE_RAW_X_SPAN = Math.max(
+  TIME_LOSS_PHRASE_RAW_X_MAX - TIME_LOSS_PHRASE_RAW_X_MIN,
+  0.0001,
+);
+const TIME_LOSS_PHRASE_RAW_Y_SPAN = Math.max(
+  TIME_LOSS_PHRASE_RAW_Y_MAX - TIME_LOSS_PHRASE_RAW_Y_MIN,
+  0.0001,
+);
+
+export const mapTimeLossPhraseXToLayout = (rawX: number) => {
+  const normalizedX =
+    (rawX - TIME_LOSS_PHRASE_RAW_X_MIN) / TIME_LOSS_PHRASE_RAW_X_SPAN;
+
+  return (
+    TIME_LOSS_PHRASE_X_MIN_MARGIN +
+    normalizedX *
+      (TIME_LOSS_PHRASE_X_MAX_MARGIN - TIME_LOSS_PHRASE_X_MIN_MARGIN)
+  );
+};
+
+export const mapTimeLossPhraseYToLayout = (rawY: number) => {
+  const normalizedY =
+    (rawY - TIME_LOSS_PHRASE_RAW_Y_MIN) / TIME_LOSS_PHRASE_RAW_Y_SPAN;
+
+  return (
+    TIME_LOSS_PHRASE_Y_MIN_MARGIN +
+    normalizedY *
+      (TIME_LOSS_PHRASE_Y_MAX_MARGIN - TIME_LOSS_PHRASE_Y_MIN_MARGIN)
+  );
+};
