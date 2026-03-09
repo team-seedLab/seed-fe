@@ -27,6 +27,7 @@ export type AssignmentHelpSectionRefs = Record<
   RefObject<HTMLElement | null>
 >;
 
+// 각 섹션 진행도 실시간 계산 및 반환하는 훅
 export const useAssignmentHelpSectionProgresses = (
   sectionRefs: AssignmentHelpSectionRefs,
 ) => {
