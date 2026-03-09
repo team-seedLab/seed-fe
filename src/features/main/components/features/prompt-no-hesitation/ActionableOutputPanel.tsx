@@ -17,8 +17,8 @@ export const ActionableOutputPanel = () => {
     >
       <Box bg="#FAFAFA" borderRadius="8px" color="seed" px={3} py={1}>
         <Text
-          fontSize="14px"
-          fontWeight={700}
+          fontSize="sm"
+          fontWeight="bold"
           letterSpacing="-0.02em"
           lineHeight="20px"
         >
@@ -27,9 +27,9 @@ export const ActionableOutputPanel = () => {
       </Box>
 
       <Text
-        color="#191F28"
-        fontSize={{ base: "30px", lg: "36px" }}
-        fontWeight={700}
+        color="text"
+        fontSize={{ base: "3xl", lg: "4xl" }}
+        fontWeight="bold"
         letterSpacing="-0.02em"
         lineHeight="1.25"
       >
@@ -39,9 +39,9 @@ export const ActionableOutputPanel = () => {
       </Text>
 
       <Text
-        color="#A1A1A1"
-        fontSize={{ base: "16px", lg: "18px" }}
-        fontWeight={400}
+        color="text.secondary"
+        fontSize={{ base: "md", lg: "lg" }}
+        fontWeight="regular"
         letterSpacing="-0.02em"
         lineHeight="1.625"
         maxW="420px"
@@ -63,7 +63,7 @@ export const ActionableOutputPanel = () => {
             <HStack align="center" gap={3} key={feature} w="full">
               <Flex
                 align="center"
-                bg="#E7F3D4"
+                bg="seed.subtle"
                 borderRadius="full"
                 h="24px"
                 justify="center"
@@ -72,9 +72,9 @@ export const ActionableOutputPanel = () => {
                 <CheckIcon color="seed" boxSize={"10px"} />
               </Flex>
               <Text
-                color="#191F28"
-                fontSize="16px"
-                fontWeight={500}
+                color="text"
+                fontSize="md"
+                fontWeight="medium"
                 letterSpacing="-0.02em"
                 lineHeight="24px"
               >

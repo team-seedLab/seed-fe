@@ -8,7 +8,7 @@ import {
   MagnifyingGlassIcon,
   MicroscopeIcon,
   ScriptIcon,
-} from "@/shared/_assets/icons";
+} from "@/shared";
 
 import type { SolutionAssignmentCard } from "../../types";
 

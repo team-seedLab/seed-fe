@@ -51,9 +51,9 @@ export const PromptPreviewCard = () => {
                 Step 3 최적화 프롬프트
               </Text>
               <Text
-                color="#A1A1A1"
-                fontSize="12px"
-                fontWeight={400}
+                color="text.secondary"
+                fontSize="xs"
+                fontWeight="regular"
                 letterSpacing="-0.02em"
                 lineHeight="16px"
               >
@@ -67,7 +67,7 @@ export const PromptPreviewCard = () => {
             borderRadius="md"
             color="white"
             fontSize="xs"
-            fontWeight={700}
+            fontWeight="bold"
             h="32px"
             minW="auto"
             px={3}
@@ -85,7 +85,7 @@ export const PromptPreviewCard = () => {
         </Flex>
 
         <Box
-          bg="#FAFAFA"
+          bg="container.bg"
           border="1px solid #FAFAFA"
           borderRadius="12px"
           px={5}
