@@ -12,8 +12,6 @@ export const RootLayout = () => {
   const isMainRoute = location.pathname === ROUTE_PATHS.MAIN;
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
 
-  const shouldHideFooter = isMainRoute;
-
   useEffect(() => {
     if (!isMainRoute) {
       return;
@@ -98,7 +96,7 @@ export const RootLayout = () => {
           <Outlet />
         </Box>
       </Flex>
-      {!shouldHideFooter && <Footer />}
+      <Footer />
     </Flex>
   );
 };

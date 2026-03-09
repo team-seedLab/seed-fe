@@ -2,13 +2,13 @@
 
 import { SendIcon } from "@/shared/_assets/icons";
 
-import type { AssignmentHelpComposerLayoutState } from "../../../types";
+import type { PromptBoxLayoutState } from "../../../types";
 
-type AssignmentHelpComposerProps = {
-  composer: AssignmentHelpComposerLayoutState;
+type PromptBoxProps = {
+  composer: PromptBoxLayoutState;
 };
 
-export const PromptBox = ({ composer }: AssignmentHelpComposerProps) => {
+export const PromptBox = ({ composer }: PromptBoxProps) => {
   return (
     <Box
       left="50%"

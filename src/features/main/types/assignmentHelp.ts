@@ -11,7 +11,7 @@ export type AssignmentHelpSectionProgressMap = Record<
   number
 >;
 
-export type AssignmentHelpComposerLayoutState = {
+export type PromptBoxLayoutState = {
   contentOpacity: number;
   height: string;
   opacity: number;
@@ -29,7 +29,7 @@ export type AssignmentHelpMotionState = {
     opacity: number;
     translateY: string;
   };
-  composer: AssignmentHelpComposerLayoutState;
+  composer: PromptBoxLayoutState;
   flags: {
     isChatVisible: boolean;
     isSolutionReady: boolean;

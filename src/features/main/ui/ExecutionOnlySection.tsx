@@ -37,7 +37,7 @@ export const ExecutionOnlySection = ({
           <VStack align="center" gap={{ base: 10, lg: 14 }} w="full">
             <Text
               color="text"
-              fontSize={{ base: "32px", lg: "48px" }}
+              fontSize={{ base: "4xl", lg: "5xl" }}
               fontWeight="bold"
               letterSpacing="-0.02em"
               lineHeight="1.4"
