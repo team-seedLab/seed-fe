@@ -9,7 +9,7 @@ import type {
   AssignmentTypeId,
   SolutionAssignmentCard,
 } from "../../types/executionOnly";
-import { deriveSolutionTimelineState } from "../../utils/executionOnly";
+import { deriveSolutionTimelineState } from "../../utils/solutionTimeline";
 
 import { useObservedHeight } from "./scrollFlow/useObservedHeight";
 import { useSolutionTimelineProgress } from "./scrollFlow/useSolutionTimelineProgress";

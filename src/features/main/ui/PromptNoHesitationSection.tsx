@@ -9,9 +9,9 @@ export const PromptNoHesitationSection = () => {
         <VStack align="start" gap={3} maxW="780px" w="full">
           <Box
             as="h2"
-            color="#0A0A0A"
-            fontSize={{ base: "32px", lg: "48px" }}
-            fontWeight={700}
+            color="text"
+            fontSize={{ base: "4xl", lg: "5xl" }}
+            fontWeight="bold"
             letterSpacing="-0.02em"
             lineHeight="1.4"
           >
@@ -21,9 +21,9 @@ export const PromptNoHesitationSection = () => {
           </Box>
           <Box
             as="p"
-            color="#525252"
-            fontSize={{ base: "16px", lg: "20px" }}
-            fontWeight={500}
+            color="text.secondary"
+            fontSize={{ base: "md", lg: "xl" }}
+            fontWeight="medium"
             letterSpacing="-0.02em"
             lineHeight="1.4"
           >

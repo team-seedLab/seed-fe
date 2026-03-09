@@ -9,33 +9,33 @@ export const WhatToDoSection = () => {
       display="flex"
       h="100vh"
       justifyContent="center"
-      py="44px"
+      py={11}
       w="full"
     >
-      <VStack align="center" gap={{ base: 4, lg: "22px" }} px={4} w="full">
+      <VStack align="center" gap={{ base: 4, lg: 5 }} px={4} w="full">
         <Text
-          color="#0A0A0A"
+          color="text"
           fontSize={{ base: "32px", lg: "48px" }}
-          fontWeight={700}
+          fontWeight="bold"
           letterSpacing="-0.02em"
           lineHeight="1.4"
           textAlign="center"
         >
           이제 과제는{" "}
-          <Box as="span" color="#98C95C">
+          <Box as="span" color="seed">
             어떻게
           </Box>
           가 아니라
           <br />
-          <Box as="span" color="#98C95C">
+          <Box as="span" color="seed">
             무엇을
           </Box>
           할지만 고민하세요.
         </Text>
         <Text
-          color="#525252"
-          fontSize={{ base: "16px", lg: "20px" }}
-          fontWeight={500}
+          color="text.secondary"
+          fontSize={{ base: "lg", lg: "xl" }}
+          fontWeight="medium"
           letterSpacing="-0.02em"
           lineHeight="1.4"
           textAlign="center"

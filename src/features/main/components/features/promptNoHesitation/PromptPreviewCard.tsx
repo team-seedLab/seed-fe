@@ -1,17 +1,6 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Image,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-const promptBadgeIconUrl =
-  "https://www.figma.com/api/mcp/asset/d4b695c1-8140-444c-9450-2d8f14bee7b3";
-const copyIconUrl =
-  "https://www.figma.com/api/mcp/asset/78fc31dd-7269-4b2a-be98-c49ea7464d2a";
+import { CopyIcon, SparklesIcon } from "@/shared";
 
 const promptTemplateLines = [
   {
@@ -29,9 +18,9 @@ const promptTemplateLines = [
 export const PromptPreviewCard = () => {
   return (
     <Box
-      bg="white"
+      bg="container.bg"
       border="1px solid #FAFAFA"
-      borderRadius="32px"
+      borderRadius="4xl"
       boxShadow="0px 20px 40px 0px rgba(0, 0, 0, 0.08)"
       px={{ base: 6, lg: 8 }}
       py={{ base: 6, lg: 8 }}
@@ -42,13 +31,13 @@ export const PromptPreviewCard = () => {
           <HStack align="center" gap={3}>
             <Flex
               align="center"
-              bg="#E7F3D4"
+              bg="container.bg.card"
               borderRadius="full"
               h="40px"
               justify="center"
               w="40px"
             >
-              <Image alt="" h="18.33px" src={promptBadgeIconUrl} w="18.33px" />
+              <SparklesIcon color="seed" boxSize="18px" />
             </Flex>
 
             <VStack align="start" gap={0} minW={0}>
@@ -74,10 +63,10 @@ export const PromptPreviewCard = () => {
           </HStack>
 
           <Button
-            bg="#191F28"
-            borderRadius="8px"
+            bg="neutral.900"
+            borderRadius="md"
             color="white"
-            fontSize="12px"
+            fontSize="xs"
             fontWeight={700}
             h="32px"
             minW="auto"
@@ -87,8 +76,8 @@ export const PromptPreviewCard = () => {
             _hover={{ bg: "#2A3038" }}
           >
             <HStack gap={1.5}>
-              <Image alt="" h="13.33px" src={copyIconUrl} w="11.33px" />
-              <Text color="inherit" fontSize="12px" fontWeight={700}>
+              <CopyIcon color="white" boxSize="18px" />
+              <Text color="inherit" fontSize="xs" fontWeight="bold">
                 Copy
               </Text>
             </HStack>
@@ -105,9 +94,9 @@ export const PromptPreviewCard = () => {
           <VStack align="start" gap={4} w="full">
             <VStack
               align="start"
-              color="#191F28"
+              color="text"
               fontFamily="'Courier New', monospace"
-              fontSize="14px"
+              fontSize="sm"
               gap={0}
               lineHeight="22.75px"
               w="full"
@@ -115,7 +104,7 @@ export const PromptPreviewCard = () => {
               {promptTemplateLines.map(({ accent, body }) => {
                 return (
                   <Text key={accent} w="full">
-                    <Box as="span" color="#98C95C" fontWeight={700}>
+                    <Box as="span" color="seed" fontWeight="bold">
                       {accent}
                     </Box>{" "}
                     <Box as="span">{body}</Box>
@@ -126,9 +115,9 @@ export const PromptPreviewCard = () => {
 
             <VStack
               align="start"
-              color="#191F28"
+              color="text"
               fontFamily="'Courier New', monospace"
-              fontSize="14px"
+              fontSize="sm"
               gap={0}
               lineHeight="22.75px"
               w="full"
@@ -146,9 +135,9 @@ export const PromptPreviewCard = () => {
 
             <VStack
               align="start"
-              color="#191F28"
+              color="text"
               fontFamily="'Courier New', monospace"
-              fontSize="14px"
+              fontSize="sm"
               gap={0}
               lineHeight="22.75px"
               w="full"

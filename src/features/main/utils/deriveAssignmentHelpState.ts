@@ -1,23 +1,12 @@
-import {
-  ASSIGNMENT_HELP_COPY,
-  ASSIGNMENT_HELP_MESSAGE_BANK,
-} from "../../../constants/";
+import { ASSIGNMENT_HELP_COPY } from "../constants";
 import type {
-  AssignmentHelpChatMessage,
-  AssignmentHelpChatStageId,
+  AssignmentHelpMotionState,
   AssignmentHelpSectionProgressMap,
-  AssignmentHelpState,
-} from "../../../types/";
-import { clamp01 } from "../../common";
+} from "../types";
+
+import { clamp01 } from "./clamp";
 
 type ProgressRange = readonly [number, number];
-
-type AssignmentHelpChatStage = {
-  id: AssignmentHelpChatStageId;
-  messages: readonly AssignmentHelpChatMessage[];
-  startAt: number;
-  subtitle: string;
-};
 
 const ASSIGNMENT_HELP_INTRO_PROGRESS_RANGES = {
   composerReveal: [0.25, 0.5] as ProgressRange,
@@ -39,75 +28,6 @@ const ASSIGNMENT_HELP_TIME_LOSS_PROGRESS_RANGES = {
   holdEnd: 0.5,
 } as const;
 
-const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
-  {
-    id: "empty",
-    messages: [],
-    startAt: 0,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
-  },
-  {
-    id: "userOnly",
-    messages: [ASSIGNMENT_HELP_MESSAGE_BANK.userHelp],
-    startAt: 0.25,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
-  },
-  {
-    id: "helpAndMethod",
-    messages: [
-      ASSIGNMENT_HELP_MESSAGE_BANK.userHelp,
-      ASSIGNMENT_HELP_MESSAGE_BANK.aiMethod,
-    ],
-    startAt: 0.375,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.methodology,
-  },
-  {
-    id: "needInfo",
-    messages: [
-      ASSIGNMENT_HELP_MESSAGE_BANK.userHelp,
-      ASSIGNMENT_HELP_MESSAGE_BANK.aiNeedInfo,
-    ],
-    startAt: 0.5,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.tooManyInfo,
-  },
-  {
-    id: "userCrown",
-    messages: [ASSIGNMENT_HELP_MESSAGE_BANK.userCrown],
-    startAt: 0.625,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
-  },
-  {
-    id: "hallucination",
-    messages: [
-      ASSIGNMENT_HELP_MESSAGE_BANK.userCrown,
-      ASSIGNMENT_HELP_MESSAGE_BANK.aiHallucination,
-    ],
-    startAt: 0.75,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
-  },
-  {
-    id: "correction",
-    messages: [
-      ASSIGNMENT_HELP_MESSAGE_BANK.userCrown,
-      ASSIGNMENT_HELP_MESSAGE_BANK.aiHallucination,
-      ASSIGNMENT_HELP_MESSAGE_BANK.userCorrection,
-    ],
-    startAt: 0.875,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
-  },
-  {
-    id: "gaslight",
-    messages: [
-      ASSIGNMENT_HELP_MESSAGE_BANK.userCrown,
-      ASSIGNMENT_HELP_MESSAGE_BANK.aiHallucination,
-      ASSIGNMENT_HELP_MESSAGE_BANK.userCorrection,
-      ASSIGNMENT_HELP_MESSAGE_BANK.aiGaslight,
-    ],
-    startAt: 1,
-    subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
-  },
-] as const;
-
 const lerp = (start: number, end: number, progress: number) => {
   return start + (end - start) * progress;
 };
@@ -120,21 +40,9 @@ const rangeProgress = (value: number, [start, end]: ProgressRange) => {
   return clamp01((value - start) / (end - start));
 };
 
-const resolveChatStage = (chatProgress: number) => {
-  let activeStage = ASSIGNMENT_HELP_CHAT_STAGES[0];
-
-  for (const candidate of ASSIGNMENT_HELP_CHAT_STAGES.slice(1)) {
-    if (chatProgress >= candidate.startAt) {
-      activeStage = candidate;
-    }
-  }
-
-  return activeStage;
-};
-
-export const deriveAssignmentHelpState = (
+export const deriveAssignmentHelpMotionState = (
   sectionProgresses: AssignmentHelpSectionProgressMap,
-): AssignmentHelpState => {
+): AssignmentHelpMotionState => {
   const introProgress = clamp01(sectionProgresses.intro);
   const chatProgress = clamp01(sectionProgresses.chat);
   const timeLossProgress = clamp01(sectionProgresses.timeLoss);
@@ -225,8 +133,6 @@ export const deriveAssignmentHelpState = (
     composerTopOffsetPx = lerp(-89, 182, timeLossComposerSettleProgress);
   }
 
-  const chatStage = resolveChatStage(chatProgress);
-  const chatMessages = chatStage.messages;
   const chatVisibilityBase =
     chatProgress >= ASSIGNMENT_HELP_CHAT_PROGRESS_RANGES.userOnly[0] ? 1 : 0;
   const chatOpacity =
@@ -244,9 +150,7 @@ export const deriveAssignmentHelpState = (
 
   return {
     chat: {
-      messages: chatMessages,
       opacity: chatOpacity,
-      stageId: chatStage.id,
       translateY: chatTranslateY,
     },
     composer: {
@@ -279,7 +183,6 @@ export const deriveAssignmentHelpState = (
       mainOpacity: mainTitleOpacity,
       mainTop: mainTitleTop,
       mainTransform: mainTitleTransform,
-      subtitle: chatStage.subtitle,
     },
   };
 };

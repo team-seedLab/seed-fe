@@ -24,7 +24,7 @@ export const colorSemanticToken = {
   },
   "container.bg": {
     DEFAULT: { value: "{colors.neutral.0}" },
-    card: { value: "{colors.neutral.100}" },
+    card: { value: "{colors.neutral.200}" },
   },
   "container.border": {
     DEFAULT: { value: "{colors.neutral.200}" },

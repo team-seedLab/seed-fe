@@ -1,4 +1,4 @@
-import { clamp, clamp01 } from "../../common";
+import { clamp, clamp01 } from "./clamp";
 
 // 실행 섹션 전체 진행값을 몇 단계로 나눠서 볼지 정함
 export const TOTAL_UNITS = 10;

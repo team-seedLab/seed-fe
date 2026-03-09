@@ -1,8 +1,8 @@
 import type { AssignmentHelpSectionId } from "../../types";
 
 export {
+  ASSIGNMENT_HELP_CHAT_PHASES,
   ASSIGNMENT_HELP_COPY,
-  ASSIGNMENT_HELP_MESSAGE_BANK,
 } from "./assignmentHelpStoryData";
 export {
   mapTimeLossPhraseXToLayout,
@@ -10,7 +10,7 @@ export {
   TIME_LOSS_PHRASE_BASE_TONE,
   TIME_LOSS_PHRASES,
   type TimeLossPhrase,
-} from "./timeLossScene";
+} from "./timeLossPhraseData";
 
 export const ASSIGNMENT_HELP_SECTION_SCROLL_VH: Record<
   AssignmentHelpSectionId,

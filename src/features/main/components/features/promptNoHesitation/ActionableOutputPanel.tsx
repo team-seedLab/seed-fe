@@ -1,7 +1,6 @@
-import { Box, Flex, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-const checkIconUrl =
-  "https://www.figma.com/api/mcp/asset/d2b857e3-9b04-44c6-96cc-3305ab940f41";
+import { CheckIcon } from "@/shared";
 
 // Benefit panel used only inside the prompt assembly section.
 // prompt assembly 섹션 내부에서만 쓰는 결과 활용 설명 패널
@@ -16,7 +15,7 @@ export const ActionableOutputPanel = () => {
       pt={{ base: 2, xl: 0 }}
       w="full"
     >
-      <Box bg="#FAFAFA" borderRadius="8px" color="#98C95C" px={3} py={1}>
+      <Box bg="#FAFAFA" borderRadius="8px" color="seed" px={3} py={1}>
         <Text
           fontSize="14px"
           fontWeight={700}
@@ -70,7 +69,7 @@ export const ActionableOutputPanel = () => {
                 justify="center"
                 w="24px"
               >
-                <Image alt="" h="7.96px" src={checkIconUrl} w="10.44px" />
+                <CheckIcon color="seed" boxSize={"10px"} />
               </Flex>
               <Text
                 color="#191F28"

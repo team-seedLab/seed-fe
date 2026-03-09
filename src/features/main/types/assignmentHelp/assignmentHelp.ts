@@ -11,16 +11,6 @@ export type AssignmentHelpSectionProgressMap = Record<
   number
 >;
 
-export type AssignmentHelpChatStageId =
-  | "empty"
-  | "userOnly"
-  | "helpAndMethod"
-  | "needInfo"
-  | "userCrown"
-  | "hallucination"
-  | "correction"
-  | "gaslight";
-
 export type AssignmentHelpComposerLayoutState = {
   contentOpacity: number;
   height: string;
@@ -34,11 +24,9 @@ export type AssignmentHelpComposerLayoutState = {
   width: string;
 };
 
-export type AssignmentHelpState = {
+export type AssignmentHelpMotionState = {
   chat: {
-    messages: readonly AssignmentHelpChatMessage[];
     opacity: number;
-    stageId: AssignmentHelpChatStageId;
     translateY: string;
   };
   composer: AssignmentHelpComposerLayoutState;
@@ -56,6 +44,5 @@ export type AssignmentHelpState = {
     mainOpacity: number;
     mainTop: string;
     mainTransform: string;
-    subtitle: string;
   };
 };
