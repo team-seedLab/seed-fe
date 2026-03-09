@@ -1,8 +1,7 @@
-import {
-  ASSIGNMENT_HELP_CHAT_PHASES,
-  ASSIGNMENT_HELP_CHAT_PHASE_START_PROGRESS,
-} from "../constants";
+import { ASSIGNMENT_HELP_CHAT_PHASES } from "../constants";
 import type { AssignmentHelpChatMessage } from "../types";
+
+const ASSIGNMENT_HELP_CHAT_PHASE_START_PROGRESS = 0.25;
 
 type AssignmentHelpChatPhaseView = {
   messages: readonly AssignmentHelpChatMessage[];

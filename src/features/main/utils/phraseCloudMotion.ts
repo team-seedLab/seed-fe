@@ -1,129 +1,46 @@
 import {
+  PHRASE_CLOUD_FONT_SIZE,
+  PHRASE_CLOUD_MOTION_CONFIG,
   TIME_LOSS_PHRASES,
-  mapTimeLossPhraseXToLayout,
-  mapTimeLossPhraseYToLayout,
 } from "../constants";
+import type {
+  ComputeNextPhraseCloudFrameParams,
+  LayoutState,
+  MotionState,
+  PhraseMetrics,
+  PhraseRender,
+  PhraseSeed,
+  UpdatePhraseCloudMotionFromPointerParams,
+} from "../types";
 
 import { clamp } from "./clamp";
 
-export type PhraseSeed = {
-  phaseX: number;
-  phaseY: number;
-  u: number;
-  v: number;
-};
-
-export type PhraseMetrics = {
-  h: number;
-  w: number;
-};
-
-export type PhraseRender = {
-  opacity: number;
-  scale: number;
-  x: number;
-  y: number;
-  z: number;
-};
-
-export type LayoutState = {
-  centerX: number;
-  centerY: number;
-  height: number;
-  width: number;
-};
-
-export type MotionState = {
-  lastPointer: { x: number; y: number } | null;
-  lastTimestamp: number;
-  offsetX: number;
-  offsetY: number;
-  targetTiltX: number;
-  targetTiltY: number;
-  tiltX: number;
-  tiltY: number;
-  torqueX: number;
-  torqueY: number;
-  velX: number;
-  velY: number;
-};
-
-type MotionFieldConfig = {
-  baseOpacity: number;
-  baseVelX: number;
-  baseVelY: number;
-  collisionPaddingX: number;
-  collisionPaddingY: number;
-  collisionPasses: number;
-  depthLiftPx: number;
-  depthWaveMix: number;
-  friction: number;
-  maxOpacity: number;
-  maxTorque: number;
-  maxVel: number;
-  pointerGainX: number;
-  pointerGainY: number;
-  positionDirectionGainX: number;
-  positionDirectionGainY: number;
-  scaleMax: number;
-  scaleMin: number;
-  spreadX: number;
-  spreadY: number;
-  tiltLerp: number;
-  tiltMax: number;
-  tiltToDepth: number;
-  torqueDecay: number;
-  waveFreqX: number;
-  waveFreqY: number;
-};
-
-type ComputeNextTimeLossPhraseFrameParams = {
-  layout: LayoutState;
-  metrics: PhraseMetrics[];
-  motion: MotionState;
-  seeds: PhraseSeed[];
-  timestamp: number;
-};
-
-type UpdateTimeLossMotionFromPointerParams = {
-  height: number;
-  motion: MotionState;
-  pointerX: number;
-  pointerY: number;
-  width: number;
-};
-
 const TWO_PI = Math.PI * 2;
-export const TIME_LOSS_PHRASE_FONT_SIZE = 30;
 
-export const TIME_LOSS_PHRASE_MOTION_CONFIG: MotionFieldConfig = {
-  baseOpacity: 0.44,
-  baseVelX: 0.0052,
-  baseVelY: -0.0036,
-  collisionPaddingX: 32,
-  collisionPaddingY: 22,
-  collisionPasses: 1,
-  depthLiftPx: 18,
-  depthWaveMix: 0.72,
-  friction: 0.91,
-  maxOpacity: 1,
-  maxTorque: 0.05,
-  maxVel: 0.055,
-  pointerGainX: 0.00008,
-  pointerGainY: 0.00008,
-  positionDirectionGainX: 0.012,
-  positionDirectionGainY: 0.009,
-  scaleMax: 1.28,
-  scaleMin: 0.84,
-  spreadX: 1.2,
-  spreadY: 1.24,
-  tiltLerp: 0.08,
-  tiltMax: 0.85,
-  tiltToDepth: 0.95,
-  torqueDecay: 0.8,
-  waveFreqX: 1.12,
-  waveFreqY: 1.02,
-};
+const TIME_LOSS_PHRASE_X_MIN_MARGIN = 0.06;
+const TIME_LOSS_PHRASE_X_MAX_MARGIN = 0.94;
+const TIME_LOSS_PHRASE_Y_MIN_MARGIN = 0.08;
+const TIME_LOSS_PHRASE_Y_MAX_MARGIN = 0.92;
+const TIME_LOSS_PHRASE_RAW_X_MIN = Math.min(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.x),
+);
+const TIME_LOSS_PHRASE_RAW_X_MAX = Math.max(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.x),
+);
+const TIME_LOSS_PHRASE_RAW_Y_MIN = Math.min(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.y),
+);
+const TIME_LOSS_PHRASE_RAW_Y_MAX = Math.max(
+  ...TIME_LOSS_PHRASES.map((phrase) => phrase.y),
+);
+const TIME_LOSS_PHRASE_RAW_X_SPAN = Math.max(
+  TIME_LOSS_PHRASE_RAW_X_MAX - TIME_LOSS_PHRASE_RAW_X_MIN,
+  0.0001,
+);
+const TIME_LOSS_PHRASE_RAW_Y_SPAN = Math.max(
+  TIME_LOSS_PHRASE_RAW_Y_MAX - TIME_LOSS_PHRASE_RAW_Y_MIN,
+  0.0001,
+);
 
 const wrapSigned = (value: number) => {
   const wrapped = (((value + 0.5) % 1) + 1) % 1;
@@ -134,7 +51,29 @@ const fract = (value: number) => {
   return value - Math.floor(value);
 };
 
-const resolveTimeLossPhraseCollisions = (
+const mapPhraseCloudXToLayout = (rawX: number) => {
+  const normalizedX =
+    (rawX - TIME_LOSS_PHRASE_RAW_X_MIN) / TIME_LOSS_PHRASE_RAW_X_SPAN;
+
+  return (
+    TIME_LOSS_PHRASE_X_MIN_MARGIN +
+    normalizedX *
+      (TIME_LOSS_PHRASE_X_MAX_MARGIN - TIME_LOSS_PHRASE_X_MIN_MARGIN)
+  );
+};
+
+const mapPhraseCloudYToLayout = (rawY: number) => {
+  const normalizedY =
+    (rawY - TIME_LOSS_PHRASE_RAW_Y_MIN) / TIME_LOSS_PHRASE_RAW_Y_SPAN;
+
+  return (
+    TIME_LOSS_PHRASE_Y_MIN_MARGIN +
+    normalizedY *
+      (TIME_LOSS_PHRASE_Y_MAX_MARGIN - TIME_LOSS_PHRASE_Y_MIN_MARGIN)
+  );
+};
+
+const resolvePhraseCloudCollisions = (
   renders: PhraseRender[],
   metrics: PhraseMetrics[],
 ) => {
@@ -144,7 +83,7 @@ const resolveTimeLossPhraseCollisions = (
 
   for (
     let pass = 0;
-    pass < TIME_LOSS_PHRASE_MOTION_CONFIG.collisionPasses;
+    pass < PHRASE_CLOUD_MOTION_CONFIG.collisionPasses;
     pass += 1
   ) {
     for (let leftIndex = 0; leftIndex < nextRenders.length; leftIndex += 1) {
@@ -163,11 +102,11 @@ const resolveTimeLossPhraseCollisions = (
 
         const minDx =
           ((leftMetric.w * left.scale + rightMetric.w * right.scale) * 0.5 +
-            TIME_LOSS_PHRASE_MOTION_CONFIG.collisionPaddingX) *
+            PHRASE_CLOUD_MOTION_CONFIG.collisionPaddingX) *
           0.7;
         const minDy =
           ((leftMetric.h * left.scale + rightMetric.h * right.scale) * 0.5 +
-            TIME_LOSS_PHRASE_MOTION_CONFIG.collisionPaddingY) *
+            PHRASE_CLOUD_MOTION_CONFIG.collisionPaddingY) *
           0.7;
 
         if (Math.abs(dx) >= minDx || Math.abs(dy) >= minDy) {
@@ -192,10 +131,10 @@ const resolveTimeLossPhraseCollisions = (
   return nextRenders;
 };
 
-export const buildTimeLossPhraseSeeds = (): PhraseSeed[] => {
+export const buildPhraseCloudSeeds = (): PhraseSeed[] => {
   return TIME_LOSS_PHRASES.map((phrase, index) => {
-    const baseU = mapTimeLossPhraseXToLayout(phrase.x) - 0.5;
-    const baseV = mapTimeLossPhraseYToLayout(phrase.y) - 0.5;
+    const baseU = mapPhraseCloudXToLayout(phrase.x) - 0.5;
+    const baseV = mapPhraseCloudYToLayout(phrase.y) - 0.5;
     const jitterX =
       (fract(Math.sin((index + 1) * 12.9898) * 43758.5453) - 0.5) * 0.028;
     const jitterY =
@@ -248,19 +187,19 @@ export const createTimeLossLayoutState = (
   };
 };
 
-export const createDefaultTimeLossPhraseMetrics = (count: number) => {
+export const createDefaultPhraseCloudMetrics = (count: number) => {
   return Array.from({ length: count }, () => {
     return {
-      h: TIME_LOSS_PHRASE_FONT_SIZE * 1.4,
-      w: TIME_LOSS_PHRASE_FONT_SIZE * 4,
+      h: PHRASE_CLOUD_FONT_SIZE * 1.4,
+      w: PHRASE_CLOUD_FONT_SIZE * 4,
     };
   });
 };
 
-export const createInitialTimeLossPhraseRenderBuffer = (count: number) => {
+export const createInitialPhraseCloudRenderBuffer = (count: number) => {
   return Array.from({ length: count }, () => {
     return {
-      opacity: TIME_LOSS_PHRASE_MOTION_CONFIG.baseOpacity,
+      opacity: PHRASE_CLOUD_MOTION_CONFIG.baseOpacity,
       scale: 1,
       x: 0,
       y: 0,
@@ -269,13 +208,13 @@ export const createInitialTimeLossPhraseRenderBuffer = (count: number) => {
   });
 };
 
-export const computeStaticTimeLossPhraseRenderBuffer = (
+export const computeStaticPhraseCloudRenderBuffer = (
   layout: LayoutState,
   seeds: PhraseSeed[],
 ) => {
   return seeds.map((seed) => {
     return {
-      opacity: TIME_LOSS_PHRASE_MOTION_CONFIG.baseOpacity,
+      opacity: PHRASE_CLOUD_MOTION_CONFIG.baseOpacity,
       scale: 1,
       x: layout.centerX + seed.u * layout.width * 1.05,
       y: layout.centerY + seed.v * layout.height * 1.05,
@@ -284,17 +223,17 @@ export const computeStaticTimeLossPhraseRenderBuffer = (
   });
 };
 
-export const computeNextTimeLossPhraseFrame = ({
+export const computeNextPhraseCloudFrame = ({
   layout,
   metrics,
   motion,
   seeds,
   timestamp,
-}: ComputeNextTimeLossPhraseFrameParams) => {
+}: ComputeNextPhraseCloudFrameParams) => {
   if (layout.width <= 0 || layout.height <= 0) {
     return {
       motion,
-      renderBuffer: createInitialTimeLossPhraseRenderBuffer(seeds.length),
+      renderBuffer: createInitialPhraseCloudRenderBuffer(seeds.length),
     };
   }
 
@@ -308,34 +247,32 @@ export const computeNextTimeLossPhraseFrame = ({
   const deltaSec = clamp(deltaSecRaw, 1 / 240, 1 / 20);
 
   nextMotion.lastTimestamp = timestamp;
-  nextMotion.torqueX *= TIME_LOSS_PHRASE_MOTION_CONFIG.torqueDecay;
-  nextMotion.torqueY *= TIME_LOSS_PHRASE_MOTION_CONFIG.torqueDecay;
+  nextMotion.torqueX *= PHRASE_CLOUD_MOTION_CONFIG.torqueDecay;
+  nextMotion.torqueY *= PHRASE_CLOUD_MOTION_CONFIG.torqueDecay;
 
   const pointerDrivenVelX =
-    nextMotion.targetTiltY *
-    TIME_LOSS_PHRASE_MOTION_CONFIG.positionDirectionGainX;
+    nextMotion.targetTiltY * PHRASE_CLOUD_MOTION_CONFIG.positionDirectionGainX;
   const pointerDrivenVelY =
-    -nextMotion.targetTiltX *
-    TIME_LOSS_PHRASE_MOTION_CONFIG.positionDirectionGainY;
+    -nextMotion.targetTiltX * PHRASE_CLOUD_MOTION_CONFIG.positionDirectionGainY;
 
   nextMotion.velX =
     (nextMotion.velX + nextMotion.torqueX + pointerDrivenVelX) *
-      TIME_LOSS_PHRASE_MOTION_CONFIG.friction +
-    TIME_LOSS_PHRASE_MOTION_CONFIG.baseVelX;
+      PHRASE_CLOUD_MOTION_CONFIG.friction +
+    PHRASE_CLOUD_MOTION_CONFIG.baseVelX;
   nextMotion.velY =
     (nextMotion.velY + nextMotion.torqueY + pointerDrivenVelY) *
-      TIME_LOSS_PHRASE_MOTION_CONFIG.friction +
-    TIME_LOSS_PHRASE_MOTION_CONFIG.baseVelY;
+      PHRASE_CLOUD_MOTION_CONFIG.friction +
+    PHRASE_CLOUD_MOTION_CONFIG.baseVelY;
 
   nextMotion.velX = clamp(
     nextMotion.velX,
-    -TIME_LOSS_PHRASE_MOTION_CONFIG.maxVel,
-    TIME_LOSS_PHRASE_MOTION_CONFIG.maxVel,
+    -PHRASE_CLOUD_MOTION_CONFIG.maxVel,
+    PHRASE_CLOUD_MOTION_CONFIG.maxVel,
   );
   nextMotion.velY = clamp(
     nextMotion.velY,
-    -TIME_LOSS_PHRASE_MOTION_CONFIG.maxVel,
-    TIME_LOSS_PHRASE_MOTION_CONFIG.maxVel,
+    -PHRASE_CLOUD_MOTION_CONFIG.maxVel,
+    PHRASE_CLOUD_MOTION_CONFIG.maxVel,
   );
   nextMotion.offsetX = wrapSigned(
     nextMotion.offsetX + nextMotion.velX * deltaSec,
@@ -345,31 +282,30 @@ export const computeNextTimeLossPhraseFrame = ({
   );
   nextMotion.tiltX +=
     (nextMotion.targetTiltX - nextMotion.tiltX) *
-    TIME_LOSS_PHRASE_MOTION_CONFIG.tiltLerp;
+    PHRASE_CLOUD_MOTION_CONFIG.tiltLerp;
   nextMotion.tiltY +=
     (nextMotion.targetTiltY - nextMotion.tiltY) *
-    TIME_LOSS_PHRASE_MOTION_CONFIG.tiltLerp;
+    PHRASE_CLOUD_MOTION_CONFIG.tiltLerp;
 
-  const minOpacity = TIME_LOSS_PHRASE_MOTION_CONFIG.baseOpacity;
-  const maxOpacity = TIME_LOSS_PHRASE_MOTION_CONFIG.maxOpacity;
+  const minOpacity = PHRASE_CLOUD_MOTION_CONFIG.baseOpacity;
+  const maxOpacity = PHRASE_CLOUD_MOTION_CONFIG.maxOpacity;
   const scaleSpan =
-    TIME_LOSS_PHRASE_MOTION_CONFIG.scaleMax -
-    TIME_LOSS_PHRASE_MOTION_CONFIG.scaleMin;
+    PHRASE_CLOUD_MOTION_CONFIG.scaleMax - PHRASE_CLOUD_MOTION_CONFIG.scaleMin;
   const renders = seeds.map((seed) => {
     const loopU = wrapSigned(seed.u + nextMotion.offsetX);
     const loopV = wrapSigned(seed.v + nextMotion.offsetY);
     const waveDepth =
       Math.sin(
-        loopU * TWO_PI * TIME_LOSS_PHRASE_MOTION_CONFIG.waveFreqX + seed.phaseX,
+        loopU * TWO_PI * PHRASE_CLOUD_MOTION_CONFIG.waveFreqX + seed.phaseX,
       ) *
       Math.cos(
-        loopV * TWO_PI * TIME_LOSS_PHRASE_MOTION_CONFIG.waveFreqY + seed.phaseY,
+        loopV * TWO_PI * PHRASE_CLOUD_MOTION_CONFIG.waveFreqY + seed.phaseY,
       );
     const tiltDepth =
       (-loopU * nextMotion.tiltY - loopV * nextMotion.tiltX) *
-      TIME_LOSS_PHRASE_MOTION_CONFIG.tiltToDepth;
+      PHRASE_CLOUD_MOTION_CONFIG.tiltToDepth;
     const z = clamp(
-      waveDepth * TIME_LOSS_PHRASE_MOTION_CONFIG.depthWaveMix + tiltDepth,
+      waveDepth * PHRASE_CLOUD_MOTION_CONFIG.depthWaveMix + tiltDepth,
       -1,
       1,
     );
@@ -377,19 +313,18 @@ export const computeNextTimeLossPhraseFrame = ({
 
     return {
       opacity: minOpacity + normalizedDepth * (maxOpacity - minOpacity),
-      scale:
-        TIME_LOSS_PHRASE_MOTION_CONFIG.scaleMin + normalizedDepth * scaleSpan,
+      scale: PHRASE_CLOUD_MOTION_CONFIG.scaleMin + normalizedDepth * scaleSpan,
       x:
         layout.centerX +
-        loopU * layout.width * TIME_LOSS_PHRASE_MOTION_CONFIG.spreadX,
+        loopU * layout.width * PHRASE_CLOUD_MOTION_CONFIG.spreadX,
       y:
         layout.centerY +
-        loopV * layout.height * TIME_LOSS_PHRASE_MOTION_CONFIG.spreadY +
-        z * TIME_LOSS_PHRASE_MOTION_CONFIG.depthLiftPx,
+        loopV * layout.height * PHRASE_CLOUD_MOTION_CONFIG.spreadY +
+        z * PHRASE_CLOUD_MOTION_CONFIG.depthLiftPx,
       z,
     };
   });
-  const renderBuffer = resolveTimeLossPhraseCollisions(renders, metrics);
+  const renderBuffer = resolvePhraseCloudCollisions(renders, metrics);
   const marginX = layout.width * 0.16;
   const marginY = layout.height * 0.16;
 
@@ -420,7 +355,7 @@ export const updateTimeLossMotionFromPointer = ({
   pointerX,
   pointerY,
   width,
-}: UpdateTimeLossMotionFromPointerParams) => {
+}: UpdatePhraseCloudMotionFromPointerParams) => {
   const nextMotion = {
     ...motion,
   };
@@ -429,14 +364,14 @@ export const updateTimeLossMotionFromPointer = ({
     const deltaX = pointerX - nextMotion.lastPointer.x;
     const deltaY = pointerY - nextMotion.lastPointer.y;
     nextMotion.torqueX = clamp(
-      nextMotion.torqueX + deltaX * TIME_LOSS_PHRASE_MOTION_CONFIG.pointerGainX,
-      -TIME_LOSS_PHRASE_MOTION_CONFIG.maxTorque,
-      TIME_LOSS_PHRASE_MOTION_CONFIG.maxTorque,
+      nextMotion.torqueX + deltaX * PHRASE_CLOUD_MOTION_CONFIG.pointerGainX,
+      -PHRASE_CLOUD_MOTION_CONFIG.maxTorque,
+      PHRASE_CLOUD_MOTION_CONFIG.maxTorque,
     );
     nextMotion.torqueY = clamp(
-      nextMotion.torqueY + deltaY * TIME_LOSS_PHRASE_MOTION_CONFIG.pointerGainY,
-      -TIME_LOSS_PHRASE_MOTION_CONFIG.maxTorque,
-      TIME_LOSS_PHRASE_MOTION_CONFIG.maxTorque,
+      nextMotion.torqueY + deltaY * PHRASE_CLOUD_MOTION_CONFIG.pointerGainY,
+      -PHRASE_CLOUD_MOTION_CONFIG.maxTorque,
+      PHRASE_CLOUD_MOTION_CONFIG.maxTorque,
     );
   }
 
@@ -453,14 +388,14 @@ export const updateTimeLossMotionFromPointer = ({
   const normalizedY = (pointerY / height - 0.5) * 2;
 
   nextMotion.targetTiltX = clamp(
-    normalizedY * TIME_LOSS_PHRASE_MOTION_CONFIG.tiltMax,
-    -TIME_LOSS_PHRASE_MOTION_CONFIG.tiltMax,
-    TIME_LOSS_PHRASE_MOTION_CONFIG.tiltMax,
+    normalizedY * PHRASE_CLOUD_MOTION_CONFIG.tiltMax,
+    -PHRASE_CLOUD_MOTION_CONFIG.tiltMax,
+    PHRASE_CLOUD_MOTION_CONFIG.tiltMax,
   );
   nextMotion.targetTiltY = clamp(
-    -normalizedX * TIME_LOSS_PHRASE_MOTION_CONFIG.tiltMax,
-    -TIME_LOSS_PHRASE_MOTION_CONFIG.tiltMax,
-    TIME_LOSS_PHRASE_MOTION_CONFIG.tiltMax,
+    -normalizedX * PHRASE_CLOUD_MOTION_CONFIG.tiltMax,
+    -PHRASE_CLOUD_MOTION_CONFIG.tiltMax,
+    PHRASE_CLOUD_MOTION_CONFIG.tiltMax,
   );
 
   return nextMotion;

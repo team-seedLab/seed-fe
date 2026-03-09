@@ -1,2 +1,3 @@
-export * from "./execution-only";
-export * from "./assignment-help";
+export * from "./assignmentHelp";
+export * from "./executionOnly";
+export * from "./phraseCloudMotion";

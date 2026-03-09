@@ -1,3 +1,3 @@
 export * from "./useAssignmentHelpSectionProgresses";
 export * from "./useAssignmentHelpSectionViewModel";
-export * from "./useTimeLossPhraseMotion";
+export * from "./usePhraseCloudMotion";

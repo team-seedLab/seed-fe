@@ -5,11 +5,8 @@ import {
   FALLBACK_ROADMAP_CONTENT_HEIGHT,
   SOLUTION_ASSIGNMENT_CARDS,
 } from "../../constants";
-import type {
-  AssignmentTypeId,
-  SolutionAssignmentCard,
-} from "../../types/execution-only";
-import { deriveSolutionTimelineState } from "../../utils/solutionTimeline";
+import type { AssignmentTypeId, SolutionAssignmentCard } from "../../types";
+import { deriveSolutionTimelineState } from "../../utils";
 
 import { useObservedHeight } from "./useObservedHeight";
 import { useSolutionTimelineProgress } from "./useSolutionTimelineProgress";

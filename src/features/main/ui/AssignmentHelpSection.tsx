@@ -1,10 +1,6 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import {
-  AssignmentHelpComposer,
-  ChatMessage,
-  PhraseCloud,
-} from "../components";
+import { ChatMessage, PhraseCloud, PromptBox } from "../components";
 import {
   ASSIGNMENT_HELP_SECTION_SCROLL_VH,
   ASSIGNMENT_HELP_STAGE_SWAP_ANIMATION,
@@ -108,9 +104,7 @@ export const AssignmentHelpSection = ({
               </Box>
             </Box>
 
-            <AssignmentHelpComposer
-              composer={assignmentHelpMotionState.composer}
-            />
+            <PromptBox composer={assignmentHelpMotionState.composer} />
 
             <Box inset={0} pointerEvents="none" position="absolute" zIndex={5}>
               <Box

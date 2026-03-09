@@ -8,42 +8,46 @@ import {
 } from "react";
 
 import {
-  type LayoutState,
-  type MotionState,
-  type PhraseMetrics,
-  type PhraseRender,
-  TIME_LOSS_PHRASE_FONT_SIZE,
-  TIME_LOSS_PHRASE_MOTION_CONFIG,
-  buildTimeLossPhraseSeeds,
-  computeNextTimeLossPhraseFrame,
-  computeStaticTimeLossPhraseRenderBuffer,
-  createDefaultTimeLossPhraseMetrics,
+  PHRASE_CLOUD_FONT_SIZE,
+  PHRASE_CLOUD_MOTION_CONFIG,
+} from "../../constants";
+import type {
+  LayoutState,
+  MotionState,
+  PhraseMetrics,
+  PhraseRender,
+} from "../../types";
+import {
+  buildPhraseCloudSeeds,
+  computeNextPhraseCloudFrame,
+  computeStaticPhraseCloudRenderBuffer,
+  createDefaultPhraseCloudMetrics,
   createEmptyTimeLossLayoutState,
+  createInitialPhraseCloudRenderBuffer,
   createInitialTimeLossMotionState,
-  createInitialTimeLossPhraseRenderBuffer,
   createTimeLossLayoutState,
   resetTimeLossMotionPointerTarget,
   updateTimeLossMotionFromPointer,
 } from "../../utils";
 
-type UseTimeLossPhraseMotionParams = {
+type UsePhraseCloudMotionParams = {
   containerRef: RefObject<HTMLDivElement | null>;
   interactive: boolean;
 };
 
-export const useTimeLossPhraseMotion = ({
+export const usePhraseCloudMotion = ({
   containerRef,
   interactive,
-}: UseTimeLossPhraseMotionParams) => {
+}: UsePhraseCloudMotionParams) => {
   const phraseRefs = useRef<Array<HTMLParagraphElement | null>>([]);
-  const seeds = useMemo(() => buildTimeLossPhraseSeeds(), []);
+  const seeds = useMemo(() => buildPhraseCloudSeeds(), []);
   const metricsRef = useRef<PhraseMetrics[]>(
-    createDefaultTimeLossPhraseMetrics(seeds.length),
+    createDefaultPhraseCloudMetrics(seeds.length),
   );
   const layoutRef = useRef<LayoutState>(createEmptyTimeLossLayoutState());
   const motionRef = useRef<MotionState>(createInitialTimeLossMotionState());
   const renderBufferRef = useRef<PhraseRender[]>(
-    createInitialTimeLossPhraseRenderBuffer(seeds.length),
+    createInitialPhraseCloudRenderBuffer(seeds.length),
   );
   const frameRef = useRef<number | null>(null);
   const resizeFrameRef = useRef<number | null>(null);
@@ -70,11 +74,11 @@ export const useTimeLossPhraseMotion = ({
       const phraseEl = phraseRefs.current[index];
       metrics[index] = {
         h: phraseEl
-          ? Math.max(phraseEl.offsetHeight, TIME_LOSS_PHRASE_FONT_SIZE * 1.4)
-          : TIME_LOSS_PHRASE_FONT_SIZE * 1.4,
+          ? Math.max(phraseEl.offsetHeight, PHRASE_CLOUD_FONT_SIZE * 1.4)
+          : PHRASE_CLOUD_FONT_SIZE * 1.4,
         w: phraseEl
-          ? Math.max(phraseEl.offsetWidth, TIME_LOSS_PHRASE_FONT_SIZE * 4)
-          : TIME_LOSS_PHRASE_FONT_SIZE * 4,
+          ? Math.max(phraseEl.offsetWidth, PHRASE_CLOUD_FONT_SIZE * 4)
+          : PHRASE_CLOUD_FONT_SIZE * 4,
       };
     }
   }, [seeds.length]);
@@ -100,7 +104,7 @@ export const useTimeLossPhraseMotion = ({
       return;
     }
 
-    renderBufferRef.current = computeStaticTimeLossPhraseRenderBuffer(
+    renderBufferRef.current = computeStaticPhraseCloudRenderBuffer(
       layoutRef.current,
       seeds,
     );
@@ -179,7 +183,7 @@ export const useTimeLossPhraseMotion = ({
     }
 
     const animate = (timestamp: number) => {
-      const nextFrame = computeNextTimeLossPhraseFrame({
+      const nextFrame = computeNextPhraseCloudFrame({
         layout: layoutRef.current,
         metrics: metricsRef.current,
         motion: motionRef.current,
@@ -217,7 +221,7 @@ export const useTimeLossPhraseMotion = ({
   }, [stopFrameLoop]);
 
   return {
-    baseOpacity: TIME_LOSS_PHRASE_MOTION_CONFIG.baseOpacity,
+    baseOpacity: PHRASE_CLOUD_MOTION_CONFIG.baseOpacity,
     handlePointerLeave,
     handlePointerMove,
     phraseRefs,

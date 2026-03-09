@@ -12,8 +12,6 @@ import {
 
 import type { SolutionAssignmentCard } from "../../types";
 
-// Static roadmap definitions for each assignment type shown in the solution section.
-// solution 섹션에서 보여주는 과제 유형별 로드맵 정적 데이터
 // 과제 유형 카드에서 쓰는 아이콘을 정함
 const ICON_WRITING = FilePenIcon;
 const ICON_PAPER = AcademicCapIcon;

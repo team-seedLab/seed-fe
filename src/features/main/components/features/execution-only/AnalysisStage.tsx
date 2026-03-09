@@ -6,9 +6,9 @@ import {
   analysisPanelStageStyle,
   fadeUpStyle,
   referencePanelStageStyle,
-} from "../../../constants";
+} from "../../../utils";
 import { AnalysisPanel } from "../../common";
-import { ReferenceDataPanel } from "../../common/analysis-stage/ReferenceDataPanel";
+import { ReferenceDataPanel } from "../../common";
 
 type AnalysisStageProps = {
   analysisPanelReveal: number;

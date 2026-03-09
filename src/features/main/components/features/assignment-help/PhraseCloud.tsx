@@ -6,9 +6,9 @@ import {
   TIME_LOSS_PHRASES,
   TIME_LOSS_PHRASE_BASE_TONE,
 } from "../../../constants";
-import { useTimeLossPhraseMotion } from "../../../hooks";
+import { usePhraseCloudMotion } from "../../../hooks";
 
-type TimeLossPhraseCloudProps = {
+type PhraseCloudCloudProps = {
   backdropOpacity: number;
   interactive: boolean;
   phraseOpacity: number;
@@ -18,11 +18,11 @@ export const PhraseCloud = ({
   backdropOpacity,
   interactive,
   phraseOpacity,
-}: TimeLossPhraseCloudProps) => {
-  const timeLossPhraseContainerRef = useRef<HTMLDivElement | null>(null);
+}: PhraseCloudCloudProps) => {
+  const PhraseCloudContainerRef = useRef<HTMLDivElement | null>(null);
   const { baseOpacity, handlePointerLeave, handlePointerMove, phraseRefs } =
-    useTimeLossPhraseMotion({
-      containerRef: timeLossPhraseContainerRef,
+    usePhraseCloudMotion({
+      containerRef: PhraseCloudContainerRef,
       interactive,
     });
 
@@ -57,7 +57,7 @@ export const PhraseCloud = ({
             overflow="hidden"
             pointerEvents={interactive ? "auto" : "none"}
             position="relative"
-            ref={timeLossPhraseContainerRef}
+            ref={PhraseCloudContainerRef}
             style={{ contain: "layout paint style" }}
             w="full"
           >

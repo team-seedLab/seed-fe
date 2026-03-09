@@ -1,3 +1,3 @@
-export * from "./assignmentHelp";
-export * from "./executionOnly";
-export * from "./promptNoHesitation";
+export * from "./assignment-help";
+export * from "./execution-only";
+export * from "./prompt-no-hesitation";

@@ -39,11 +39,11 @@ export const AnalysisPanel = ({
               키워드 추출
             </Text>
             <Flex gap={2.5} px={2.5} py={2.5} w="full">
-              <Box bg="#2F3B24" h="30px" w="60px" />
-              <Box bg="#395420" h="30px" w="60px" />
-              <Box bg="#98C95C" h="30px" w="60px" />
-              <Box bg="#598828" h="30px" w="60px" />
-              <Box bg="#B0D97D" h="30px" w="80px" />
+              <Box bg="seed.900" h="30px" w="60px" />
+              <Box bg="seed.500" h="30px" w="60px" />
+              <Box bg="seed.500" h="30px" w="60px" />
+              <Box bg="seed.600" h="30px" w="60px" />
+              <Box bg="seed.400" h="30px" w="80px" />
             </Flex>
           </VStack>
         </AnalysisPanelReveal>
@@ -59,11 +59,11 @@ export const AnalysisPanel = ({
               문단 요약
             </Text>
             <VStack align="stretch" gap={2.5} px={2.5} py={2.5}>
-              <Box bg="#2F3B24" h="30px" w="full" />
-              <Box bg="#98C95C" h="60px" w="full" />
+              <Box bg="seed.900" h="30px" w="full" />
+              <Box bg="seed.500" h="60px" w="full" />
               <Flex gap={2.5} w="full">
-                <Box bg="#598828" flex={1} h="30px" />
-                <Box bg="#B0D97D" flex={1} h="30px" />
+                <Box bg="seed.600" flex={1} h="30px" />
+                <Box bg="seed.400" flex={1} h="30px" />
               </Flex>
             </VStack>
           </VStack>
@@ -80,12 +80,12 @@ export const AnalysisPanel = ({
               과제 의도 파악
             </Text>
             <VStack align="stretch" gap={2.5} px={2.5} py={2.5}>
-              <Box bg="#456922" h="30px" w="full" />
+              <Box bg="seed.900" h="30px" w="full" />
               <Flex gap={2.5} w="full">
-                <Box bg="#598828" flex={1} h="30px" />
-                <Box bg="#E7F3D4" flex={1} h="30px" />
+                <Box bg="seed.600" flex={1} h="30px" />
+                <Box bg="seed.400" flex={1} h="30px" />
               </Flex>
-              <Box bg="#D0E9AD" h="60px" w="full" />
+              <Box bg="seed.300" h="60px" w="full" />
             </VStack>
           </VStack>
         </AnalysisPanelReveal>
