@@ -1,15 +1,5 @@
-export type AssignmentHelpRichBlock =
-  | {
-      type: "paragraph";
-      text: string;
-    }
-  | {
-      type: "ordered-list";
-      items: string[];
-    };
-
 export type AssignmentHelpChatMessage = {
-  content: string | AssignmentHelpRichBlock[];
+  content: string;
   id: string;
   role: "user" | "ai";
 };
