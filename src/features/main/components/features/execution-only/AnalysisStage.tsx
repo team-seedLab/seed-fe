@@ -6,10 +6,9 @@ import {
   analysisPanelStageStyle,
   fadeUpStyle,
   referencePanelStageStyle,
-} from "../../../../constants/executionOnly";
-
-import { AnalysisPanel } from "./analysisPanel/AnalysisPanel";
-import { ReferenceDataPanel } from "./referenceDataPanel/ReferenceDataPanel";
+} from "../../../constants";
+import { AnalysisPanel } from "../../common";
+import { ReferenceDataPanel } from "../../common/analysis-stage/ReferenceDataPanel";
 
 type AnalysisStageProps = {
   analysisPanelReveal: number;
@@ -23,8 +22,6 @@ type AnalysisStageProps = {
   summaryReveal: number;
 };
 
-// Reveals the assignment analysis header and syncs the two-panel analysis composition.
-// 과제 분석 헤더와 좌우 분석 패널 구성을 함께 제어하는 stage 컴포넌트
 export const AnalysisStage = ({
   analysisPanelReveal,
   analysisStageReveal,
@@ -58,9 +55,9 @@ export const AnalysisStage = ({
             {...fadeUpStyle(referenceReveal, 64)}
           >
             <Text
-              color="#191F28"
+              color="text"
               fontSize={{ base: "28px", lg: "36px" }}
-              fontWeight={700}
+              fontWeight="bold"
               letterSpacing="-0.02em"
               lineHeight="1.4"
               ref={progressTriggerRef}

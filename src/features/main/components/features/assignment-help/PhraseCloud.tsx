@@ -14,7 +14,7 @@ type TimeLossPhraseCloudProps = {
   phraseOpacity: number;
 };
 
-export const TimeLossPhraseCloud = ({
+export const PhraseCloud = ({
   backdropOpacity,
   interactive,
   phraseOpacity,
@@ -66,10 +66,10 @@ export const TimeLossPhraseCloud = ({
                 as="p"
                 color={`rgb(${TIME_LOSS_PHRASE_BASE_TONE}, ${TIME_LOSS_PHRASE_BASE_TONE}, ${TIME_LOSS_PHRASE_BASE_TONE})`}
                 fontSize={{
-                  base: "18px",
-                  md: "22px",
-                  lg: "26px",
-                  xl: "30px",
+                  base: "lg",
+                  md: "2xl",
+                  lg: "3xl",
+                  xl: "4xl",
                 }}
                 fontWeight={700}
                 key={`${phrase.text}-${index}`}

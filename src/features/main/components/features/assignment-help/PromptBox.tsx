@@ -8,9 +8,7 @@ type AssignmentHelpComposerProps = {
   composer: AssignmentHelpComposerLayoutState;
 };
 
-export const AssignmentHelpComposer = ({
-  composer,
-}: AssignmentHelpComposerProps) => {
+export const PromptBox = ({ composer }: AssignmentHelpComposerProps) => {
   return (
     <Box
       left="50%"
@@ -41,9 +39,9 @@ export const AssignmentHelpComposer = ({
           <Flex align="center" h="28px">
             <Box h="28px" position="relative" w="full">
               <Text
-                color="neutral.400"
+                color="text.secondary"
                 fontSize="18px"
-                fontWeight={500}
+                fontWeight="medium"
                 left={0}
                 letterSpacing="-0.02em"
                 lineHeight="1.4"
@@ -56,9 +54,9 @@ export const AssignmentHelpComposer = ({
                 AI에게 물어보기
               </Text>
               <Text
-                color="#191F28"
+                color="text"
                 fontSize="18px"
-                fontWeight={500}
+                fontWeight="medium"
                 left={0}
                 letterSpacing="-0.02em"
                 lineHeight="1.4"
@@ -82,9 +80,9 @@ export const AssignmentHelpComposer = ({
           </Flex>
           <Flex align="center" justify="space-between" mt={3}>
             <Text
-              color="neutral.900"
-              fontSize="30px"
-              fontWeight={300}
+              color="text"
+              fontSize="3xl"
+              fontWeight="regular"
               lineHeight="1.4"
             >
               +

@@ -7,7 +7,7 @@ type AssignmentHelpChatMessageProps = {
   message: AssignmentHelpChatMessageData;
 };
 
-export const AssignmentHelpChatMessage = ({
+export const ChatMessage = ({
   animation,
   message,
 }: AssignmentHelpChatMessageProps) => {

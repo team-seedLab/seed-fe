@@ -24,7 +24,7 @@ export const AssignmentTypeCard = ({
   return (
     <Button
       aria-pressed={isActive}
-      bg={isHighlighted ? "white" : "#FAFAFA"}
+      bg={isHighlighted ? "white" : "button.bg.secondary"}
       border="1px solid"
       borderColor={isHighlighted ? "button.border" : "transparent"}
       borderRadius="24px"
@@ -35,6 +35,7 @@ export const AssignmentTypeCard = ({
       disabled={!isInteractive}
       flex="1 1 0"
       minW={{ base: "calc(50% - 10px)", lg: "0px" }}
+      h={"fit-content"}
       onClick={() => {
         onSelect(card.id);
       }}

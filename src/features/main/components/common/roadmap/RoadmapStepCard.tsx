@@ -49,7 +49,7 @@ export const RoadmapStepCard = ({
           <Flex
             align="center"
             bg="white"
-            border={`4px solid ${isHovering ? "#F4FAEB" : "#FAFAFA"}`}
+            border={`4px solid ${isHovering ? "seed.subtle" : "neutral.50"}`}
             borderRadius="full"
             boxShadow={
               isHovering
@@ -63,7 +63,7 @@ export const RoadmapStepCard = ({
           >
             <Flex
               align="center"
-              bg={isHovering ? "#98C95C" : "#E7F3D4"}
+              bg={isHovering ? "seed" : "seed.subtle"}
               borderRadius="full"
               h="80px"
               justify="center"
@@ -80,18 +80,18 @@ export const RoadmapStepCard = ({
                 position="absolute"
                 transition="opacity 220ms ease"
               />
-              <StepIcon boxSize="7" color={isHovering ? "white" : "#75AC36"} />
+              <StepIcon boxSize="7" color={isHovering ? "white" : "seed"} />
             </Flex>
           </Flex>
 
           <Flex
             align="center"
-            bg={isHovering ? "white" : "#98C95C"}
-            border={`2px solid ${isHovering ? "#98C95C" : "white"}`}
+            bg={isHovering ? "white" : "seed"}
+            border={`2px solid ${isHovering ? "seed" : "white"}`}
             borderRadius="full"
-            color={isHovering ? "#98C95C" : "white"}
-            fontSize="14px"
-            fontWeight={700}
+            color={isHovering ? "seed" : "white"}
+            fontSize="md"
+            fontWeight="bold"
             h="32px"
             justify="center"
             position="absolute"
@@ -108,7 +108,7 @@ export const RoadmapStepCard = ({
       <VStack
         align="stretch"
         bg="white"
-        border={`1px solid ${isHovering ? "#98C95C" : "#FAFAFA"}`}
+        border={`1px solid ${isHovering ? "seed" : "neutral.50"}`}
         borderRadius="32px"
         boxShadow={
           isHovering
@@ -125,7 +125,7 @@ export const RoadmapStepCard = ({
         transition="border-color 220ms ease, box-shadow 220ms ease"
       >
         <Box
-          bg={isHovering ? "#98C95C" : "transparent"}
+          bg={isHovering ? "seed" : "transparent"}
           h="6px"
           left={0}
           position="absolute"
@@ -145,7 +145,7 @@ export const RoadmapStepCard = ({
             {step.title}
           </Text>
           <Text
-            color="#A1A1A1"
+            color="text.secondary"
             fontSize="14px"
             fontWeight={400}
             lineHeight="1.625"
@@ -166,7 +166,7 @@ export const RoadmapStepCard = ({
         >
           <Flex
             align="center"
-            bg={isHovering ? "#F4FAEB" : "#FAFAFA"}
+            bg={isHovering ? "seed.subtle" : "neutral.100"}
             borderRadius="8px"
             gap={1.5}
             px={3}
@@ -175,11 +175,11 @@ export const RoadmapStepCard = ({
           >
             <SparklesIcon
               boxSize="3"
-              color={isHovering ? "#98C95C" : "#A1A1A1"}
+              color={isHovering ? "seed" : "neutral.400"}
             />
             <Text
-              color={isHovering ? "#98C95C" : "#A1A1A1"}
-              fontSize="12px"
+              color={isHovering ? "seed" : "text.secondary"}
+              fontSize="xs"
               fontWeight={600}
               lineHeight="1.3"
               transition="color 220ms ease"

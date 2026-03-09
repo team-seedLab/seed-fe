@@ -1,6 +1,6 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { AnalysisPanelReveal } from "./reveal";
+import { AnalysisPanelReveal } from "./AnalysisPanelReveal";
 
 type AnalysisPanelProps = {
   intentReveal: number;
@@ -24,16 +24,16 @@ export const AnalysisPanel = ({
       w={"full"}
     >
       <VStack align="stretch" gap={4}>
-        <Text color="#191F28" fontSize="20px" fontWeight={700} lineHeight="1.4">
+        <Text color="text" fontSize="xl" fontWeight="bold" lineHeight="1.4">
           AI 분석
         </Text>
 
         <AnalysisPanelReveal progress={keywordReveal} revealHeight={132}>
           <VStack align="stretch" gap={1}>
             <Text
-              color="#191F28"
-              fontSize="16px"
-              fontWeight={400}
+              color="text"
+              fontSize="md"
+              fontWeight="medium"
               lineHeight="1.4"
             >
               키워드 추출
@@ -51,9 +51,9 @@ export const AnalysisPanel = ({
         <AnalysisPanelReveal progress={summaryReveal} revealHeight={190}>
           <VStack align="stretch" gap={1}>
             <Text
-              color="#191F28"
-              fontSize="16px"
-              fontWeight={400}
+              color="text"
+              fontSize="md"
+              fontWeight="medium"
               lineHeight="1.4"
             >
               문단 요약
@@ -72,9 +72,9 @@ export const AnalysisPanel = ({
         <AnalysisPanelReveal progress={intentReveal} revealHeight={190}>
           <VStack align="stretch" gap={1}>
             <Text
-              color="#191F28"
-              fontSize="16px"
-              fontWeight={400}
+              color="text"
+              fontSize="md"
+              fontWeight="medium"
               lineHeight="1.4"
             >
               과제 의도 파악

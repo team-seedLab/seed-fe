@@ -1,11 +1,11 @@
 import type { RefObject } from "react";
 
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack, useMediaQuery } from "@chakra-ui/react";
 
 import type { AssignmentTypeId, SolutionAssignmentCard } from "../../../types";
-import { AssignmentTypeCard } from "../../common/assignmentType/AssignmentTypeCard";
-
-import { SolutionRoadmapList } from "./solutionRoadmapList";
+import { createFadeUpAnimation } from "../../../utils";
+import { AssignmentTypeCard } from "../../common/assignment-type/AssignmentTypeCard";
+import { RoadmapStepCard } from "../../common/roadmap/RoadmapStepCard";
 
 type RoadmapStageProps = {
   activeCard: SolutionAssignmentCard | undefined;
@@ -20,6 +20,11 @@ type RoadmapStageProps = {
   roadmapContentRef: RefObject<HTMLDivElement | null>;
   roadmapInteractive: boolean;
 };
+
+const roadmapSwapInAnimation = createFadeUpAnimation({
+  distancePx: 16,
+  durationMs: 280,
+});
 
 // Reveals the assignment selector and the active roadmap list after the analysis phase finishes.
 // 분석 단계가 끝난 뒤 과제 유형 선택기와 활성 로드맵 목록을 노출
@@ -36,6 +41,8 @@ export const RoadmapStage = ({
   roadmapContentRef,
   roadmapInteractive,
 }: RoadmapStageProps) => {
+  const [reduceMotion] = useMediaQuery(["(prefers-reduced-motion: reduce)"]);
+
   return (
     <Box
       maxH={`${(resolvedRoadmapHeight * roadmapContainerReveal).toFixed(2)}px`}
@@ -101,7 +108,26 @@ export const RoadmapStage = ({
               transform={`translateY(${((1 - roadmapListReveal) * 16).toFixed(2)}px)`}
               w="full"
             >
-              <SolutionRoadmapList card={activeCard} />
+              <Box w="full">
+                <Flex
+                  animation={reduceMotion ? undefined : roadmapSwapInAnimation}
+                  direction={{ base: "column", xl: "row" }}
+                  gap={4}
+                  justify="center"
+                  key={activeCard.id}
+                  w="full"
+                >
+                  {activeCard.roadmapSteps.map((step, index) => {
+                    return (
+                      <RoadmapStepCard
+                        animationDelayMs={index * 60}
+                        key={`${activeCard.id}-${step.stepNumber}-${step.title}`}
+                        step={step}
+                      />
+                    );
+                  })}
+                </Flex>
+              </Box>
             </Box>
           ) : null}
         </VStack>

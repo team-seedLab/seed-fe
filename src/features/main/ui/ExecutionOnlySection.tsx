@@ -36,20 +36,20 @@ export const ExecutionOnlySection = ({
         >
           <VStack align="center" gap={{ base: 10, lg: 14 }} w="full">
             <Text
-              color="#191F28"
+              color="text"
               fontSize={{ base: "32px", lg: "48px" }}
-              fontWeight={700}
+              fontWeight="bold"
               letterSpacing="-0.02em"
               lineHeight="1.4"
               textAlign="center"
               whiteSpace="nowrap"
             >
               프롬프트 고민은{" "}
-              <Box as="span" color="#75AC36">
+              <Box as="span" color="seed">
                 SEED
               </Box>
               가 합니다.{" "}
-              <Box as="span" color="#75AC36">
+              <Box as="span" color="seed">
                 실행
               </Box>
               만 하세요.

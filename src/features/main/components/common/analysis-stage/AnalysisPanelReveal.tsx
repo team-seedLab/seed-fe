@@ -12,8 +12,6 @@ const revealMaxHeight = (progress: number, maxHeightPx: number) => {
   return `${(progress * maxHeightPx).toFixed(2)}px`;
 };
 
-// Shared reveal wrapper for staged analysis sub-blocks inside the analysis stage.
-// analysis stage 내부 세부 블록에 공통으로 쓰는 reveal wrapper
 export const AnalysisPanelReveal = ({
   children,
   progress,

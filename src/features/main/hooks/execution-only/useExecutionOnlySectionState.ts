@@ -4,11 +4,11 @@ import {
   FALLBACK_ANALYSIS_CONTENT_HEIGHT,
   FALLBACK_ROADMAP_CONTENT_HEIGHT,
   SOLUTION_ASSIGNMENT_CARDS,
-} from "../../constants/executionOnly";
+} from "../../constants";
 import type {
   AssignmentTypeId,
   SolutionAssignmentCard,
-} from "../../types/executionOnly";
+} from "../../types/execution-only";
 import { deriveSolutionTimelineState } from "../../utils/solutionTimeline";
 
 import { useObservedHeight } from "./useObservedHeight";

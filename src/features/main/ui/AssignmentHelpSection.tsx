@@ -1,9 +1,9 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
 import {
-  AssignmentHelpChatMessage,
   AssignmentHelpComposer,
-  TimeLossPhraseCloud,
+  ChatMessage,
+  PhraseCloud,
 } from "../components";
 import {
   ASSIGNMENT_HELP_SECTION_SCROLL_VH,
@@ -96,7 +96,7 @@ export const AssignmentHelpSection = ({
                   <VStack align="stretch" gap={10} pb={2}>
                     {visibleChatMessages.map((message) => {
                       return (
-                        <AssignmentHelpChatMessage
+                        <ChatMessage
                           animation={ASSIGNMENT_HELP_STAGE_SWAP_ANIMATION}
                           key={message.id}
                           message={message}
@@ -145,7 +145,7 @@ export const AssignmentHelpSection = ({
               </Box>
             </Box>
 
-            <TimeLossPhraseCloud
+            <PhraseCloud
               backdropOpacity={
                 assignmentHelpMotionState.timeLoss.backdropOpacity
               }
