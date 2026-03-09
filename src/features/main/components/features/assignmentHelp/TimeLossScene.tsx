@@ -1,9 +1,9 @@
 import { Box, Text } from "@chakra-ui/react";
 
-import { ASSIGNMENT_HELP_COPY } from "../../../../constants";
-import type { AssignmentHelpState } from "../../../../types";
+import { ASSIGNMENT_HELP_COPY } from "../../../constants";
+import type { AssignmentHelpState } from "../../../types";
 
-import { TimeLossPhraseCloud } from "./phraseCloud";
+import { TimeLossPhraseCloud } from "./timeLossScene/phraseCloud";
 
 type TimeLossSceneProps = {
   timeLoss: AssignmentHelpState["timeLoss"];

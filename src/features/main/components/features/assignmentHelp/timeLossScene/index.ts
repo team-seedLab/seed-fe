@@ -1,2 +1,2 @@
 export * from "./phraseCloud";
-export * from "./TimeLossScene";
+export * from "../TimeLossScene";

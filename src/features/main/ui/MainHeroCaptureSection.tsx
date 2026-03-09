@@ -3,51 +3,44 @@ import {
   Button,
   Flex,
   HStack,
-  Image,
   Input,
   Text,
   VStack,
 } from "@chakra-ui/react";
 
-const badgeIcon = "/rocket-badge-icon.svg";
+import { SparklesIcon } from "@/shared";
 
 export const MainHeroCaptureSection = () => {
   return (
     <Box
       as="section"
       display="flex"
-      minH={{ base: "auto", lg: "calc(100dvh - 108px)" }}
+      minH={{ base: "auto", lg: "calc(100dvh - {sizes.headerHeight})" }}
       w="full"
     >
       <Flex
         align={{ base: "stretch", lg: "center" }}
         direction={{ base: "column", lg: "row" }}
-        gap={{ base: "56px", lg: "48px" }}
+        gap={{ base: 14, lg: 12 }}
         justify="space-between"
         maxW="1200px"
         mx="auto"
-        py={{ base: "72px", md: "88px", lg: "40px" }}
+        py={{ base: 16, md: 22, lg: 10 }}
         w="full"
       >
-        <VStack
-          align="flex-start"
-          flex={1}
-          gap="24px"
-          justify="center"
-          minW={0}
-        >
+        <VStack align="flex-start" flex={1} gap={6} justify="center" minW={0}>
           <HStack
-            bg="#F2F4F6"
-            borderRadius="9999px"
-            gap="8px"
-            px="16px"
-            py="8px"
+            bg="container.bg.card"
+            borderRadius="full"
+            gap={2}
+            px={4}
+            py={2}
           >
-            <Image alt="" aria-hidden="true" boxSize="18px" src={badgeIcon} />
+            <SparklesIcon boxSize={5} color="seed" />
             <Text
-              color="#4E5968"
-              fontSize="20px"
-              fontWeight={500}
+              color="text.secondary"
+              fontSize="lg"
+              fontWeight="medium"
               letterSpacing="-0.02em"
               lineHeight="1.4"
             >
@@ -56,11 +49,11 @@ export const MainHeroCaptureSection = () => {
           </HStack>
 
           <Text
-            color="#191F28"
-            fontSize={{ base: "40px", md: "56px", lg: "64px" }}
-            fontWeight={700}
-            letterSpacing={{ base: "-0.04em", lg: "-0.025em" }}
-            lineHeight={{ base: "1.15", lg: "73.6px" }}
+            color="text"
+            fontSize={{ base: "4xl", md: "5xl", lg: "7xl" }}
+            fontWeight={"bold"}
+            letterSpacing={"-0.02em"}
+            lineHeight={"1.2"}
             textAlign="left"
           >
             오래 걸리는 과제,
@@ -71,12 +64,11 @@ export const MainHeroCaptureSection = () => {
           </Text>
 
           <Text
-            color="neutral.600"
-            fontSize={{ base: "18px", lg: "20px" }}
-            fontWeight={500}
+            color="text.secondary"
+            fontSize="xl"
+            fontWeight="medium"
             letterSpacing="-0.02em"
             lineHeight="1.4"
-            maxW="474px"
             textAlign="left"
           >
             PDF 업로드 한 번으로 과제 로드맵부터 최적화 프롬프트까지.
@@ -86,16 +78,16 @@ export const MainHeroCaptureSection = () => {
         <VStack
           align="stretch"
           flexShrink={0}
-          gap="24px"
+          gap={6}
           justify="center"
           maxW="486px"
           w="full"
         >
-          <VStack align="stretch" gap="12px">
+          <VStack align="stretch" gap={3}>
             <Text
-              color="#000000"
-              fontSize="20px"
-              fontWeight={700}
+              color="text"
+              fontSize="xl"
+              fontWeight={"bold"}
               letterSpacing="-0.02em"
               lineHeight="1.4"
             >
@@ -103,12 +95,12 @@ export const MainHeroCaptureSection = () => {
             </Text>
             <Input
               aria-label="이메일 또는 전화번호"
-              bg="#FAFAFA"
+              bg="container.bg.card"
               border="none"
               borderRadius="0"
               boxShadow="none"
-              h="48px"
-              px="16px"
+              h={12}
+              px={4}
               _focusVisible={{
                 borderColor: "transparent",
                 outline: "2px solid #98C95C",
@@ -121,17 +113,16 @@ export const MainHeroCaptureSection = () => {
 
           <Flex justify={{ base: "stretch", lg: "flex-end" }}>
             <Button
-              bg="seed"
-              borderRadius="20px"
-              color="white"
-              fontSize="20px"
+              bg="button.bg"
+              borderRadius={20}
+              color="button.foreground"
+              fontSize="xl"
               fontWeight={700}
-              h="52px"
               letterSpacing="-0.02em"
               lineHeight="1.4"
-              px="24px"
+              p={6}
               type="button"
-              w={{ base: "full", lg: "179px" }}
+              w={{ base: "full", lg: "auto" }}
               _active={{ bg: "seed.active" }}
               _hover={{ bg: "seed.hover" }}
             >
