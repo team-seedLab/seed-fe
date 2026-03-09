@@ -11,6 +11,7 @@ export {
   TIME_LOSS_PHRASES,
   type TimeLossPhrase,
 } from "./timeLossPhraseData";
+export * from "./assignmentHelpPresentation";
 
 export const ASSIGNMENT_HELP_SECTION_SCROLL_VH: Record<
   AssignmentHelpSectionId,

@@ -4,8 +4,8 @@ import { Box, Flex, Text, VStack, useMediaQuery } from "@chakra-ui/react";
 
 import { SparklesIcon } from "@/shared/_assets/icons";
 
-import type { RoadmapStep } from "../../../../../../types";
-import { createFadeUpAnimation } from "../../../../../../utils";
+import type { RoadmapStep } from "../../../types";
+import { createFadeUpAnimation } from "../../../utils";
 
 const stepRiseInAnimation = createFadeUpAnimation({
   distancePx: 20,

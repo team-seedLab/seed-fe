@@ -2,12 +2,9 @@ import type { RefObject } from "react";
 
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import type {
-  AssignmentTypeId,
-  SolutionAssignmentCard,
-} from "../../../../types";
+import type { AssignmentTypeId, SolutionAssignmentCard } from "../../../types";
+import { AssignmentTypeCard } from "../../common/assignmentType/AssignmentTypeCard";
 
-import { AssignmentTypeCard } from "./assignmentTypeCard";
 import { SolutionRoadmapList } from "./solutionRoadmapList";
 
 type RoadmapStageProps = {

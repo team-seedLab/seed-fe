@@ -1,9 +1,8 @@
 import { Box, Flex, useMediaQuery } from "@chakra-ui/react";
 
-import type { SolutionAssignmentCard } from "../../../../../types";
-import { createFadeUpAnimation } from "../../../../../utils";
-
-import { RoadmapStepCard } from "./roadmapStepCard";
+import type { SolutionAssignmentCard } from "../../../types";
+import { createFadeUpAnimation } from "../../../utils";
+import { RoadmapStepCard } from "../../common";
 
 const roadmapSwapInAnimation = createFadeUpAnimation({
   distancePx: 16,

@@ -3,31 +3,14 @@ import { type RefObject, useEffect, useState } from "react";
 import type {
   AssignmentHelpSectionId,
   AssignmentHelpSectionProgressMap,
-} from "../../../../types";
-import { clamp01 } from "../../../../utils";
-
-// 각 섹션의 진행도를 계산하는 로직
-const calculateSectionProgress = (section: HTMLElement | null) => {
-  if (!section) {
-    return 0;
-  }
-
-  const rect = section.getBoundingClientRect();
-  const travel = rect.height - window.innerHeight;
-
-  if (travel <= 1) {
-    return rect.top <= 0 ? 1 : 0;
-  }
-
-  return clamp01(-rect.top / travel);
-};
+} from "../../types";
+import { calculateAssignmentHelpSectionProgress } from "../../utils";
 
 export type AssignmentHelpSectionRefs = Record<
   AssignmentHelpSectionId,
   RefObject<HTMLElement | null>
 >;
 
-// 각 섹션 진행도 실시간 계산 및 반환하는 훅
 export const useAssignmentHelpSectionProgresses = (
   sectionRefs: AssignmentHelpSectionRefs,
 ) => {
@@ -42,10 +25,34 @@ export const useAssignmentHelpSectionProgresses = (
     let frameId: number | null = null;
 
     const calculate = () => {
+      const introRect =
+        sectionRefs.intro.current?.getBoundingClientRect() ?? null;
+      const chatRect =
+        sectionRefs.chat.current?.getBoundingClientRect() ?? null;
+      const timeLossRect =
+        sectionRefs.timeLoss.current?.getBoundingClientRect() ?? null;
       const nextProgress: AssignmentHelpSectionProgressMap = {
-        intro: calculateSectionProgress(sectionRefs.intro.current),
-        chat: calculateSectionProgress(sectionRefs.chat.current),
-        timeLoss: calculateSectionProgress(sectionRefs.timeLoss.current),
+        intro: introRect
+          ? calculateAssignmentHelpSectionProgress({
+              height: introRect.height,
+              top: introRect.top,
+              viewportHeight: window.innerHeight,
+            })
+          : 0,
+        chat: chatRect
+          ? calculateAssignmentHelpSectionProgress({
+              height: chatRect.height,
+              top: chatRect.top,
+              viewportHeight: window.innerHeight,
+            })
+          : 0,
+        timeLoss: timeLossRect
+          ? calculateAssignmentHelpSectionProgress({
+              height: timeLossRect.height,
+              top: timeLossRect.top,
+              viewportHeight: window.innerHeight,
+            })
+          : 0,
       };
 
       setProgresses((current) => {

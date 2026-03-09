@@ -11,8 +11,8 @@ import type {
 } from "../../types/executionOnly";
 import { deriveSolutionTimelineState } from "../../utils/solutionTimeline";
 
-import { useObservedHeight } from "./scrollFlow/useObservedHeight";
-import { useSolutionTimelineProgress } from "./scrollFlow/useSolutionTimelineProgress";
+import { useObservedHeight } from "./useObservedHeight";
+import { useSolutionTimelineProgress } from "./useSolutionTimelineProgress";
 
 type UseExecutionOnlySectionStateParams = {
   isActivated: boolean;

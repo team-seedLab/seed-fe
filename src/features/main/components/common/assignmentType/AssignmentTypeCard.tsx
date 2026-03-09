@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Flex, Text, VStack, chakra } from "@chakra-ui/react";
+import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 
-import type { SolutionAssignmentCard } from "../../../../../types";
+import type { SolutionAssignmentCard } from "../../../types";
 
 type AssignmentTypeCardProps = {
   card: SolutionAssignmentCard;
@@ -22,11 +22,11 @@ export const AssignmentTypeCard = ({
   const CardIcon = card.icon;
 
   return (
-    <chakra.button
+    <Button
       aria-pressed={isActive}
       bg={isHighlighted ? "white" : "#FAFAFA"}
       border="1px solid"
-      borderColor={isHighlighted ? "#98C95C" : "transparent"}
+      borderColor={isHighlighted ? "button.border" : "transparent"}
       borderRadius="24px"
       boxShadow={
         isHighlighted ? "0px 8px 30px 0px rgba(0, 0, 0, 0.06)" : "none"
@@ -62,7 +62,7 @@ export const AssignmentTypeCard = ({
       <VStack align="center" gap={3}>
         <Flex
           align="center"
-          bg={isHighlighted ? "#F4FAEB" : "white"}
+          bg={isHighlighted ? "seed.subtle" : "white"}
           borderRadius="full"
           boxShadow="0px 1px 2px 0px rgba(0, 0, 0, 0.05)"
           h={12}
@@ -70,22 +70,25 @@ export const AssignmentTypeCard = ({
           transition="background-color 200ms ease"
           w={12}
         >
-          <CardIcon boxSize={5} color={isHighlighted ? "#98C95C" : "#191F28"} />
+          <CardIcon
+            boxSize={5}
+            color={isHighlighted ? "seed" : "neutral.400"}
+          />
         </Flex>
         <VStack align="center" gap={1}>
           <Text
-            color="#191F28"
-            fontSize="18px"
-            fontWeight={700}
+            color="text"
+            fontSize="lg"
+            fontWeight="bold"
             lineHeight="28px"
             whiteSpace="nowrap"
           >
             {card.title}
           </Text>
           <Text
-            color="#A1A1A1"
-            fontSize="12px"
-            fontWeight={400}
+            color="text.secondary"
+            fontSize="xs"
+            fontWeight="reguler"
             lineHeight="16px"
             textAlign="center"
             whiteSpace="nowrap"
@@ -94,6 +97,6 @@ export const AssignmentTypeCard = ({
           </Text>
         </VStack>
       </VStack>
-    </chakra.button>
+    </Button>
   );
 };

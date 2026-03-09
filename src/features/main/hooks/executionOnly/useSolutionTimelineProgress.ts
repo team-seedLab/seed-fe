@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { resolveProgressUnits } from "../../../utils";
+import { resolveProgressUnits } from "../../utils/solutionTimeline";
 
 // 트리거 요소의 위치를 실행 섹션 진행값으로 바꿈
 export const useSolutionTimelineProgress = (isActivated: boolean) => {
