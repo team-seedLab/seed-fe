@@ -3,6 +3,13 @@ export const ROUTE_PATHS = {
   ROOT: "/",
   MAIN: "/",
   MYPAGE: "/mypage",
+  FILE_UPLOAD: "/upload",
+
+  UPLOAD_LOADING: "/upload/loading",
+  UPLOAD_STEP_BASE: "/upload/step",
+  UPLOAD_STEP: "/upload/step/:step",
+  UPLOAD_COMPLETE: "/upload/complete",
+
   NOT_FOUND: "*",
 };
 
