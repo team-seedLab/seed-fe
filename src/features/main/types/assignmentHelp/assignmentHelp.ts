@@ -58,6 +58,5 @@ export type AssignmentHelpState = {
     mainTop: string;
     mainTransform: string;
     subtitle: string;
-    subtitleKey: string;
   };
 };

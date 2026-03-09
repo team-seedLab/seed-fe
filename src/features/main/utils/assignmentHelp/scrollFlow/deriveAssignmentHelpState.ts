@@ -17,7 +17,6 @@ type AssignmentHelpChatStage = {
   messages: readonly AssignmentHelpChatMessage[];
   startAt: number;
   subtitle: string;
-  subtitleKey: string;
 };
 
 const ASSIGNMENT_HELP_INTRO_PROGRESS_RANGES = {
@@ -46,14 +45,12 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
     messages: [],
     startAt: 0,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
-    subtitleKey: "empty",
   },
   {
     id: "userOnly",
     messages: [ASSIGNMENT_HELP_MESSAGE_BANK.userHelp],
     startAt: 0.25,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.common,
-    subtitleKey: "userOnly",
   },
   {
     id: "helpAndMethod",
@@ -63,7 +60,6 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
     ],
     startAt: 0.375,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.methodology,
-    subtitleKey: "helpAndMethod",
   },
   {
     id: "needInfo",
@@ -73,14 +69,12 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
     ],
     startAt: 0.5,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.tooManyInfo,
-    subtitleKey: "needInfo",
   },
   {
     id: "userCrown",
     messages: [ASSIGNMENT_HELP_MESSAGE_BANK.userCrown],
     startAt: 0.625,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
-    subtitleKey: "userCrown",
   },
   {
     id: "hallucination",
@@ -90,7 +84,6 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
     ],
     startAt: 0.75,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.hallucination,
-    subtitleKey: "hallucination",
   },
   {
     id: "correction",
@@ -101,7 +94,6 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
     ],
     startAt: 0.875,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
-    subtitleKey: "correction",
   },
   {
     id: "gaslight",
@@ -113,7 +105,6 @@ const ASSIGNMENT_HELP_CHAT_STAGES: readonly AssignmentHelpChatStage[] = [
     ],
     startAt: 1,
     subtitle: ASSIGNMENT_HELP_COPY.subtitles.repeatMistake,
-    subtitleKey: "gaslight",
   },
 ] as const;
 
@@ -290,7 +281,6 @@ export const deriveAssignmentHelpState = (
       mainTop: mainTitleTop,
       mainTransform: mainTitleTransform,
       subtitle: chatStage.subtitle,
-      subtitleKey: chatStage.subtitleKey,
     },
   };
 };
