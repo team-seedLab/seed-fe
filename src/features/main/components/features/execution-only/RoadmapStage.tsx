@@ -4,8 +4,7 @@ import { Box, Flex, Text, VStack, useMediaQuery } from "@chakra-ui/react";
 
 import type { AssignmentTypeId, SolutionAssignmentCard } from "../../../types";
 import { createFadeUpAnimation } from "../../../utils";
-import { AssignmentTypeCard } from "../../common/assignment-type/AssignmentTypeCard";
-import { RoadmapStepCard } from "../../common/roadmap/RoadmapStepCard";
+import { AssignmentTypeCard, RoadmapStepCard } from "../../common";
 
 type RoadmapStageProps = {
   activeCard: SolutionAssignmentCard | undefined;
@@ -26,8 +25,6 @@ const roadmapSwapInAnimation = createFadeUpAnimation({
   durationMs: 280,
 });
 
-// Reveals the assignment selector and the active roadmap list after the analysis phase finishes.
-// 분석 단계가 끝난 뒤 과제 유형 선택기와 활성 로드맵 목록을 노출
 export const RoadmapStage = ({
   activeCard,
   activeId,
