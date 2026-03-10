@@ -11,10 +11,50 @@ import {
 } from "@chakra-ui/react";
 
 import { AssignmentHelpSection, ExecutionOnlySection } from "@/features";
-import { CheckIcon, CopyIcon, SparklesIcon } from "@/shared";
+import { CheckIcon, CopyIcon, SparklesIcon, supabase } from "@/shared";
 
 export default function MainPage() {
   const [isSolutionSectionReady, setIsSolutionSectionReady] = useState(false);
+  const [email, setEmail] = useState("");
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const submitWaitlistEmail = async () => {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) return;
+
+    setSubmitStatus("loading");
+    setErrorMessage("");
+
+    try {
+      const { error } = await supabase.functions.invoke("notify-waitlist", {
+        body: { email: trimmedEmail },
+      });
+
+      if (error) {
+        let message = "오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        try {
+          const body = await (
+            error as { context?: { json: () => Promise<{ error?: string }> } }
+          ).context?.json();
+          if (body?.error) message = body.error;
+        } catch (e) {
+          // 에러 메시지 파싱 실패 시 기본 메시지 사용
+          console.error("Error parsing error message:", e);
+        }
+        setErrorMessage(message);
+        setSubmitStatus("error");
+        return;
+      }
+
+      setSubmitStatus("success");
+    } catch {
+      setErrorMessage("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      setSubmitStatus("error");
+    }
+  };
 
   return (
     <Flex flexDir="column" align="center" bg="white">
@@ -81,7 +121,6 @@ export default function MainPage() {
             </Text>
           </VStack>
 
-          {/* 이메일/전화번호 입력은 추가적인 로직이 필요하므로 추후 컴포넌트화 필요 */}
           <VStack
             align="stretch"
             flexShrink={0}
@@ -90,53 +129,88 @@ export default function MainPage() {
             maxW="486px"
             w="full"
           >
-            <VStack align="stretch" gap={3}>
-              <Text
-                color="text"
-                fontSize="xl"
-                fontWeight="bold"
-                letterSpacing="-0.02em"
-                lineHeight="1.4"
+            {submitStatus === "success" ? (
+              <Flex
+                align="center"
+                bg="seed.subtle"
+                borderRadius="xl"
+                gap={3}
+                justify="center"
+                p={5}
               >
-                이메일 / 전화번호
-              </Text>
-              <Input
-                aria-label="이메일 또는 전화번호"
-                bg="container.bg.card"
-                border="none"
-                borderRadius="0"
-                boxShadow="none"
-                h={12}
-                px={4}
-                _focusVisible={{
-                  borderColor: "transparent",
-                  outline: "2px solid",
-                  outlineColor: "seed",
-                  outlineOffset: "2px",
-                }}
-                _hover={{ borderColor: "transparent" }}
-                _placeholder={{ color: "transparent" }}
-              />
-            </VStack>
+                <CheckIcon boxSize={5} color="seed" />
+                <Text color="seed" fontWeight="semibold">
+                  알림 신청이 완료되었습니다!
+                </Text>
+              </Flex>
+            ) : (
+              <>
+                <VStack align="stretch" gap={3}>
+                  <Text
+                    color="text"
+                    fontSize="xl"
+                    fontWeight="bold"
+                    letterSpacing="-0.02em"
+                    lineHeight="1.4"
+                  >
+                    이메일 / 전화번호
+                  </Text>
+                  <Input
+                    aria-label="이메일 또는 전화번호"
+                    bg="container.bg.card"
+                    border="none"
+                    borderRadius="0"
+                    boxShadow="none"
+                    h={12}
+                    placeholder="이메일 주소를 입력하세요"
+                    px={4}
+                    type="email"
+                    value={email}
+                    _focusVisible={{
+                      borderColor: "transparent",
+                      outline: "2px solid",
+                      outlineColor: "seed",
+                      outlineOffset: "2px",
+                    }}
+                    _hover={{ borderColor: "transparent" }}
+                    _placeholder={{ color: "text.placeholder" }}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") submitWaitlistEmail();
+                    }}
+                  />
+                  {submitStatus === "error" && (
+                    <Text color="red.500" fontSize="sm">
+                      {errorMessage}
+                    </Text>
+                  )}
+                </VStack>
 
-            <Flex justify={{ base: "stretch", lg: "flex-end" }}>
-              <Button
-                bg="button.bg"
-                borderRadius={20}
-                color="button.foreground"
-                fontSize="xl"
-                fontWeight={700}
-                letterSpacing="-0.02em"
-                lineHeight="1.4"
-                p={6}
-                type="button"
-                w={{ base: "full", lg: "auto" }}
-                _active={{ bg: "seed.active" }}
-                _hover={{ bg: "seed.hover" }}
-              >
-                알림 받아보기
-              </Button>
-            </Flex>
+                <Flex justify={{ base: "stretch", lg: "flex-end" }}>
+                  <Button
+                    bg="button.bg"
+                    borderRadius={20}
+                    color="button.foreground"
+                    disabled={submitStatus === "loading"}
+                    fontSize="xl"
+                    fontWeight={700}
+                    letterSpacing="-0.02em"
+                    lineHeight="1.4"
+                    opacity={submitStatus === "loading" ? 0.7 : 1}
+                    p={6}
+                    type="button"
+                    w={{ base: "full", lg: "auto" }}
+                    _active={{ bg: "seed.active" }}
+                    _hover={{ bg: "seed.hover" }}
+                    onClick={submitWaitlistEmail}
+                  >
+                    {submitStatus === "loading"
+                      ? "신청 중..."
+                      : "알림 받아보기"}
+                  </Button>
+                </Flex>
+              </>
+            )}
           </VStack>
         </Flex>
       </Box>
