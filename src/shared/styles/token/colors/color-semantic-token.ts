@@ -12,7 +12,7 @@ export const colorSemanticToken = {
   },
   "button.bg": {
     DEFAULT: { value: "{colors.seed.400}" },
-    secondary: { value: "{colors.neutral.50}" },
+    secondary: { value: "{colors.neutral.100}" },
   },
   "button.border": {
     DEFAULT: { value: "{colors.seed.400}" },
@@ -24,7 +24,7 @@ export const colorSemanticToken = {
   },
   "container.bg": {
     DEFAULT: { value: "{colors.neutral.0}" },
-    card: { value: "{colors.neutral.100}" },
+    card: { value: "{colors.neutral.200}" },
   },
   "container.border": {
     DEFAULT: { value: "{colors.neutral.200}" },
