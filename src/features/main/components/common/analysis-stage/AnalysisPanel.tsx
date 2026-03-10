@@ -17,7 +17,8 @@ export const AnalysisPanel = ({
 }: AnalysisPanelProps) => {
   return (
     <Box
-      border="1px solid #98C95C"
+      border="1px solid"
+      borderColor="seed"
       borderRadius="24px"
       h={{ base: "auto", xl: "600px" }}
       p={{ base: 5, lg: 12 }}

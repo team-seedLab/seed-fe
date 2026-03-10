@@ -57,9 +57,9 @@ export default function MainPage() {
             <Text
               color="text"
               fontSize={{ base: "4xl", md: "5xl", lg: "7xl" }}
-              fontWeight={"bold"}
-              letterSpacing={"-0.02em"}
-              lineHeight={"1.2"}
+              fontWeight="bold"
+              letterSpacing="-0.02em"
+              lineHeight="1.2"
               textAlign="left"
             >
               오래 걸리는 과제,
@@ -94,7 +94,7 @@ export default function MainPage() {
               <Text
                 color="text"
                 fontSize="xl"
-                fontWeight={"bold"}
+                fontWeight="bold"
                 letterSpacing="-0.02em"
                 lineHeight="1.4"
               >
@@ -189,7 +189,8 @@ export default function MainPage() {
             <Box flex="1 1 0" minW={0}>
               <Box
                 bg="container.bg"
-                border="1px solid #FAFAFA"
+                border="1px solid"
+                borderColor="button.border.secondary"
                 borderRadius="4xl"
                 boxShadow="0px 20px 40px 0px rgba(0, 0, 0, 0.08)"
                 px={{ base: 6, lg: 8 }}
@@ -212,9 +213,9 @@ export default function MainPage() {
 
                       <VStack align="start" gap={0} minW={0}>
                         <Text
-                          color="#191F28"
-                          fontSize="14px"
-                          fontWeight={700}
+                          color="text"
+                          fontSize="sm"
+                          fontWeight="bold"
                           letterSpacing="-0.02em"
                           lineHeight="20px"
                         >
@@ -256,7 +257,8 @@ export default function MainPage() {
 
                   <Box
                     bg="container.bg"
-                    border="1px solid #FAFAFA"
+                    border="1px solid"
+                    borderColor="neutral.50"
                     borderRadius="12px"
                     px={5}
                     py={4}
@@ -292,7 +294,8 @@ export default function MainPage() {
                   </Box>
 
                   <Box
-                    borderTop="1px solid #FAFAFA"
+                    borderTop="1px solid"
+                    borderColor="neutral.50"
                     minH="16px"
                     pt={5}
                     w="full"
@@ -309,7 +312,13 @@ export default function MainPage() {
               pt={{ base: 2, xl: 0 }}
               w="full"
             >
-              <Box bg="#FAFAFA" borderRadius="8px" color="seed" px={3} py={1}>
+              <Box
+                bg="container.bg"
+                borderRadius="8px"
+                color="seed"
+                px={3}
+                py={1}
+              >
                 <Text
                   fontSize="sm"
                   fontWeight="bold"
@@ -395,7 +404,7 @@ export default function MainPage() {
         <VStack align="center" gap={{ base: 4, lg: 5 }} px={4} w="full">
           <Text
             color="text"
-            fontSize={{ base: "32px", lg: "48px" }}
+            fontSize={{ base: "3xl", lg: "5xl" }}
             fontWeight="bold"
             letterSpacing="-0.02em"
             lineHeight="1.4"

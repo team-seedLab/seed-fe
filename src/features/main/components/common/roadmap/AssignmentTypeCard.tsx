@@ -49,7 +49,8 @@ export const AssignmentTypeCard = ({
       transition="background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
       type="button"
       _focusVisible={{
-        outline: "2px solid #98C95C",
+        outline: "2px solid",
+        outlineColor: "seed",
         outlineOffset: "2px",
       }}
       _hover={
@@ -89,7 +90,7 @@ export const AssignmentTypeCard = ({
           <Text
             color="text.secondary"
             fontSize="xs"
-            fontWeight="reguler"
+            fontWeight="regular"
             lineHeight="16px"
             textAlign="center"
             whiteSpace="nowrap"

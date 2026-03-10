@@ -71,7 +71,7 @@ export const PhraseCloud = ({
                   lg: "3xl",
                   xl: "4xl",
                 }}
-                fontWeight={700}
+                fontWeight="bold"
                 key={`${phrase.text}-${index}`}
                 left="50%"
                 letterSpacing="-0.02em"
