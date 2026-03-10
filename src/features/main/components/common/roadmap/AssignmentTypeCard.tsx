@@ -27,7 +27,7 @@ export const AssignmentTypeCard = ({
       bg={isHighlighted ? "white" : "button.bg.secondary"}
       border="1px solid"
       borderColor={isHighlighted ? "button.border" : "transparent"}
-      borderRadius="24px"
+      borderRadius="3xl"
       boxShadow={
         isHighlighted ? "0px 8px 30px 0px rgba(0, 0, 0, 0.06)" : "none"
       }
@@ -67,10 +67,9 @@ export const AssignmentTypeCard = ({
           bg={isHighlighted ? "seed.subtle" : "white"}
           borderRadius="full"
           boxShadow="0px 1px 2px 0px rgba(0, 0, 0, 0.05)"
-          h={12}
+          boxSize={12}
           justify="center"
           transition="background-color 200ms ease"
-          w={12}
         >
           <CardIcon
             boxSize={5}

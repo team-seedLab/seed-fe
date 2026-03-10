@@ -62,9 +62,9 @@ export const RoadmapStage = ({
           pt={{ base: 10, lg: 14 }}
         >
           <Text
-            color="#191F28"
-            fontSize={{ base: "26px", lg: "36px" }}
-            fontWeight={700}
+            color="text"
+            fontSize={{ base: "2xl", lg: "4xl" }}
+            fontWeight="bold"
             letterSpacing="-0.02em"
             lineHeight="1.4"
             opacity={roadmapTitleReveal}

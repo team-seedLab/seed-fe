@@ -34,24 +34,22 @@ export const PhraseCloud = ({
       zIndex={3}
     >
       <Box
-        h="full"
+        boxSize="full"
         left={0}
         opacity={backdropOpacity}
         overflow="hidden"
         position="absolute"
         top={0}
         transition="opacity 260ms ease"
-        w="full"
         zIndex={1}
       >
         <Box
-          h="full"
+          boxSize="full"
           opacity={phraseOpacity}
           transition="opacity 220ms ease"
-          w="full"
         >
           <Box
-            h="full"
+            boxSize="full"
             onPointerLeave={interactive ? handlePointerLeave : undefined}
             onPointerMove={interactive ? handlePointerMove : undefined}
             overflow="hidden"
@@ -59,7 +57,6 @@ export const PhraseCloud = ({
             position="relative"
             ref={phraseCloudContainerRef}
             style={{ contain: "layout paint style" }}
-            w="full"
           >
             {PHRASE_CLOUD_PHRASES.map((phrase, index) => (
               <Text

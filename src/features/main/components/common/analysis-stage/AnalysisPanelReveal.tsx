@@ -28,7 +28,7 @@ export const AnalysisPanelReveal = ({
       transition="max-height 220ms ease, opacity 220ms ease, transform 220ms ease"
       w="full"
     >
-      <Text color="text" fontSize="md" fontWeight="medium" lineHeight="1.4">
+      <Text color="text" fontWeight="medium" lineHeight="1.4">
         {title}
       </Text>
       {children}

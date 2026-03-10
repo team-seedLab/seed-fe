@@ -19,7 +19,7 @@ export const AnalysisPanel = ({
     <Box
       border="1px solid"
       borderColor="seed"
-      borderRadius="24px"
+      borderRadius="3xl"
       h={{ base: "auto", xl: "600px" }}
       p={{ base: 5, lg: 12 }}
       w={"full"}

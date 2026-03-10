@@ -36,11 +36,11 @@ export const PromptBox = ({ composer }: PromptBoxProps) => {
         w="full"
       >
         <Box opacity={composer.contentOpacity} transition="opacity 220ms ease">
-          <Flex align="center" h="28px">
-            <Box h="28px" position="relative" w="full">
+          <Flex align="center" h={7}>
+            <Box h={7} position="relative" w="full">
               <Text
                 color="text.secondary"
-                fontSize="18px"
+                fontSize="lg"
                 fontWeight="medium"
                 left={0}
                 letterSpacing="-0.02em"
@@ -55,7 +55,7 @@ export const PromptBox = ({ composer }: PromptBoxProps) => {
               </Text>
               <Text
                 color="text"
-                fontSize="18px"
+                fontSize="lg"
                 fontWeight="medium"
                 left={0}
                 letterSpacing="-0.02em"

@@ -239,7 +239,7 @@ export default function MainPage() {
                       color="white"
                       fontSize="xs"
                       fontWeight="bold"
-                      h="32px"
+                      h={8}
                       minW="auto"
                       px={3}
                       py={2}
@@ -247,7 +247,7 @@ export default function MainPage() {
                       _hover={{ bg: "#2A3038" }}
                     >
                       <HStack gap={1.5}>
-                        <CopyIcon color="white" boxSize="18px" />
+                        <CopyIcon color="white" boxSize={4.5} />
                         <Text color="inherit" fontSize="xs" fontWeight="bold">
                           Copy
                         </Text>
@@ -259,7 +259,7 @@ export default function MainPage() {
                     bg="container.bg"
                     border="1px solid"
                     borderColor="neutral.50"
-                    borderRadius="12px"
+                    borderRadius="xl"
                     px={5}
                     py={4}
                   >
@@ -296,7 +296,7 @@ export default function MainPage() {
                   <Box
                     borderTop="1px solid"
                     borderColor="neutral.50"
-                    minH="16px"
+                    minH={4}
                     pt={5}
                     w="full"
                   />
@@ -307,14 +307,14 @@ export default function MainPage() {
               align="start"
               flex="1 1 0"
               gap={4}
-              maxW={{ base: "full", xl: "480px" }}
+              maxW={{ base: "full", xl: 120 }}
               minW={0}
               pt={{ base: 2, xl: 0 }}
               w="full"
             >
               <Box
                 bg="container.bg"
-                borderRadius="8px"
+                borderRadius="lg"
                 color="seed"
                 px={3}
                 py={1}
@@ -347,7 +347,7 @@ export default function MainPage() {
                 fontWeight="regular"
                 letterSpacing="-0.02em"
                 lineHeight="1.625"
-                maxW="420px"
+                maxW={105}
               >
                 로드맵 각 단계에 꼭 맞는 최적의 프롬프트가 생성됩니다.
                 <br />
@@ -368,11 +368,10 @@ export default function MainPage() {
                         align="center"
                         bg="seed.subtle"
                         borderRadius="full"
-                        h="24px"
+                        boxSize={6}
                         justify="center"
-                        w="24px"
                       >
-                        <CheckIcon color="seed" boxSize={"10px"} />
+                        <CheckIcon color="seed" boxSize={2.5} />
                       </Flex>
                       <Text
                         color="text"

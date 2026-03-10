@@ -16,8 +16,8 @@ export const ChatMessage = ({
       <Flex animation={animation} justify="flex-end" w="full">
         <Box
           bg="neutral.100"
-          borderRadius="24px"
-          borderTopRightRadius="6px"
+          borderRadius="3xl"
+          borderTopRightRadius="md"
           color="text"
           maxW="100%"
           px={6}
@@ -47,11 +47,10 @@ export const ChatMessage = ({
         flexShrink={0}
         fontSize="3xl"
         fontWeight="bold"
-        h={12}
         justify="center"
         letterSpacing="-0.02em"
         lineHeight="1.4"
-        w={12}
+        boxSize={12}
       >
         AI
       </Flex>

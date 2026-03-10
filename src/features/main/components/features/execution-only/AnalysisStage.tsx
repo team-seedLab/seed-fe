@@ -54,7 +54,7 @@ export const AnalysisStage = ({
           >
             <Text
               color="text"
-              fontSize={{ base: "28px", lg: "36px" }}
+              fontSize={{ base: "3xl", lg: "4xl" }}
               fontWeight="bold"
               letterSpacing="-0.02em"
               lineHeight="1.4"
