@@ -28,7 +28,8 @@ export const useWaitList = () => {
       }
 
       return { success: true };
-    } catch {
+    } catch (e) {
+      console.error("useWaitList submit 중 예기치 않은 오류 발생:", e);
       return {
         success: false,
         errorMessage: "오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
