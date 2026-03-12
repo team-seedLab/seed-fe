@@ -27,10 +27,10 @@ export const SendEmailSection = () => {
         <>
           <VStack align="start" gap={3}>
             <Text color="text" fontSize="xl" fontWeight="bold">
-              이메일 / 전화번호
+              이메일
             </Text>
             <Input
-              aria-label="이메일 또는 전화번호"
+              aria-label="이메일 입력"
               bg="container.bg.card"
               border="none"
               borderRadius="sm"
@@ -63,7 +63,7 @@ export const SendEmailSection = () => {
               borderRadius={20}
               color="button.foreground"
               fontSize="xl"
-              fontWeight={700}
+              fontWeight="bold"
               loading={submitStatus === "loading"}
               loadingText="알림 받아보기"
               p={6}
