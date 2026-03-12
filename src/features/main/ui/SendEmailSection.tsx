@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Flex, Input, Text, VStack } from "@chakra-ui/react";
 
 import { CheckIcon } from "@/shared";
 
@@ -70,32 +62,17 @@ export const SendEmailSection = () => {
               bg="button.bg"
               borderRadius={20}
               color="button.foreground"
-              disabled={submitStatus === "loading"}
               fontSize="xl"
               fontWeight={700}
-              opacity={submitStatus === "loading" ? 0.7 : 1}
+              loading={submitStatus === "loading"}
+              loadingText="알림 받아보기"
               p={6}
               w={{ base: "full", lg: "auto" }}
               _active={{ bg: "seed.active" }}
               _hover={{ bg: "seed.hover" }}
               onClick={submitWaitlistEmail}
             >
-              <Box
-                as="span"
-                display="inline-flex"
-                alignItems="center"
-                justifyContent="center"
-                position="relative"
-              >
-                <Box as="span" opacity={submitStatus === "loading" ? 0 : 1}>
-                  알림 받아보기
-                </Box>
-                {submitStatus === "loading" && (
-                  <Box as="span" position="absolute">
-                    <Spinner size="sm" />
-                  </Box>
-                )}
-              </Box>
+              알림 받아보기
             </Button>
           </Flex>
         </>
