@@ -22,19 +22,21 @@ export const useSendEmail = () => {
     setSubmitStatus("loading");
     setErrorMessage("");
 
-    const result = await submit(trimmedEmail);
+    try {
+      const result = await submit(trimmedEmail);
 
-    if (!result.success) {
-      setErrorMessage(
-        result.errorMessage ??
-          "오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-      );
-      setSubmitStatus("error");
-    } else {
-      setSubmitStatus("success");
+      if (!result.success) {
+        setErrorMessage(
+          result.errorMessage ??
+            "오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        );
+        setSubmitStatus("error");
+      } else {
+        setSubmitStatus("success");
+      }
+    } finally {
+      isSubmittingRef.current = false;
     }
-
-    isSubmittingRef.current = false;
   };
 
   const submitOnEnter = (e: React.KeyboardEvent) => {
