@@ -25,7 +25,6 @@ export const ExecutionOnlySection = ({
             align="center"
             gap={0}
             h="full"
-            maxW={320}
             mx="auto"
             px={{ base: 4, lg: 16 }}
             w="full"

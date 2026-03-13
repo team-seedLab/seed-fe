@@ -31,7 +31,7 @@ export const RoadmapStepCard = ({
       cursor="pointer"
       flex="1 1 0"
       gap={0}
-      minW={{ base: 70, md: 0 }}
+      minW={{ base: "280px", md: 0 }}
       onMouseEnter={() => {
         setIsHovering(true);
       }}

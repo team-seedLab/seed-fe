@@ -25,8 +25,12 @@ export const SendEmailSection = () => {
         </VStack>
       ) : (
         <>
-          <VStack align="start" gap={3}>
-            <Text color="text" fontSize="xl" fontWeight="bold">
+          <VStack align="start" gap={{ base: 2, lg: 3 }}>
+            <Text
+              color="text"
+              fontSize={{ base: "lg", lg: "xl" }}
+              fontWeight="bold"
+            >
               이메일
             </Text>
             <Input
@@ -40,6 +44,7 @@ export const SendEmailSection = () => {
               px={4}
               type="email"
               value={email}
+              inputMode="email"
               _focusVisible={{
                 borderColor: "transparent",
                 outline: "2px solid",

@@ -17,30 +17,40 @@ export default function MainPage() {
       <Box
         as="section"
         display="flex"
-        minH={{ base: "auto", lg: "calc(100dvh - {sizes.headerHeight})" }}
+        minH="calc(100dvh - {sizes.headerHeight})"
         w="full"
       >
         <Flex
           align={{ base: "stretch", lg: "center" }}
           direction={{ base: "column", lg: "row" }}
-          gap={{ base: 14, lg: 12 }}
-          justify="space-between"
+          gap={{ base: 6, lg: 12 }}
+          justify={{ base: "center", lg: "space-between" }}
           maxW="1200px"
           mx="auto"
-          px={{ base: 4, lg: 10 }}
+          px={{ base: 6, lg: 10 }}
           py={{ base: 16, md: 22, lg: 10 }}
           w="full"
         >
-          <VStack align="flex-start" flex={1} gap={6} justify="center" minW={0}>
+          <VStack
+            align="flex-start"
+            flex={{ base: "none", lg: 1 }}
+            gap={{ base: 3, lg: 6 }}
+            justify="center"
+            minW={0}
+          >
             <HStack
-              bg="container.bg.card"
+              bg={{ base: "none", lg: "container.bg.card" }}
               borderRadius="full"
               gap={2}
-              px={4}
+              px={{ base: 0, lg: 4 }}
               py={2}
             >
               <SparklesIcon boxSize={5} color="seed" />
-              <Text color="text.secondary" fontSize="lg" fontWeight="medium">
+              <Text
+                color="text"
+                fontSize={{ base: "md", lg: "lg" }}
+                fontWeight="medium"
+              >
                 생산성 +50% 로켓 탑승하기
               </Text>
             </HStack>
@@ -61,11 +71,16 @@ export default function MainPage() {
 
             <Text
               color="text.secondary"
-              fontSize="xl"
+              fontSize={{ base: "md", lg: "lg" }}
               fontWeight="medium"
               textAlign="left"
             >
-              PDF 업로드 한 번으로 과제 로드맵부터 최적화 프롬프트까지.
+              PDF 업로드 한 번으로
+              <Box as="br" display={{ base: "block", lg: "none" }} />
+              <Box as="span" display={{ base: "none", lg: "inline" }}>
+                {" "}
+              </Box>
+              과제 로드맵부터 최적화 프롬프트까지.
             </Text>
           </VStack>
 
@@ -77,7 +92,14 @@ export default function MainPage() {
       />
       <ExecutionOnlySection isActivated={isSolutionSectionReady} />
       <Box bg="white" py={{ base: 16, md: 20, lg: 24 }} w="full">
-        <VStack align="stretch" gap={12} maxW={300} mx="auto" px={10} w="full">
+        <VStack
+          align="stretch"
+          gap={12}
+          maxW="1200px"
+          mx="auto"
+          px={10}
+          w="full"
+        >
           <VStack align="start" gap={3} maxW="780px" w="full">
             <Box
               as="h2"
@@ -222,7 +244,7 @@ export default function MainPage() {
               align="start"
               flex="1 1 0"
               gap={4}
-              maxW={{ base: "full", xl: 120 }}
+              maxW={{ base: "full", xl: "480px" }}
               minW={0}
               pt={{ base: 2, xl: 0 }}
               w="full"
@@ -255,7 +277,7 @@ export default function MainPage() {
                 fontSize={{ base: "md", lg: "lg" }}
                 fontWeight="regular"
                 lineHeight="1.625"
-                maxW={105}
+                maxW="420px"
               >
                 로드맵 각 단계에 꼭 맞는 최적의 프롬프트가 생성됩니다.
                 <br />

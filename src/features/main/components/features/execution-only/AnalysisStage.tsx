@@ -56,7 +56,6 @@ export const AnalysisStage = ({
               color="text"
               fontSize={{ base: "3xl", lg: "4xl" }}
               fontWeight="bold"
-              letterSpacing="-0.02em"
               lineHeight="1.4"
               textAlign="center"
               whiteSpace="nowrap"
@@ -65,11 +64,12 @@ export const AnalysisStage = ({
             </Text>
 
             <Box display={{ base: "none", xl: "block" }} w="full">
-              <Box h={150} position="relative" w="full">
+              <Box h={"600px"} position="relative" w="full">
                 <Box
                   left="50%"
                   position="absolute"
                   top="50%"
+                  w={"600px"}
                   zIndex={2}
                   {...referencePanelStageStyle(
                     referenceReveal,
@@ -82,7 +82,7 @@ export const AnalysisStage = ({
                   left="50%"
                   position="absolute"
                   top="50%"
-                  w="auto"
+                  w={"520px"}
                   zIndex={1}
                   {...analysisPanelStageStyle(analysisPanelReveal)}
                 >

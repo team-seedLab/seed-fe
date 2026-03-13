@@ -45,29 +45,35 @@ export const AssignmentHelpSection = ({
               <VStack align="center" gap={3}>
                 <Text
                   color="text"
-                  fontSize="5xl"
+                  fontSize={{ base: "3xl", lg: "5xl" }}
                   fontWeight="bold"
-                  letterSpacing="-0.02em"
                   lineHeight="1.4"
                   textAlign="center"
                   whiteSpace="nowrap"
                 >
                   혹시 AI에게{" "}
-                  <Box as="span" color="seed">
+                  <Box as="br" display={{ base: "block", md: "none" }} />
+                  <Box
+                    as="span"
+                    color="seed"
+                    fontSize={{ base: "4xl", lg: "6xl" }}
+                  >
                     '과제 도와줘'
-                  </Box>
-                  라고만 질문하고 계신가요?
+                  </Box>{" "}
+                  라고만 <Box as="br" display={{ base: "block", md: "none" }} />
+                  질문하고 계신가요?
                 </Text>
                 <Text
                   animation={ASSIGNMENT_HELP_STAGE_SWAP_ANIMATION}
                   color="text.secondary"
-                  fontSize="2xl"
+                  fontSize={{ base: "xl", md: "2xl" }}
                   fontWeight="semibold"
                   key={activeChatPhaseKey}
-                  letterSpacing="-0.02em"
                   lineHeight="1.4"
                   textAlign="center"
-                  whiteSpace="nowrap"
+                  whiteSpace="normal"
+                  w="full"
+                  maxW={{ base: "358px", lg: "full" }}
                 >
                   {activeChatPhase.subtitle}
                 </Text>
@@ -121,7 +127,6 @@ export const AssignmentHelpSection = ({
                   color="text"
                   fontSize="5xl"
                   fontWeight="bold"
-                  letterSpacing="-0.02em"
                   lineHeight="1.4"
                   textAlign="center"
                   whiteSpace="nowrap"

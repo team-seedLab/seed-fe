@@ -65,7 +65,6 @@ export const RoadmapStage = ({
             color="text"
             fontSize={{ base: "2xl", lg: "4xl" }}
             fontWeight="bold"
-            letterSpacing="-0.02em"
             lineHeight="1.4"
             opacity={roadmapTitleReveal}
             textAlign="center"
