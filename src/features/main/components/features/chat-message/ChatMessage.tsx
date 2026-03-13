@@ -19,7 +19,6 @@ export const ChatMessage = ({
           borderRadius="3xl"
           borderTopRightRadius="md"
           color="text"
-          maxW="100%"
           px={6}
           py={4}
         >
@@ -58,7 +57,7 @@ export const ChatMessage = ({
         fontSize="lg"
         fontWeight="medium"
         lineHeight="1.4"
-        maxW="full"
+        maxW="575px"
         pt={3}
         whiteSpace="pre-line"
       >
