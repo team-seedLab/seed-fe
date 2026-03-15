@@ -2,6 +2,8 @@ import { Flex, Text } from "@chakra-ui/react";
 
 import { ChevronRightIcon, DocumentTextIcon } from "@/shared";
 
+import { formatUpdatedAt } from "../../utils";
+
 type Props = {
   name: string;
   updatedAt: string;
@@ -41,7 +43,7 @@ export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
             {name}
           </Text>
           <Text color="text.secondary" fontSize="xs">
-            {updatedAt}
+            {formatUpdatedAt(updatedAt)}
           </Text>
         </Flex>
       </Flex>

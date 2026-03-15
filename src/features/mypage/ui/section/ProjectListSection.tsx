@@ -1,18 +1,29 @@
 import { useState } from "react";
 
-import { Flex, Text, VStack } from "@chakra-ui/react";
+import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
-import { PROJECT_LIST_MOCK, type Project, ProjectListItem } from "@/entities";
+import { ProjectListItem, useGetProjectList } from "@/entities";
 import { Pagination, PlusIcon } from "@/shared";
 
 import { ProjectListToolbar } from "../../components";
 
 export const ProjectListSection = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    data: projectsListData,
+    isLoading,
+    isFetching,
+  } = useGetProjectList({
+    page: currentPage - 1,
+    size: 10,
+    sort: "createdAt,DESC",
+  });
   const [filterActive, setFilterActive] = useState(false);
   const [manageActive, setManageActive] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 8;
+  const totalPages = projectsListData?.totalPages ?? 1;
+  const projects = projectsListData?.content ?? [];
+  const isInitialLoading = isLoading && projects.length === 0;
 
   return (
     <VStack gap={6} align="flex-start" pt={4} w="full">
@@ -28,14 +39,50 @@ export const ProjectListSection = () => {
         />
       </Flex>
 
-      <VStack gap={3} w="full">
-        {PROJECT_LIST_MOCK.map((project: Project) => (
+      <VStack
+        gap={3}
+        w="full"
+        position="relative"
+        minH={{ base: "360px", md: "420px" }}
+      >
+        {projects.map((project) => (
           <ProjectListItem
-            key={project.id}
-            name={project.name}
-            updatedAt={project.updatedAt}
+            key={project.projectId}
+            name={project.title}
+            updatedAt={project.createdAt}
           />
         ))}
+
+        {isInitialLoading ? (
+          <Flex
+            position="absolute"
+            inset={0}
+            align="center"
+            justify="center"
+            bg="neutral.0"
+          >
+            <Spinner color="seed" size="lg" />
+          </Flex>
+        ) : null}
+
+        {isFetching && !isInitialLoading ? (
+          <Flex
+            position="absolute"
+            top={0}
+            right={0}
+            px={2}
+            py={1}
+            borderRadius="md"
+            bg="neutral.0"
+            align="center"
+            gap={2}
+          >
+            <Spinner color="seed" size="sm" />
+            <Text color="text.secondary" fontSize="xs">
+              불러오는 중...
+            </Text>
+          </Flex>
+        ) : null}
 
         <Flex
           bg="white"
