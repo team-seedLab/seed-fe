@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router";
 
 import { Box, Flex } from "@chakra-ui/react";
 
+import { useGetUserInfo } from "@/entities";
 import { ROUTE_PATHS, ScrollToTop } from "@/shared";
 
 import { Footer, Header } from "../components";
@@ -10,7 +11,13 @@ import { Footer, Header } from "../components";
 export const RootLayout = () => {
   const location = useLocation();
   const isMainRoute = location.pathname === ROUTE_PATHS.MAIN;
+  // TODO: 추후 Auth layout 으로 분리
+  const shouldFetchUserInfo = location.pathname !== ROUTE_PATHS.LOGIN;
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
+  useGetUserInfo({
+    enabled: shouldFetchUserInfo,
+    showErrorToast: false,
+  });
 
   useEffect(() => {
     if (!isMainRoute) {
