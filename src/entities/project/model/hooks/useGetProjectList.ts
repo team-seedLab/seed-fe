@@ -9,5 +9,10 @@ export const useGetProjectList = (params: ProjectListParameters = {}) => {
   return useQuery({
     queryKey: projectKeys.list(queryParams),
     queryFn: () => getProjectListAPI(queryParams),
+    throwOnError: false,
+    meta: {
+      showErrorToast: true,
+      errorMessage: "프로젝트 목록을 불러오지 못했습니다.",
+    },
   });
 };

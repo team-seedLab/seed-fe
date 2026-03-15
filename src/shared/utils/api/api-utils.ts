@@ -1,6 +1,5 @@
 import { API_ERROR_MESSAGES } from "../../constants";
 import type { ApiResponse, ErrorResponse } from "../../types";
-import { toaster } from "../toaster";
 
 // 커스텀 API 에러 클래스
 export class ApiError extends Error {
@@ -15,15 +14,19 @@ export class ApiError extends Error {
   }
 }
 
-// API 에러 메시지 표시 함수
-export const showApiError = (apiError: ApiError) => {
-  const customMessage =
-    API_ERROR_MESSAGES[apiError.errorCode as keyof typeof API_ERROR_MESSAGES];
-  const message = customMessage || apiError.message;
-  toaster.create({
-    type: "error",
-    description: message,
-  });
+// UI에 독립적으로 재사용할 수 있는 에러 메시지 변환 함수
+export const getApiErrorMessage = (error: unknown) => {
+  if (error instanceof ApiError) {
+    const customMessage =
+      API_ERROR_MESSAGES[error.errorCode as keyof typeof API_ERROR_MESSAGES];
+    return customMessage || error.message;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "요청을 처리할 수 없습니다.";
 };
 
 export function processApiResponse<T>(response: ApiResponse<T>): T {
@@ -32,7 +35,6 @@ export function processApiResponse<T>(response: ApiResponse<T>): T {
   } else {
     // 에러 응답의 경우 커스텀 ApiError를 throw하여 더 상세한 에러 정보 제공
     const apiError = new ApiError(response);
-    showApiError(apiError);
     throw apiError;
   }
 }
