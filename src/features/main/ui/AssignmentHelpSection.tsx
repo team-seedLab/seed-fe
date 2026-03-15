@@ -88,7 +88,7 @@ export const AssignmentHelpSection = ({
               }
               position="absolute"
               pt={"240px"}
-              px={10}
+              px={{ base: 4, md: 10 }}
               transform={`translateY(${assignmentHelpMotionState.chat.translateY})`}
               transition="opacity 220ms ease, transform 220ms ease"
               zIndex={1}

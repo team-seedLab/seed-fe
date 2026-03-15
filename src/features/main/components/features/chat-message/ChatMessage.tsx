@@ -19,14 +19,13 @@ export const ChatMessage = ({
           borderRadius="3xl"
           borderTopRightRadius="md"
           color="text"
-          px={6}
-          py={4}
+          px={{ base: 4, md: 6 }}
+          py={{ base: 2, md: 4 }}
         >
           <Text
             color="inherit"
-            fontSize="lg"
+            fontSize={{ base: "md", md: "lg" }}
             fontWeight="medium"
-            letterSpacing="-0.02em"
             lineHeight="1.4"
           >
             {message.content}
@@ -37,29 +36,35 @@ export const ChatMessage = ({
   }
 
   return (
-    <HStack align="start" animation={animation} gap={7} w="full">
+    <HStack
+      align="start"
+      animation={animation}
+      gap={{ base: 2, md: 7 }}
+      w="full"
+    >
       <Flex
         align="center"
         bg="neutral.100"
         borderRadius="full"
         color="text"
         flexShrink={0}
-        fontSize="3xl"
+        fontSize={{ base: "2xl", md: "3xl" }}
         fontWeight="bold"
         justify="center"
         lineHeight="1.4"
-        boxSize={12}
+        boxSize={{ base: 10, md: 12 }}
       >
         AI
       </Flex>
       <Box
         color="text"
-        fontSize="lg"
+        fontSize={{ base: "md", md: "lg" }}
         fontWeight="medium"
         lineHeight="1.4"
         maxW="575px"
         pt={3}
         whiteSpace="pre-line"
+        wordBreak="keep-all"
       >
         {message.content}
       </Box>
