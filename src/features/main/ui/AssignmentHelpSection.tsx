@@ -51,14 +51,15 @@ export const AssignmentHelpSection = ({
                   textAlign="center"
                   whiteSpace="nowrap"
                 >
-                  AI에게{" "}
+                  AI에게
                   <Box
                     as="span"
                     color="seed"
                     fontSize={{ base: "4xl", lg: "6xl" }}
                   >
-                    '과제 도와줘'
-                  </Box>{" "}
+                    {" "}
+                    '과제 도와줘'{" "}
+                  </Box>
                   라고만 <Box as="br" display={{ base: "block", md: "none" }} />
                   질문하고 계신가요?
                 </Text>
@@ -125,14 +126,19 @@ export const AssignmentHelpSection = ({
               >
                 <Text
                   color="text"
-                  fontSize="5xl"
+                  fontSize={{ base: "3xl", lg: "5xl" }}
                   fontWeight="bold"
                   lineHeight="1.4"
                   textAlign="center"
                   whiteSpace="nowrap"
                 >
                   직접 프롬프트를 짜느라{" "}
-                  <Box as="span" color="seed">
+                  <Box as="br" display={{ base: "block", md: "none" }} />
+                  <Box
+                    as="span"
+                    color="seed"
+                    fontSize={{ base: "4xl", lg: "6xl" }}
+                  >
                     시간을 버리고
                   </Box>
                   <Box as="span" color="text">

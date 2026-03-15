@@ -13,9 +13,9 @@ export type AssignmentHelpSectionProgressMap = Record<
 
 export type PromptBoxLayoutState = {
   contentOpacity: number;
-  height: string;
+  height: { base: string; md: string };
   opacity: number;
-  padding: string;
+  padding: { base: string; md: string };
   radius: string;
   topOffsetPx: number;
   topPercent: number;

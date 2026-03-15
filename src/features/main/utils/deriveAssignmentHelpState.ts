@@ -70,9 +70,12 @@ export const deriveAssignmentHelpMotionState = (
   );
 
   let composerWidth = "4px";
-  let composerHeight = "4px";
+  let composerHeight: { base: string; md: string } = { base: "4px", md: "4px" };
   let composerRadius = "9999px";
-  let composerPadding = "0px";
+  let composerPadding: { base: string; md: string } = {
+    base: "0px",
+    md: "0px",
+  };
   let composerContentOpacity = 0;
 
   if (
@@ -87,9 +90,15 @@ export const deriveAssignmentHelpMotionState = (
       composerRevealProgress,
       0.04,
     ).toFixed(4)} * (100% - 80px)))`;
-    composerHeight = `${lerp(4, 130, composerRevealProgress).toFixed(2)}px`;
+    composerHeight = {
+      base: `${lerp(4, 60, composerRevealProgress).toFixed(2)}px`,
+      md: `${lerp(4, 130, composerRevealProgress).toFixed(2)}px`,
+    };
     composerRadius = `${lerp(9999, 32, composerRevealProgress).toFixed(2)}px`;
-    composerPadding = `${lerp(0, 24, composerRevealProgress).toFixed(2)}px`;
+    composerPadding = {
+      base: `${lerp(0, 16, composerRevealProgress).toFixed(2)}px`,
+      md: `${lerp(0, 24, composerRevealProgress).toFixed(2)}px`,
+    };
     composerContentOpacity =
       hasChatStarted ||
       introProgress >= ASSIGNMENT_HELP_INTRO_PROGRESS_RANGES.composerRevealEnd
@@ -109,7 +118,7 @@ export const deriveAssignmentHelpMotionState = (
   }
 
   let composerTopPercent = 50;
-  let composerTopOffsetPx = 180;
+  let composerTopOffsetPx = 158;
 
   if (hasChatStarted) {
     composerTopPercent = lerp(50, 100, chatDockProgress);

@@ -1,4 +1,4 @@
-export * from "./analysisStageStyle";
+export * from "./stageStyle";
 export * from "./calculateAssignmentHelpSectionProgress";
 export * from "./deriveAssignmentHelpState";
 export * from "./fadeUpAnimation";

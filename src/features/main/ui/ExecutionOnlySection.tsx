@@ -39,22 +39,31 @@ export const ExecutionOnlySection = ({
               <VStack align="center" gap={{ base: 10, lg: 14 }} w="full">
                 <Text
                   color="text"
-                  fontSize={{ base: "4xl", lg: "5xl" }}
+                  fontSize={{ base: "3xl", lg: "5xl" }}
                   fontWeight="bold"
-                  letterSpacing="-0.02em"
                   lineHeight="1.4"
                   textAlign="center"
                   whiteSpace="nowrap"
                 >
                   프롬프트 고민은{" "}
-                  <Box as="span" color="seed">
+                  <Box as="br" display={{ base: "block", md: "none" }} />
+                  <Box
+                    as="span"
+                    color="seed"
+                    fontSize={{ base: "4xl", lg: "6xl" }}
+                  >
                     SEED
                   </Box>
                   가 합니다.{" "}
-                  <Box as="span" color="seed">
+                  <Box as="br" display={{ base: "block", md: "none" }} />
+                  <Box
+                    as="span"
+                    color="seed"
+                    fontSize={{ base: "4xl", lg: "6xl" }}
+                  >
                     실행
                   </Box>
-                  만 하세요.
+                  만 하세요!
                 </Text>
 
                 <AnalysisStage {...analysisStageProps} />

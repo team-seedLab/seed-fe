@@ -139,8 +139,7 @@ export default function MainPage() {
                 borderColor="button.border.secondary"
                 borderRadius="4xl"
                 boxShadow="0px 20px 40px 0px rgba(0, 0, 0, 0.08)"
-                px={{ base: 6, lg: 8 }}
-                py={{ base: 6, lg: 8 }}
+                p={{ base: 6, lg: 8 }}
                 w="full"
               >
                 <VStack align="stretch" gap={6} w="full">

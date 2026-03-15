@@ -29,7 +29,6 @@ export const useExecutionOnlySectionState = ({
   const timeline = useMemo(() => {
     return deriveSolutionTimelineState(progressUnits);
   }, [progressUnits]);
-  const roadmapInteractive = timeline.roadmapCardsReveal >= 0.8;
   const [selectedId, setSelectedId] = useState<AssignmentTypeId>(() => {
     return cards.some((card) => card.id === "writing")
       ? "writing"
@@ -56,10 +55,6 @@ export const useExecutionOnlySectionState = ({
   });
 
   const handleSelect = (cardId: AssignmentTypeId) => {
-    if (!roadmapInteractive) {
-      return;
-    }
-
     setSelectedId(cardId);
   };
 
@@ -82,7 +77,6 @@ export const useExecutionOnlySectionState = ({
       roadmapCardsReveal: timeline.roadmapCardsReveal,
       roadmapContainerReveal: timeline.roadmapContainerReveal,
       roadmapContentRef,
-      roadmapInteractive,
       roadmapListReveal: timeline.roadmapListReveal,
       roadmapTitleReveal: timeline.roadmapTitleReveal,
       resolvedRoadmapHeight,

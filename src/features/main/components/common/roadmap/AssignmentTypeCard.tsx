@@ -7,18 +7,16 @@ import type { SolutionAssignmentCard } from "../../../types";
 type AssignmentTypeCardProps = {
   card: SolutionAssignmentCard;
   isActive: boolean;
-  isInteractive: boolean;
   onSelect: (cardId: SolutionAssignmentCard["id"]) => void;
 };
 
 export const AssignmentTypeCard = ({
   card,
   isActive,
-  isInteractive,
   onSelect,
 }: AssignmentTypeCardProps) => {
   const [isHovering, setIsHovering] = useState(false);
-  const isHighlighted = isActive || (isInteractive && isHovering);
+  const isHighlighted = isActive || isHovering;
   const CardIcon = card.icon;
 
   return (
@@ -31,10 +29,9 @@ export const AssignmentTypeCard = ({
       boxShadow={
         isHighlighted ? "0px 8px 30px 0px rgba(0, 0, 0, 0.06)" : "none"
       }
-      cursor={isInteractive ? "pointer" : "default"}
-      disabled={!isInteractive}
+      cursor="pointer"
       flex="1 1 0"
-      minW={{ base: "calc(50% - 10px)", lg: "0px" }}
+      minW={{ base: "calc(50% - 10px)", md: "0px" }}
       h={"fit-content"}
       onClick={() => {
         onSelect(card.id);
@@ -53,13 +50,9 @@ export const AssignmentTypeCard = ({
         outlineColor: "seed",
         outlineOffset: "2px",
       }}
-      _hover={
-        isInteractive
-          ? {
-              transform: "translateY(-2px)",
-            }
-          : undefined
-      }
+      _hover={{
+        transform: "translateY(-2px)",
+      }}
     >
       <VStack align="center" gap={3}>
         <Flex

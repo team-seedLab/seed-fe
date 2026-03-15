@@ -3,7 +3,11 @@ import type { RefObject } from "react";
 import { Box, Flex, Text, VStack, useMediaQuery } from "@chakra-ui/react";
 
 import type { AssignmentTypeId, SolutionAssignmentCard } from "../../../types";
-import { createFadeUpAnimation } from "../../../utils";
+import {
+  createFadeUpAnimation,
+  fadeUpStyleDesktopOnly,
+  stageContainerStyle,
+} from "../../../utils";
 import { AssignmentTypeCard, RoadmapStepCard } from "../../common";
 
 type RoadmapStageProps = {
@@ -17,7 +21,6 @@ type RoadmapStageProps = {
   roadmapTitleReveal: number;
   resolvedRoadmapHeight: number;
   roadmapContentRef: RefObject<HTMLDivElement | null>;
-  roadmapInteractive: boolean;
 };
 
 const roadmapSwapInAnimation = createFadeUpAnimation({
@@ -36,22 +39,20 @@ export const RoadmapStage = ({
   roadmapTitleReveal,
   resolvedRoadmapHeight,
   roadmapContentRef,
-  roadmapInteractive,
 }: RoadmapStageProps) => {
   const [reduceMotion] = useMediaQuery(["(prefers-reduced-motion: reduce)"]);
 
   return (
     <Box
-      maxH={`${(resolvedRoadmapHeight * roadmapContainerReveal).toFixed(2)}px`}
-      opacity={roadmapContainerReveal}
-      overflow="hidden"
-      pointerEvents={roadmapContainerReveal > 0.16 ? "auto" : "none"}
-      transform={`translateY(${((1 - roadmapContainerReveal) * 24).toFixed(2)}px)`}
-      transition={[
-        "max-height 240ms cubic-bezier(0.22, 1, 0.36, 1)",
-        "opacity 220ms ease",
-        "transform 240ms cubic-bezier(0.22, 1, 0.36, 1)",
-      ].join(", ")}
+      {...stageContainerStyle(
+        roadmapContainerReveal,
+        resolvedRoadmapHeight,
+        24,
+      )}
+      pointerEvents={{
+        base: "auto",
+        xl: roadmapContainerReveal > 0.16 ? "auto" : "none",
+      }}
       w="full"
     >
       <Box ref={roadmapContentRef}>
@@ -66,16 +67,20 @@ export const RoadmapStage = ({
             fontSize={{ base: "2xl", lg: "4xl" }}
             fontWeight="bold"
             lineHeight="1.4"
-            opacity={roadmapTitleReveal}
             textAlign="center"
-            transform={`translateY(${((1 - roadmapTitleReveal) * 14).toFixed(2)}px)`}
+            {...fadeUpStyleDesktopOnly(roadmapTitleReveal, 14)}
           >
-            과제물 분석을 통해 최적의 로드맵을 제공합니다.
+            과제물 분석을 통해
+            <Box as="br" display={{ base: "block", md: "none" }} />
+            <Box as="span" color="seed" fontSize={{ base: "3xl", lg: "5xl" }}>
+              {" "}
+              최적의 로드맵{" "}
+            </Box>
+            을 제공합니다.
           </Text>
 
           <Box
-            opacity={roadmapCardsReveal}
-            transform={`translateY(${((1 - roadmapCardsReveal) * 12).toFixed(2)}px)`}
+            {...fadeUpStyleDesktopOnly(roadmapCardsReveal, 12)}
             w="full"
             mb={10}
           >
@@ -83,13 +88,12 @@ export const RoadmapStage = ({
               gap={4}
               justify="center"
               w="full"
-              wrap={{ base: "wrap", lg: "nowrap" }}
+              wrap={{ base: "wrap", md: "nowrap" }}
             >
               {cards.map((card) => (
                 <AssignmentTypeCard
                   card={card}
                   isActive={activeId === card.id}
-                  isInteractive={roadmapInteractive}
                   key={card.id}
                   onSelect={onSelect}
                 />
@@ -99,15 +103,14 @@ export const RoadmapStage = ({
 
           {activeCard ? (
             <Box
-              opacity={roadmapListReveal}
-              pt={{ base: 2, lg: 4 }}
-              transform={`translateY(${((1 - roadmapListReveal) * 16).toFixed(2)}px)`}
+              {...fadeUpStyleDesktopOnly(roadmapListReveal, 16)}
               w="full"
+              pt={{ base: 2, lg: 4 }}
             >
               <Box w="full">
                 <Flex
                   animation={reduceMotion ? undefined : roadmapSwapInAnimation}
-                  direction={{ base: "column", xl: "row" }}
+                  direction={{ base: "column", md: "row" }}
                   gap={4}
                   justify="center"
                   key={activeCard.id}

@@ -3,9 +3,10 @@ import type { RefObject } from "react";
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import {
-  analysisPanelStageStyle,
-  fadeUpStyle,
-  referencePanelStageStyle,
+  analysisPanelStageStyleDesktopOnly,
+  fadeUpStyleDesktopOnly,
+  referencePanelStageStyleDesktopOnly,
+  stageContainerStyle,
 } from "../../../utils";
 import { AnalysisPanel } from "../../common";
 import { ReferenceDataPanel } from "../../common";
@@ -33,15 +34,7 @@ export const AnalysisStage = ({
 }: AnalysisStageProps) => {
   return (
     <Box
-      maxH={`${(resolvedAnalysisHeight * analysisStageReveal).toFixed(2)}px`}
-      opacity={analysisStageReveal}
-      overflow="hidden"
-      transform={`translateY(${((1 - analysisStageReveal) * 20).toFixed(2)}px)`}
-      transition={[
-        "max-height 240ms cubic-bezier(0.22, 1, 0.36, 1)",
-        "opacity 220ms ease",
-        "transform 240ms cubic-bezier(0.22, 1, 0.36, 1)",
-      ].join(", ")}
+      {...stageContainerStyle(analysisStageReveal, resolvedAnalysisHeight, 20)}
       w="full"
     >
       <Box ref={analysisContentRef}>
@@ -50,17 +43,17 @@ export const AnalysisStage = ({
             align="center"
             gap={{ base: 8, lg: 12 }}
             w="full"
-            {...fadeUpStyle(referenceReveal, 64)}
+            {...fadeUpStyleDesktopOnly(referenceReveal, 64)}
           >
             <Text
               color="text"
-              fontSize={{ base: "3xl", lg: "4xl" }}
+              fontSize={{ base: "2xl", lg: "4xl" }}
               fontWeight="bold"
               lineHeight="1.4"
               textAlign="center"
               whiteSpace="nowrap"
             >
-              과제를 등록하면 분석을 시작합니다
+              과제를 등록하면 분석을 시작합니다.
             </Text>
 
             <Box display={{ base: "none", xl: "block" }} w="full">
@@ -71,7 +64,7 @@ export const AnalysisStage = ({
                   top="50%"
                   w={"600px"}
                   zIndex={2}
-                  {...referencePanelStageStyle(
+                  {...referencePanelStageStyleDesktopOnly(
                     referenceReveal,
                     analysisPanelReveal,
                   )}
@@ -84,7 +77,7 @@ export const AnalysisStage = ({
                   top="50%"
                   w={"520px"}
                   zIndex={1}
-                  {...analysisPanelStageStyle(analysisPanelReveal)}
+                  {...analysisPanelStageStyleDesktopOnly(analysisPanelReveal)}
                 >
                   <AnalysisPanel
                     intentReveal={intentReveal}
@@ -104,7 +97,10 @@ export const AnalysisStage = ({
               w="full"
             >
               <ReferenceDataPanel />
-              <Box {...fadeUpStyle(analysisPanelReveal, 16)} w="full">
+              <Box
+                {...fadeUpStyleDesktopOnly(analysisPanelReveal, 16)}
+                w="full"
+              >
                 <AnalysisPanel
                   intentReveal={intentReveal}
                   keywordReveal={keywordReveal}
