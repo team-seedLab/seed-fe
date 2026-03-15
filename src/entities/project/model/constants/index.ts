@@ -1,1 +1,1 @@
-export * from "./project-query-factory";
+export * from "./project-query-keys";
