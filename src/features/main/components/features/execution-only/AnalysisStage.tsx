@@ -3,9 +3,9 @@ import type { RefObject } from "react";
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import {
-  analysisPanelStageStyleDesktopOnly,
+  analysisPanelStageStyle,
   fadeUpStyleDesktopOnly,
-  referencePanelStageStyleDesktopOnly,
+  referencePanelStageStyle,
   stageContainerStyle,
 } from "../../../utils";
 import { AnalysisPanel } from "../../common";
@@ -64,7 +64,7 @@ export const AnalysisStage = ({
                   top="50%"
                   w={"600px"}
                   zIndex={2}
-                  {...referencePanelStageStyleDesktopOnly(
+                  {...referencePanelStageStyle(
                     referenceReveal,
                     analysisPanelReveal,
                   )}
@@ -77,7 +77,7 @@ export const AnalysisStage = ({
                   top="50%"
                   w={"520px"}
                   zIndex={1}
-                  {...analysisPanelStageStyleDesktopOnly(analysisPanelReveal)}
+                  {...analysisPanelStageStyle(analysisPanelReveal)}
                 >
                   <AnalysisPanel
                     intentReveal={intentReveal}

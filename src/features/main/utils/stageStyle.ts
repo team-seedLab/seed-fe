@@ -1,14 +1,14 @@
 export const fadeUpStyleDesktopOnly = (progress: number, distance: number) => {
   return {
-    opacity: { base: 1, lg: progress },
+    opacity: { base: 1, xl: progress },
     transform: {
       base: "none",
-      lg: `translateY(${((1 - progress) * distance).toFixed(2)}px)`,
+      xl: `translateY(${((1 - progress) * distance).toFixed(2)}px)`,
     },
   };
 };
 
-export const referencePanelStageStyleDesktopOnly = (
+export const referencePanelStageStyle = (
   enterProgress: number,
   shiftProgress: number,
 ) => {
@@ -17,24 +17,18 @@ export const referencePanelStageStyleDesktopOnly = (
   const scale = 0.94 + 0.06 * enterProgress;
 
   return {
-    opacity: { base: 1, lg: enterProgress },
-    transform: {
-      base: "none",
-      lg: `translate(-50%, -50%) translateX(${x.toFixed(2)}px) translateY(${y.toFixed(2)}px) scale(${scale.toFixed(4)})`,
-    },
+    opacity: enterProgress,
+    transform: `translate(-50%, -50%) translateX(${x.toFixed(2)}px) translateY(${y.toFixed(2)}px) scale(${scale.toFixed(4)})`,
   };
 };
 
-export const analysisPanelStageStyleDesktopOnly = (progress: number) => {
+export const analysisPanelStageStyle = (progress: number) => {
   const x = -48 + 360 * progress;
   const y = (1 - progress) * 20;
 
   return {
-    opacity: { base: 1, lg: progress },
-    transform: {
-      base: "none",
-      lg: `translate(-50%, -50%) translateX(${x.toFixed(2)}px) translateY(${y.toFixed(2)}px)`,
-    },
+    opacity: progress,
+    transform: `translate(-50%, -50%) translateX(${x.toFixed(2)}px) translateY(${y.toFixed(2)}px)`,
   };
 };
 
@@ -45,7 +39,7 @@ export const stageContainerStyle = (
   distancePx: number,
 ) => ({
   maxH: { base: "none", xl: `${(height * reveal).toFixed(2)}px` },
-  opacity: { base: 1, xl: reveal },
+  opacity: reveal,
   overflow: { base: "visible", xl: "hidden" },
   transform: {
     base: "none",
