@@ -335,7 +335,7 @@ export default function MainPage() {
         as="section"
         bg="white"
         display="flex"
-        h="100vh"
+        h="100dvh"
         justifyContent="center"
         py={11}
         w="full"
