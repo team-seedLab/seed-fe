@@ -53,7 +53,7 @@ export const AnalysisStage = ({
               textAlign="center"
               whiteSpace="nowrap"
             >
-              과제를 등록하면 분석을 시작합니다.
+              과제를 등록하면 분석을 시작합니다
             </Text>
 
             <Box display={{ base: "none", xl: "block" }} w="full">
