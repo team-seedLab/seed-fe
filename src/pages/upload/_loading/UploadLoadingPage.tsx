@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 
 import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
+import SproutAnimation from "@/features/upload-loading/_assets/sprout-animation.svg?react";
 import { ROUTE_PATHS } from "@/shared";
 import AbstractBackgroundCircle from "@/shared/_assets/images/abstract-background-circle.svg";
 
@@ -89,6 +90,7 @@ export default function UploadLoadingPage() {
         />
 
         <VStack gap={4}>
+          <SproutAnimation />
           <Text
             color="neutral.900"
             fontSize="36px"
