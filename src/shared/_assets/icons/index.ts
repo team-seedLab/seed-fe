@@ -16,12 +16,15 @@ import _ChevronRightIcon from "@/shared/_assets/icons/chevron-right.svg?react";
 import _ClipboardCheckIcon from "@/shared/_assets/icons/clipboard-check.svg?react";
 import _CopyIcon from "@/shared/_assets/icons/copy.svg?react";
 import _DocumentTextIcon from "@/shared/_assets/icons/document-text.svg?react";
+import _DoorOutIcon from "@/shared/_assets/icons/door-out.svg?react";
 import _ErrorIcon from "@/shared/_assets/icons/error.svg?react";
 import _FilePdfIcon from "@/shared/_assets/icons/file-pdf.svg?react";
 import _FilePenIcon from "@/shared/_assets/icons/file-pen.svg?react";
+import _FolderIcon from "@/shared/_assets/icons/folder.svg?react";
 import _MagnifyingGlassIcon from "@/shared/_assets/icons/magnifying-glass.svg?react";
 import _MicroscopeIcon from "@/shared/_assets/icons/microscope.svg?react";
 import _OrgChartIcon from "@/shared/_assets/icons/org-chart.svg?react";
+import _PersonIcon from "@/shared/_assets/icons/person.svg?react";
 import _PictureIcon from "@/shared/_assets/icons/picture.svg?react";
 import _PlusCircleIcon from "@/shared/_assets/icons/plus-circle.svg?react";
 import _PlusIcon from "@/shared/_assets/icons/plus.svg?react";
@@ -63,15 +66,18 @@ export const DocumentTextIcon = createIcon(
   _DocumentTextIcon,
   "DocumentTextIcon",
 );
+export const DoorOutIcon = createIcon(_DoorOutIcon, "DoorOutIcon");
 export const ErrorIcon = createIcon(_ErrorIcon, "ErrorIcon");
 export const FilePdfIcon = createIcon(_FilePdfIcon, "FilePdfIcon");
 export const FilePenIcon = createIcon(_FilePenIcon, "FilePenIcon");
+export const FolderIcon = createIcon(_FolderIcon, "FolderIcon");
 export const MagnifyingGlassIcon = createIcon(
   _MagnifyingGlassIcon,
   "MagnifyingGlassIcon",
 );
 export const MicroscopeIcon = createIcon(_MicroscopeIcon, "MicroscopeIcon");
 export const OrgChartIcon = createIcon(_OrgChartIcon, "OrgChartIcon");
+export const PersonIcon = createIcon(_PersonIcon, "PersonIcon");
 export const PictureIcon = createIcon(_PictureIcon, "PictureIcon");
 export const PlusCircleIcon = createIcon(_PlusCircleIcon, "PlusCircleIcon");
 export const PlusIcon = createIcon(_PlusIcon, "PlusIcon");
