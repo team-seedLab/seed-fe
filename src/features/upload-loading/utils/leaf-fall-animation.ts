@@ -1,5 +1,6 @@
 import { keyframes } from "@emotion/react";
 
+// 왼쪽 잎 떨어지는 애니메이션
 export const leafFallLeftAnimation = `${keyframes`
   0%   { transform: translate(0px,   0px)  rotate(12deg);  opacity: 0; }
   6%   { transform: translate(4px,   5px)  rotate(0deg);   opacity: 1; }
@@ -17,6 +18,7 @@ export const leafFallLeftAnimation = `${keyframes`
   100% { transform: translate(2px,  80px)  rotate(0deg);   opacity: 1; }
 `} 2800ms linear forwards`;
 
+// 오른쪽 잎 떨어지는 애니메이션
 export const leafFallRightAnimation = `${keyframes`
   0%   { transform: translate(0px,   0px)  rotate(-12deg); opacity: 0; }
   12%  { transform: translate(-4px,  5px)  rotate(0deg);   opacity: 1; }
