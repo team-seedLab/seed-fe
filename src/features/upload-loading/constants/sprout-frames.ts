@@ -20,3 +20,6 @@ export const SPROUT_FRAMES = [
 ] as const;
 
 export const FRAME_COUNT = SPROUT_FRAMES.length;
+
+export const GROWTH_THRESHOLD = 80;
+export const LEAF_FALL_THRESHOLD = 85;
