@@ -60,8 +60,7 @@ export default function UploadLoadingPage() {
         bg="seed.subtle"
         borderRadius="full"
         filter="blur(32px)"
-        h="800px"
-        w="800px"
+        boxSize="800px"
         left="50%"
         opacity={0.5}
         position="absolute"
@@ -89,8 +88,9 @@ export default function UploadLoadingPage() {
           objectFit="contain"
         />
 
+        <SproutAnimation />
+
         <VStack gap={4}>
-          <SproutAnimation />
           <Text
             color="neutral.900"
             fontSize="36px"
