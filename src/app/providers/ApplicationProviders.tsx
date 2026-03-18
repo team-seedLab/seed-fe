@@ -1,6 +1,6 @@
 import { Toaster } from "@/shared";
 
-import { QueryProvider, ThemeProvider } from "./components";
+import { AuthProvider, QueryProvider, ThemeProvider } from "./components";
 
 type Props = {
   children: React.ReactNode;
@@ -9,10 +9,12 @@ type Props = {
 export const ApplicationProviders = ({ children }: Props) => {
   return (
     <QueryProvider>
-      <ThemeProvider>
-        {children}
-        <Toaster />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </AuthProvider>
     </QueryProvider>
   );
 };
