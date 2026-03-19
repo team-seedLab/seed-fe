@@ -1,4 +1,5 @@
 const KAKAO_LOGIN_URL_BASE = import.meta.env.VITE_KAKAO_LOGIN_URL;
+const GOOGLE_LOGIN_URL_BASE = import.meta.env.VITE_GOOGLE_LOGIN_URL;
 
 export const KAKAO_LOGIN_URL_LOCAL =
   import.meta.env.VITE_KAKAO_LOGIN_URL_LOCAL ?? KAKAO_LOGIN_URL_BASE;
@@ -9,3 +10,13 @@ export const KAKAO_LOGIN_URL_PROD =
 export const KAKAO_LOGIN_URL = import.meta.env.DEV
   ? KAKAO_LOGIN_URL_LOCAL
   : KAKAO_LOGIN_URL_PROD;
+
+export const GOOGLE_LOGIN_URL_LOCAL =
+  import.meta.env.VITE_GOOGLE_LOGIN_URL_LOCAL ?? GOOGLE_LOGIN_URL_BASE;
+
+export const GOOGLE_LOGIN_URL_PROD =
+  import.meta.env.VITE_GOOGLE_LOGIN_URL_PROD ?? GOOGLE_LOGIN_URL_BASE;
+
+export const GOOGLE_LOGIN_URL = import.meta.env.DEV
+  ? GOOGLE_LOGIN_URL_LOCAL
+  : GOOGLE_LOGIN_URL_PROD;
