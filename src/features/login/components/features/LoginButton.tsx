@@ -2,7 +2,7 @@ import { Button, Image } from "@chakra-ui/react";
 
 import GoogleLogo from "../../_assets/google-symbol.webp";
 import KakaoSymbol from "../../_assets/kakao-symbol.webp";
-import { KAKAO_LOGIN_URL } from "../../constants";
+import { GOOGLE_LOGIN_URL, KAKAO_LOGIN_URL } from "../../constants";
 
 type LoginProvider = "kakao" | "google";
 
@@ -52,9 +52,24 @@ const redirectToKakaoLogin = () => {
   window.location.assign(KAKAO_LOGIN_URL);
 };
 
+const redirectToGoogleLogin = () => {
+  if (!GOOGLE_LOGIN_URL) {
+    throw new Error(
+      "Google login URL is not configured. Set VITE_GOOGLE_LOGIN_URL_LOCAL or VITE_GOOGLE_LOGIN_URL_PROD.",
+    );
+  }
+
+  window.location.assign(GOOGLE_LOGIN_URL);
+};
+
+const LOGIN_HANDLER: Record<LoginProvider, () => void> = {
+  kakao: redirectToKakaoLogin,
+  google: redirectToGoogleLogin,
+};
+
 export const LoginButton = ({ provider }: Props) => {
   const config = LOGIN_BUTTON_CONFIG[provider];
-  const onClick = provider === "kakao" ? redirectToKakaoLogin : undefined;
+  const onClick = LOGIN_HANDLER[provider];
 
   return (
     <Button
@@ -65,7 +80,7 @@ export const LoginButton = ({ provider }: Props) => {
       border={config.border}
       borderColor={config.borderColor}
       fontSize={{ base: "sm", lg: "md" }}
-      fontWeight={600}
+      fontWeight="semibold"
       borderRadius="xl"
       _hover={{ bg: config.hoverBg }}
       position="relative"
