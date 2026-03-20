@@ -11,6 +11,13 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
+import {
+  type AssignmentType,
+  ROADMAP_STEP_CODES,
+  ROADMAP_TYPE_MAP,
+  useCreateProject,
+  useUploadFlowStore,
+} from "@/entities";
 import { formatSize } from "@/features";
 import {
   AcademicCapIcon,
@@ -23,9 +30,9 @@ import {
   ROUTE_PATHS,
   SquarePlayIcon,
   XMarkIcon,
+  getApiErrorMessage,
+  toaster,
 } from "@/shared";
-
-type AssignmentType = "글쓰기형" | "발표형" | "실습형" | "요약형" | "학습형";
 
 type UploadedFile = {
   id: string;
@@ -40,6 +47,7 @@ const ASSIGNMENT_TYPES: {
   Icon: React.ComponentType<{ color?: string; boxSize?: string | number }>;
 }[] = [
   { label: "글쓰기형", Icon: FilePenIcon },
+  { label: "논문형", Icon: AcademicCapIcon },
   { label: "발표형", Icon: SquarePlayIcon },
   { label: "실습형", Icon: BeakerIcon },
   { label: "요약형", Icon: ClipboardCheckIcon },
@@ -60,6 +68,17 @@ export default function UploadPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
+
+  const { mutate: createProject, isPending } = useCreateProject();
+  const reset = useUploadFlowStore((state) => state.reset);
+  const setProjectId = useUploadFlowStore((state) => state.setProjectId);
+  const setError = useUploadFlowStore((state) => state.setError);
+
+  const canSubmit =
+    title.trim().length > 0 &&
+    (uploadedFiles.length > 0 || content.trim().length > 0);
+
+  const stepCount = ROADMAP_STEP_CODES[ROADMAP_TYPE_MAP[selectedType]].length;
 
   const addFiles = (newFiles: File[]) => {
     setUploadedFiles((prev) => {
@@ -94,7 +113,32 @@ export default function UploadPage() {
     e.target.value = "";
   };
 
-  const startAnalysis = () => navigate(ROUTE_PATHS.UPLOAD_LOADING);
+  const startAnalysis = () => {
+    if (!canSubmit || isPending) return;
+
+    reset();
+    createProject(
+      {
+        title,
+        roadmapType: ROADMAP_TYPE_MAP[selectedType],
+        userIntent: content,
+        files: uploadedFiles.map((f) => f.file),
+      },
+      {
+        onSuccess: (data) => {
+          setProjectId(data.projectId);
+        },
+        onError: (error) => {
+          toaster.create({
+            type: "error",
+            description: getApiErrorMessage(error),
+          });
+          setError(error instanceof Error ? error : new Error(String(error)));
+        },
+      },
+    );
+    navigate(ROUTE_PATHS.UPLOAD_LOADING);
+  };
 
   const FileIcon = ({ file }: { file: File }) => {
     if (isPdf(file))
@@ -466,19 +510,22 @@ export default function UploadPage() {
               bg="seed"
               borderRadius="20px"
               boxShadow="0px 8px 20px 0px rgba(152,201,92,0.25)"
-              cursor="pointer"
+              cursor={canSubmit && !isPending ? "pointer" : "not-allowed"}
               gap={2}
               h={14}
               justify="center"
               maxW="384px"
               onClick={startAnalysis}
+              opacity={canSubmit && !isPending ? 1 : 0.5}
               px={8}
               transition="opacity 0.15s"
               w="full"
-              _hover={{ opacity: 0.85 }}
+              _hover={{
+                opacity: canSubmit && !isPending ? 0.85 : 0.5,
+              }}
             >
               <Text color="white" fontWeight="bold">
-                3단계 로드맵 생성하기 →
+                {stepCount}단계 로드맵 생성하기 →
               </Text>
             </Flex>
             <Text color="neutral.600" fontSize="xs" textAlign="center">
