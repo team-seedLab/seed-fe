@@ -3,8 +3,9 @@ import { useNavigate } from "react-router";
 
 import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
+import { useUploadFlowStore } from "@/entities";
 import { SproutAnimation } from "@/features";
-import { ROUTE_PATHS } from "@/shared";
+import { ROUTE_PATHS, toaster } from "@/shared";
 import AbstractBackgroundCircle from "@/shared/_assets/images/abstract-background-circle.svg";
 
 const LOADING_STEPS = [
@@ -18,6 +19,9 @@ const LOADING_STEPS = [
 export default function UploadLoadingPage() {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+
+  const projectId = useUploadFlowStore((state) => state.projectId);
+  const error = useUploadFlowStore((state) => state.error);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,13 +38,23 @@ export default function UploadLoadingPage() {
   }, []);
 
   useEffect(() => {
-    if (progress >= 100) {
+    if (error) {
+      toaster.create({
+        type: "error",
+        description: "프로젝트 생성에 실패했습니다.",
+      });
+      navigate(ROUTE_PATHS.FILE_UPLOAD);
+    }
+  }, [error, navigate]);
+
+  useEffect(() => {
+    if (progress >= 100 && projectId) {
       const timer = setTimeout(() => {
-        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/1`);
+        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/1`);
       }, 600);
       return () => clearTimeout(timer);
     }
-  }, [progress, navigate]);
+  }, [progress, projectId, navigate]);
 
   const currentStep =
     [...LOADING_STEPS].reverse().find((s) => progress >= s.threshold) ??
@@ -93,7 +107,7 @@ export default function UploadLoadingPage() {
         <VStack gap={4}>
           <Text
             color="neutral.900"
-            fontSize="36px"
+            fontSize="4xl"
             fontWeight="bold"
             lineHeight="40px"
           >
