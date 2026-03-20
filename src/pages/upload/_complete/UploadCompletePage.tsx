@@ -1,75 +1,29 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { ROUTE_PATHS } from "@/shared";
+import { useCompleteProject, useGetProjectDetail } from "@/entities";
+import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 import {
   CheckCircleIcon,
   ChevronRightIcon,
   CopyIcon,
 } from "@/shared/_assets/icons";
 
-const PROJECT_TITLE = "심리학 개론 보고서";
-const COMPLETED_DATE = "2026-03-09 완료됨";
-
-const GENERATED_ASSETS = [
-  {
-    id: 1,
-    title: "주제 선정 프롬프트",
-    subtitle: "키워드 추출 및 주제 구체화",
-    prompt: `# System Role
-Act as a professional research assistant specializing in psychology.
-# User Context
-Topic: "Introduction to Psychology Report"
-Key Areas: Behavioral Psychology, Cognitive Development, Recent Case Studies.
-# Task
-Please search for and summarize 5 key academic papers or reliable articles published
-within the last 5 years regarding the topic above.
-For each source, provide:
-1. Title & Author
-2. Key Argument (Bullet points)
-3. Relevance to "Modern Behavioral Analysis"
-// Ensure the tone is academic yet accessible.`,
-    result: `"심리학의 기초 이론과 현대 사회에서의 적용 사례를 중심으로 분석하라. 특히 인지심리학적 관점에서 소셜 미디어 사용 패턴을 설명하고, 이것이 청소년의 자존감 형성에 미치는 긍정적/부정적 영향을 3가지 이상 제시하시오."`,
-  },
-  {
-    id: 2,
-    title: "개요 작성 프롬프트",
-    subtitle: "논리적 구조 설계",
-    prompt: `# System Role
-Act as an expert academic writing consultant specializing in psychology reports.
-# Task
-Create a detailed outline for the psychology report based on the research findings.
-# Instructions
-1. Design a 3-section structure (서론, 본론, 결론)
-2. For each section, define 2-3 key subsections
-3. Specify the main arguments for each subsection
-// Return a detailed outline in Korean`,
-    result: "",
-  },
-  {
-    id: 3,
-    title: "초안 생성 결과물",
-    subtitle: "서론 및 본문 초안",
-    prompt: `# System Role
-Act as a professional academic writer with expertise in psychology.
-# Task
-Write the full draft of the psychology report based on the outline provided.
-# Requirements
-- Academic tone and style (APA format references)
-- Minimum 3,000 characters in Korean
-- Logical flow between sections
-// Return a complete report in Korean`,
-    result: "",
-  },
-];
+type Asset = {
+  id: number;
+  title: string;
+  subtitle: string;
+  prompt: string;
+  result: string;
+};
 
 function AssetItem({
   asset,
   defaultOpen,
 }: {
-  asset: (typeof GENERATED_ASSETS)[number];
+  asset: Asset;
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen ?? false);
@@ -224,9 +178,35 @@ function AssetItem({
 }
 
 export default function UploadCompletePage() {
+  const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
 
+  const { data: project } = useGetProjectDetail(projectId ?? "");
+  const { mutate: completeProject } = useCompleteProject();
+
+  useEffect(() => {
+    if (projectId) {
+      completeProject(projectId, {
+        onError: (error) => {
+          toaster.create({
+            type: "error",
+            description: getApiErrorMessage(error),
+          });
+        },
+      });
+    }
+  }, [projectId, completeProject]);
+
   const goToMyPage = () => navigate(ROUTE_PATHS.MYPAGE);
+
+  const assets: Asset[] =
+    project?.stepResponses.map((step, index) => ({
+      id: index + 1,
+      title: step.stepName,
+      subtitle: step.stepCode,
+      prompt: step.providedPromptSnapshot,
+      result: "",
+    })) ?? [];
 
   return (
     <Flex
@@ -302,7 +282,7 @@ export default function UploadCompletePage() {
                 fontWeight="bold"
                 letterSpacing="-0.52px"
               >
-                {PROJECT_TITLE}
+                {project?.title}
               </Text>
               <Text
                 color="neutral.600"
@@ -310,7 +290,7 @@ export default function UploadCompletePage() {
                 fontWeight="medium"
                 letterSpacing="-0.28px"
               >
-                {COMPLETED_DATE}
+                {project?.createdAt}
               </Text>
             </VStack>
 
@@ -348,7 +328,7 @@ export default function UploadCompletePage() {
           </Text>
 
           <VStack gap={4} w="full">
-            {GENERATED_ASSETS.map((asset, i) => (
+            {assets.map((asset, i) => (
               <AssetItem key={asset.id} asset={asset} defaultOpen={i === 0} />
             ))}
           </VStack>

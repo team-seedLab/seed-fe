@@ -22,13 +22,14 @@ import { formatSize } from "@/features";
 import {
   AcademicCapIcon,
   BeakerIcon,
-  ClipboardCheckIcon,
+  BoardTeacherIcon,
   FilePdfIcon,
   FilePenIcon,
   PictureIcon,
   PlusCircleIcon,
   ROUTE_PATHS,
-  SquarePlayIcon,
+  ScriptIcon,
+  StudyIcon,
   XMarkIcon,
   getApiErrorMessage,
   toaster,
@@ -48,10 +49,10 @@ const ASSIGNMENT_TYPES: {
 }[] = [
   { label: "글쓰기형", Icon: FilePenIcon },
   { label: "논문형", Icon: AcademicCapIcon },
-  { label: "발표형", Icon: SquarePlayIcon },
+  { label: "발표형", Icon: BoardTeacherIcon },
   { label: "실습형", Icon: BeakerIcon },
-  { label: "요약형", Icon: ClipboardCheckIcon },
-  { label: "학습형", Icon: AcademicCapIcon },
+  { label: "요약형", Icon: ScriptIcon },
+  { label: "학습형", Icon: StudyIcon },
 ];
 
 const isPdf = (file: File) => file.type === "application/pdf";
