@@ -1,9 +1,14 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { Project, ProjectInitialContext } from "../types";
+import type {
+  Project,
+  ProjectInitialContext,
+  ProjectStepResponse,
+} from "../types";
 
 export interface ProjectDetailResponse extends Project {
   initialContext: ProjectInitialContext;
+  stepResponses: ProjectStepResponse[];
 }
 
 export const getProjectDetailAPI = async (
