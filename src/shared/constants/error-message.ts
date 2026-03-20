@@ -10,10 +10,16 @@ export const HTTP_ERROR_MESSAGES = {
   default: "요청을 처리할 수 없습니다.",
 } as const;
 
-// API 에러 코드별 메시지
 export const API_ERROR_MESSAGES = {
   DUPLICATE_USER_ID: "이미 사용 중인 아이디입니다.",
   DUPLICATE_NICKNAME: "이미 사용 중인 닉네임입니다.",
   INVALID_PASSWORD: "비밀번호가 올바르지 않습니다.",
   USER_NOT_FOUND: "존재하지 않는 사용자입니다.",
+
+  P002: "PDF 파일 파싱에 실패했습니다.",
+  P004: "분석할 내용이 없습니다. 파일 또는 텍스트를 입력해주세요.",
+  P005: "AI 서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+  P006: "AI 응답 처리에 실패했습니다.",
+  AP001: "프롬프트 템플릿을 찾을 수 없습니다.",
+  AP002: "해당 단계를 먼저 시작해주세요.",
 } as const;
