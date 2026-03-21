@@ -155,7 +155,8 @@ function UploadStepContent({
   const navigate = useNavigate();
 
   const [resultText, setResultText] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedFormat, setCopiedFormat] = useState(false);
 
   const { data: project } = useGetProjectDetail(projectId);
   const roadmapType = project?.roadmapType as RoadmapType | undefined;
@@ -186,11 +187,10 @@ function UploadStepContent({
     }
   }, [projectId, stepCode, startStep]);
 
-  const copyPrompt = () => {
-    if (!stepData?.providedPromptSnapshot) return;
-    navigator.clipboard.writeText(stepData.providedPromptSnapshot).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = (text: string, setter: (v: boolean) => void) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setter(true);
+      setTimeout(() => setter(false), 2000);
     });
   };
 
@@ -250,7 +250,7 @@ function UploadStepContent({
             <Box
               bg="neutral.50"
               border="1px solid white"
-              borderRadius="6px"
+              borderRadius="md"
               color="neutral.600"
               fontSize="2xs"
               fontWeight="regular"
@@ -277,7 +277,7 @@ function UploadStepContent({
         <Box
           bg="white"
           border="1px solid white"
-          borderRadius="32px"
+          borderRadius="4xl"
           boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
           overflow="hidden"
           pb="1px"
@@ -296,7 +296,9 @@ function UploadStepContent({
                 lineHeight="1.4"
                 pt="5px"
               >
-                AI가 생성한 프롬프트를 복사하여 사용하세요.
+                AI가 과제 주제를 분석하여 최적의 자료 조사를 위한 프롬프트를
+                생성했습니다.
+                <br />이 프롬프트를 사용하여 고품질의 레퍼런스를 확보하세요.
               </Text>
             </VStack>
 
@@ -304,7 +306,7 @@ function UploadStepContent({
               bg="neutral.50"
               border="1px solid"
               borderColor="neutral.50"
-              borderRadius="16px"
+              borderRadius="2xl"
               overflow="hidden"
               w="full"
             >
@@ -328,10 +330,16 @@ function UploadStepContent({
                   bg="white"
                   border="1px solid"
                   borderColor="neutral.50"
-                  borderRadius="8px"
+                  borderRadius="lg"
                   boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
                   cursor="pointer"
-                  onClick={copyPrompt}
+                  onClick={() =>
+                    stepData?.providedPromptSnapshot &&
+                    copyToClipboard(
+                      stepData.providedPromptSnapshot,
+                      setCopiedPrompt,
+                    )
+                  }
                   px="13px"
                   py="7px"
                   _hover={{ boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)" }}
@@ -339,15 +347,15 @@ function UploadStepContent({
                   <Flex align="center" gap="6px">
                     <CopyIcon
                       boxSize={3}
-                      color={copied ? "seed" : "neutral.900"}
+                      color={copiedPrompt ? "seed" : "neutral.900"}
                     />
                     <Text
-                      color={copied ? "seed" : "neutral.900"}
+                      color={copiedPrompt ? "seed" : "neutral.900"}
                       fontSize="xs"
                       fontWeight="semibold"
                       lineHeight="16px"
                     >
-                      {copied ? "복사됨 ✓" : "복사하기"}
+                      {copiedPrompt ? "복사됨 ✓" : "복사하기"}
                     </Text>
                   </Flex>
                 </Box>
@@ -371,6 +379,89 @@ function UploadStepContent({
               </Box>
             </Box>
 
+            {stepData?.formatPrompt && (
+              <VStack align="flex-start" gap={6} w="full">
+                <Text
+                  color="neutral.900"
+                  fontSize="2xl"
+                  fontWeight="bold"
+                  lineHeight="1.4"
+                >
+                  결과 추출
+                </Text>
+                <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
+                  이 프롬프트를 사용하여 ai와 함께 작업한 결과를 추출해주세요.
+                </Text>
+                <Box
+                  bg="neutral.50"
+                  border="1px solid"
+                  borderColor="neutral.50"
+                  borderRadius="2xl"
+                  overflow="hidden"
+                  w="full"
+                >
+                  <Flex
+                    align="center"
+                    borderBottom="1px solid"
+                    borderBottomColor="neutral.50"
+                    justify="space-between"
+                    py={4}
+                    px={6}
+                  >
+                    <Flex align="center" gap={2}>
+                      <DocumentTextIcon boxSize={3} color="neutral.600" />
+                      <Text
+                        color="neutral.600"
+                        fontSize="xs"
+                        fontWeight="medium"
+                      >
+                        작업 결과 추출 프롬프트
+                      </Text>
+                    </Flex>
+
+                    <Box
+                      as="button"
+                      bg="white"
+                      border="1px solid"
+                      borderColor="neutral.50"
+                      borderRadius="lg"
+                      boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
+                      cursor="pointer"
+                      onClick={() =>
+                        copyToClipboard(stepData.formatPrompt, setCopiedFormat)
+                      }
+                      px="13px"
+                      py="7px"
+                      _hover={{
+                        boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)",
+                      }}
+                    >
+                      <Flex align="center" gap="6px">
+                        <CopyIcon
+                          boxSize={3}
+                          color={copiedFormat ? "seed" : "neutral.900"}
+                        />
+                        <Text
+                          color={copiedFormat ? "seed" : "neutral.900"}
+                          fontSize="xs"
+                          fontWeight="semibold"
+                          lineHeight="16px"
+                        >
+                          {copiedFormat ? "복사됨 ✓" : "복사하기"}
+                        </Text>
+                      </Flex>
+                    </Box>
+                  </Flex>
+
+                  <Box bg="neutral.50" p="28px">
+                    {stepData.formatPrompt.split("\n").map((line, i) => (
+                      <PromptLine key={i} line={line} />
+                    ))}
+                  </Box>
+                </Box>
+              </VStack>
+            )}
+
             <VStack align="flex-start" gap={6} pt="71px" w="full">
               <Text
                 color="neutral.900"
@@ -390,7 +481,7 @@ function UploadStepContent({
                   _placeholder={{ color: "neutral.300" }}
                   bg="neutral.50"
                   border="none"
-                  borderRadius="12px"
+                  borderRadius="xl"
                   color="neutral.900"
                   fontSize="sm"
                   fontWeight="medium"
@@ -421,7 +512,7 @@ function UploadStepContent({
             <Flex justify="flex-end" pt={8} w="full">
               <Button
                 bg="seed"
-                borderRadius="12px"
+                borderRadius="xl"
                 color="white"
                 cursor={
                   resultText.trim() && !isSaving ? "pointer" : "not-allowed"
@@ -437,7 +528,7 @@ function UploadStepContent({
                 }}
               >
                 {isLastStep ? "로드맵 완성" : "다음 단계로 진행"}
-                <ArrowRightIcon boxSize="13px" />
+                <ArrowRightIcon boxSize={3} />
               </Button>
             </Flex>
           </VStack>
