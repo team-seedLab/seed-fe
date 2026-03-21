@@ -18,20 +18,22 @@ const LOADING_STEPS = [
 
 export default function UploadLoadingPage() {
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(0);
+  const [timerProgress, setTimerProgress] = useState(0);
 
   const projectId = useUploadFlowStore((state) => state.projectId);
   const error = useUploadFlowStore((state) => state.error);
 
+  const progress = projectId ? 100 : timerProgress;
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
+      setTimerProgress((prev) => {
+        if (prev >= 90) {
           clearInterval(interval);
-          return 100;
+          return 90;
         }
-        const increment = prev < 70 ? 1.2 : prev < 90 ? 0.6 : 0.3;
-        return Math.min(prev + increment, 100);
+        const increment = prev < 70 ? 1.2 : 0.6;
+        return Math.min(prev + increment, 90);
       });
     }, 80);
     return () => clearInterval(interval);
@@ -48,13 +50,13 @@ export default function UploadLoadingPage() {
   }, [error, navigate]);
 
   useEffect(() => {
-    if (progress >= 100 && projectId) {
+    if (projectId) {
       const timer = setTimeout(() => {
         navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/1`);
       }, 600);
       return () => clearTimeout(timer);
     }
-  }, [progress, projectId, navigate]);
+  }, [projectId, navigate]);
 
   const currentStep =
     [...LOADING_STEPS].reverse().find((s) => progress >= s.threshold) ??
