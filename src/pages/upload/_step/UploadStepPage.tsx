@@ -134,6 +134,7 @@ function StepIndicator({
                 fontWeight={isActive ? "bold" : "medium"}
                 lineHeight="20px"
                 textAlign="center"
+                wordBreak="keep-all"
               >
                 {ROADMAP_STEP_NAMES[code] ?? code}
               </Text>
