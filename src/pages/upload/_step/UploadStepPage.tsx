@@ -28,6 +28,7 @@ function PromptLine({ line }: { line: string }) {
         display="block"
         fontSize="sm"
         lineHeight="1.4"
+        fontFamily="mono"
       >
         {line}
       </Text>
@@ -41,6 +42,7 @@ function PromptLine({ line }: { line: string }) {
         display="block"
         fontSize="sm"
         lineHeight="1.4"
+        fontFamily="mono"
       >
         {line}
       </Text>
@@ -53,6 +55,7 @@ function PromptLine({ line }: { line: string }) {
       display="block"
       fontSize="sm"
       lineHeight="1.4"
+      fontFamily="mono"
     >
       {line}
     </Text>
