@@ -200,7 +200,7 @@ export default function UploadCompletePage() {
   const goToMyPage = () => navigate(ROUTE_PATHS.MYPAGE);
 
   const assets: Asset[] =
-    project?.stepResponses.map((step, index) => ({
+    project?.stepResponses?.map((step, index) => ({
       id: index + 1,
       title: step.stepName,
       subtitle: step.stepCode,

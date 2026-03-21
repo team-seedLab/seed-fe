@@ -120,7 +120,7 @@ export default function UploadLoadingPage() {
           </Text>
         </VStack>
 
-        <VStack gap={3} maxW="320px" w="full">
+        <VStack gap={3} maxW={80} w="full">
           <Flex align="center" justify="space-between" w="full">
             <Text color="seed" fontSize="xs" fontWeight="medium">
               {currentStep.message}

@@ -23,16 +23,14 @@ import {
   AcademicCapIcon,
   BeakerIcon,
   BoardTeacherIcon,
+  DocumentTextIcon,
   FilePdfIcon,
   FilePenIcon,
   PictureIcon,
   PlusCircleIcon,
   ROUTE_PATHS,
-  ScriptIcon,
   StudyIcon,
   XMarkIcon,
-  getApiErrorMessage,
-  toaster,
 } from "@/shared";
 
 type UploadedFile = {
@@ -51,7 +49,7 @@ const ASSIGNMENT_TYPES: {
   { label: "논문형", Icon: AcademicCapIcon },
   { label: "발표형", Icon: BoardTeacherIcon },
   { label: "실습형", Icon: BeakerIcon },
-  { label: "요약형", Icon: ScriptIcon },
+  { label: "요약형", Icon: DocumentTextIcon },
   { label: "학습형", Icon: StudyIcon },
 ];
 
@@ -72,8 +70,6 @@ export default function UploadPage() {
 
   const { mutate: createProject, isPending } = useCreateProject();
   const reset = useUploadFlowStore((state) => state.reset);
-  const setProjectId = useUploadFlowStore((state) => state.setProjectId);
-  const setError = useUploadFlowStore((state) => state.setError);
 
   const canSubmit =
     title.trim().length > 0 &&
@@ -118,26 +114,12 @@ export default function UploadPage() {
     if (!canSubmit || isPending) return;
 
     reset();
-    createProject(
-      {
-        title,
-        roadmapType: ROADMAP_TYPE_MAP[selectedType],
-        userIntent: content,
-        files: uploadedFiles.map((f) => f.file),
-      },
-      {
-        onSuccess: (data) => {
-          setProjectId(data.projectId);
-        },
-        onError: (error) => {
-          toaster.create({
-            type: "error",
-            description: getApiErrorMessage(error),
-          });
-          setError(error instanceof Error ? error : new Error(String(error)));
-        },
-      },
-    );
+    createProject({
+      title,
+      roadmapType: ROADMAP_TYPE_MAP[selectedType],
+      userIntent: content,
+      files: uploadedFiles.map((f) => f.file),
+    });
     navigate(ROUTE_PATHS.UPLOAD_LOADING);
   };
 
@@ -209,7 +191,7 @@ export default function UploadPage() {
 
         <Flex
           bg="white"
-          borderRadius="32px"
+          borderRadius="4xl"
           boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
           direction="column"
           gap={12}
@@ -217,13 +199,7 @@ export default function UploadPage() {
           w="full"
         >
           <VStack align="flex-start" gap={4} w="full">
-            <Text
-              color="neutral.600"
-              fontSize="sm"
-              fontWeight="semibold"
-              letterSpacing="0.7px"
-              textTransform="uppercase"
-            >
+            <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
               과제 유형
             </Text>
             <HStack gap={3} flexWrap="wrap">
@@ -236,10 +212,10 @@ export default function UploadPage() {
                     bg={isActive ? "seed.subtle" : "neutral.50"}
                     border="2px solid"
                     borderColor={isActive ? "seed" : "neutral.50"}
-                    borderRadius="24px"
+                    borderRadius="3xl"
                     cursor="pointer"
                     gap={2}
-                    h="56px"
+                    h={14}
                     justify="center"
                     minW="120px"
                     px={5}
@@ -277,7 +253,7 @@ export default function UploadPage() {
             <Flex
               border="1px solid"
               borderColor="neutral.50"
-              borderRadius="28px"
+              borderRadius="4xl"
               boxShadow="0px 4px 20px 0px rgba(0,0,0,0.02)"
               overflow="hidden"
               w="full"
@@ -286,13 +262,13 @@ export default function UploadPage() {
                 <Textarea
                   color="neutral.900"
                   flex={1}
-                  h="256px"
+                  h={64}
                   placeholder={`교수님이 제시한 과제 주제나 요구사항을 자유롭게 적어주세요.\n예) '마케팅 전략 분석 리포트 작성, 2000자 내외, SWOT 분석 포함 필수'`}
                   resize="none"
                   value={content}
                   border="none"
                   _focusVisible={{ outline: "none", boxShadow: "none" }}
-                  _placeholder={{ color: "neutral.300", fontSize: "16px" }}
+                  _placeholder={{ color: "neutral.300" }}
                   maxLength={MAX_CONTENT_LENGTH}
                   onChange={(e) => setContent(e.target.value)}
                 />
@@ -339,7 +315,7 @@ export default function UploadPage() {
                       align="center"
                       border="2px dashed"
                       borderColor={isDragging ? "seed" : "neutral.300"}
-                      borderRadius="20px"
+                      borderRadius="2xl"
                       cursor="pointer"
                       direction="column"
                       flex={1}
@@ -509,13 +485,13 @@ export default function UploadPage() {
             <Flex
               align="center"
               bg="seed"
-              borderRadius="20px"
+              borderRadius="2xl"
               boxShadow="0px 8px 20px 0px rgba(152,201,92,0.25)"
               cursor={canSubmit && !isPending ? "pointer" : "not-allowed"}
               gap={2}
               h={14}
               justify="center"
-              maxW="384px"
+              maxW={96}
               onClick={startAnalysis}
               opacity={canSubmit && !isPending ? 1 : 0.5}
               px={8}
