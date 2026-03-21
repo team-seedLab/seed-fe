@@ -12,7 +12,7 @@ const LOADING_STEPS = [
   { threshold: 0, message: "파일 업로드 중..." },
   { threshold: 20, message: "PDF 텍스트 추출 중..." },
   { threshold: 50, message: "과제 내용 분석 중..." },
-  { threshold: 75, message: "3단계 로드맵 생성 중..." },
+  { threshold: 75, message: "로드맵 생성 중..." },
   { threshold: 95, message: "마무리 중..." },
 ];
 
@@ -116,7 +116,7 @@ export default function UploadLoadingPage() {
             분석하고 있어요
           </Text>
           <Text color="neutral.600" fontSize="lg" fontWeight="medium">
-            분석이 완료되면 나만의 3단계 로드맵이 펼쳐집니다.
+            분석이 완료되면 나만의 로드맵이 펼쳐집니다.
           </Text>
         </VStack>
 

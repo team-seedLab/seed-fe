@@ -239,9 +239,8 @@ export default function UploadCompletePage() {
           <VStack gap={2}>
             <Text
               color="neutral.900"
-              fontSize="30px"
+              fontSize="3xl"
               fontWeight="bold"
-              letterSpacing="-0.6px"
               lineHeight="1.4"
             >
               과제 압축 완료!
@@ -258,7 +257,7 @@ export default function UploadCompletePage() {
           bg="white"
           border="1px solid"
           borderColor="neutral.50"
-          borderRadius="32px"
+          borderRadius="4xl"
           boxShadow="0px 10px 40px -10px rgba(0,0,0,0.05)"
           mb={4}
           p="33px"
@@ -268,28 +267,17 @@ export default function UploadCompletePage() {
               <Box bg="neutral.50" borderRadius="full" px={3} py={1}>
                 <Text
                   color="neutral.600"
-                  fontSize="12px"
+                  fontSize="xs"
                   fontWeight="semibold"
-                  letterSpacing="0.3px"
                   textTransform="uppercase"
                 >
                   Assignment
                 </Text>
               </Box>
-              <Text
-                color="neutral.900"
-                fontSize="26px"
-                fontWeight="bold"
-                letterSpacing="-0.52px"
-              >
+              <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
                 {project?.title}
               </Text>
-              <Text
-                color="neutral.600"
-                fontSize="14px"
-                fontWeight="medium"
-                letterSpacing="-0.28px"
-              >
+              <Text color="neutral.600" fontSize="sm" fontWeight="medium">
                 {project?.createdAt}
               </Text>
             </VStack>
@@ -299,18 +287,12 @@ export default function UploadCompletePage() {
                 align="center"
                 bg="rgba(152,201,92,0.1)"
                 borderRadius="full"
-                h="48px"
+                boxSize={12}
                 justify="center"
-                w="48px"
               >
                 <CheckCircleIcon boxSize="22px" color="seed" />
               </Flex>
-              <Text
-                color="seed"
-                fontSize="12px"
-                fontWeight="bold"
-                letterSpacing="-0.24px"
-              >
+              <Text color="seed" fontSize="xs" fontWeight="bold">
                 로드맵 완료
               </Text>
             </VStack>
@@ -318,12 +300,7 @@ export default function UploadCompletePage() {
         </Box>
 
         <VStack align="flex-start" gap={4} w="full">
-          <Text
-            color="neutral.600"
-            fontSize="14px"
-            fontWeight="semibold"
-            letterSpacing="-0.28px"
-          >
+          <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
             생성된 자산 (Generated Assets)
           </Text>
 
@@ -337,11 +314,11 @@ export default function UploadCompletePage() {
         <Flex justify="center" mt={4}>
           <Button
             bg="seed"
-            borderRadius="16px"
+            borderRadius="2xl"
             color="white"
-            fontSize="18px"
+            fontSize="lg"
             fontWeight="bold"
-            h="60px"
+            h={16}
             maxW="624px"
             onClick={goToMyPage}
             w="full"
