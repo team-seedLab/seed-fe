@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import { ProjectListItem, useGetProjectList } from "@/entities";
-import { Pagination, PlusIcon } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS, Pagination, PlusIcon } from "@/shared";
 
 import { ProjectListToolbar } from "../../components";
 
 export const ProjectListSection = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const {
     data: projectsListData,
@@ -49,6 +51,9 @@ export const ProjectListSection = () => {
           <ProjectListItem
             key={project.projectId}
             name={project.title}
+            onClick={() =>
+              navigate(DYNAMIC_ROUTE_PATHS.getProjectDetail(project.projectId))
+            }
             updatedAt={project.createdAt}
           />
         ))}
