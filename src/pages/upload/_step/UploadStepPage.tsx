@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, Text, Textarea, VStack } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 
 import {
   ROADMAP_STEP_CODES,
   ROADMAP_STEP_NAMES,
+  completeProjectAPI,
+  saveStepResultAPI,
+  startStepAPI,
   useGetProjectDetail,
-  useSaveStepResult,
-  useStartStep,
 } from "@/entities";
 import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 import {
@@ -171,8 +173,13 @@ function UploadStepContent({
     mutate: startStep,
     data: stepData,
     isPending: isStepLoading,
-  } = useStartStep();
-  const { mutate: saveResult, isPending: isSaving } = useSaveStepResult();
+  } = useMutation({ mutationFn: startStepAPI });
+  const { mutate: saveResult, isPending: isSaving } = useMutation({
+    mutationFn: saveStepResultAPI,
+  });
+  const { mutate: completeProject, isPending: isCompleting } = useMutation({
+    mutationFn: completeProjectAPI,
+  });
 
   useEffect(() => {
     if (projectId && stepCode) {
@@ -224,16 +231,33 @@ function UploadStepContent({
   };
 
   const goToNextStep = () => {
-    if (!projectId || !stepCode || !resultText.trim() || isSaving) return;
+    if (
+      !projectId ||
+      !stepCode ||
+      !resultText.trim() ||
+      isSaving ||
+      isCompleting
+    )
+      return;
 
     saveResult(
       { projectId, stepCode, resultText },
       {
         onSuccess: () => {
           if (isLastStep) {
-            navigate(
-              ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
-            );
+            completeProject(projectId, {
+              onSuccess: () => {
+                navigate(
+                  ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
+                );
+              },
+              onError: (error) => {
+                toaster.create({
+                  type: "error",
+                  description: getApiErrorMessage(error),
+                });
+              },
+            });
           } else {
             navigate(
               `${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`,
@@ -560,16 +584,27 @@ function UploadStepContent({
 }
 
 export default function UploadStepPage() {
+  const navigate = useNavigate();
   const { projectId, step } = useParams<{
     projectId: string;
     step: string;
   }>();
   const stepNum = parseInt(step ?? "1", 10);
 
+  useEffect(() => {
+    if (!projectId || isNaN(stepNum) || stepNum < 1) {
+      navigate(ROUTE_PATHS.FILE_UPLOAD, { replace: true });
+    }
+  }, [projectId, stepNum, navigate]);
+
+  if (!projectId || isNaN(stepNum) || stepNum < 1) {
+    return null;
+  }
+
   return (
     <UploadStepContent
       key={`${projectId}-${stepNum}`}
-      projectId={projectId ?? ""}
+      projectId={projectId}
       stepNum={stepNum}
     />
   );

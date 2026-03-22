@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { useCompleteProject, useGetProjectDetail } from "@/entities";
-import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
+import { useGetProjectDetail } from "@/entities";
+import { ROUTE_PATHS, toaster } from "@/shared";
 import {
   CheckCircleIcon,
   ChevronRightIcon,
@@ -193,22 +193,12 @@ export default function UploadCompletePage() {
   const navigate = useNavigate();
 
   const { data: project } = useGetProjectDetail(projectId ?? "");
-  const { mutate: completeProject } = useCompleteProject();
 
   useEffect(() => {
     if (!projectId) {
       navigate(ROUTE_PATHS.MYPAGE);
-      return;
     }
-    completeProject(projectId, {
-      onError: (error) => {
-        toaster.create({
-          type: "error",
-          description: getApiErrorMessage(error),
-        });
-      },
-    });
-  }, [projectId, completeProject, navigate]);
+  }, [projectId, navigate]);
 
   if (!projectId) {
     return null;
@@ -249,7 +239,7 @@ export default function UploadCompletePage() {
             boxSize={20}
             justify="center"
           >
-            <CheckCircleIcon boxSize="33px" color="seed" />
+            <CheckCircleIcon boxSize={8} color="seed" />
           </Flex>
 
           <VStack gap={2}>
