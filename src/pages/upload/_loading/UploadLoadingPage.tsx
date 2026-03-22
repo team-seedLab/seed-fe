@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 
 import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
+import { useUploadFlowStore } from "@/entities";
 import { SproutAnimation } from "@/features";
 import { ROUTE_PATHS } from "@/shared";
 import AbstractBackgroundCircle from "@/shared/_assets/images/abstract-background-circle.svg";
@@ -11,36 +12,47 @@ const LOADING_STEPS = [
   { threshold: 0, message: "파일 업로드 중..." },
   { threshold: 20, message: "PDF 텍스트 추출 중..." },
   { threshold: 50, message: "과제 내용 분석 중..." },
-  { threshold: 75, message: "3단계 로드맵 생성 중..." },
+  { threshold: 75, message: "로드맵 생성 중..." },
   { threshold: 95, message: "마무리 중..." },
 ];
 
 export default function UploadLoadingPage() {
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(0);
+  const [timerProgress, setTimerProgress] = useState(0);
+
+  const projectId = useUploadFlowStore((state) => state.projectId);
+  const error = useUploadFlowStore((state) => state.error);
+
+  const progress = projectId ? 100 : timerProgress;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
+      setTimerProgress((prev) => {
+        if (prev >= 90) {
           clearInterval(interval);
-          return 100;
+          return 90;
         }
-        const increment = prev < 70 ? 1.2 : prev < 90 ? 0.6 : 0.3;
-        return Math.min(prev + increment, 100);
+        const increment = prev < 70 ? 1.2 : 0.6;
+        return Math.min(prev + increment, 90);
       });
     }, 80);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    if (progress >= 100) {
+    if (error) {
+      navigate(ROUTE_PATHS.FILE_UPLOAD);
+    }
+  }, [error, navigate]);
+
+  useEffect(() => {
+    if (projectId) {
       const timer = setTimeout(() => {
-        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/1`);
+        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/1`);
       }, 600);
       return () => clearTimeout(timer);
     }
-  }, [progress, navigate]);
+  }, [projectId, navigate]);
 
   const currentStep =
     [...LOADING_STEPS].reverse().find((s) => progress >= s.threshold) ??
@@ -93,7 +105,7 @@ export default function UploadLoadingPage() {
         <VStack gap={4}>
           <Text
             color="neutral.900"
-            fontSize="36px"
+            fontSize="4xl"
             fontWeight="bold"
             lineHeight="40px"
           >
@@ -102,11 +114,11 @@ export default function UploadLoadingPage() {
             분석하고 있어요
           </Text>
           <Text color="neutral.600" fontSize="lg" fontWeight="medium">
-            분석이 완료되면 나만의 3단계 로드맵이 펼쳐집니다.
+            분석이 완료되면 나만의 로드맵이 펼쳐집니다.
           </Text>
         </VStack>
 
-        <VStack gap={3} maxW="320px" w="full">
+        <VStack gap={3} maxW={80} w="full">
           <Flex align="center" justify="space-between" w="full">
             <Text color="seed" fontSize="xs" fontWeight="medium">
               {currentStep.message}

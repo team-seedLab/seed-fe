@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import { ProjectListItem, useGetProjectList } from "@/entities";
-import { Pagination, PlusIcon } from "@/shared";
+import { Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
 
 import { ProjectListToolbar } from "../../components";
 
 export const ProjectListSection = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const {
     data: projectsListData,
@@ -97,6 +99,7 @@ export const ProjectListSection = () => {
           cursor="pointer"
           _hover={{ bg: "neutral.50" }}
           transition="background 0.15s"
+          onClick={() => navigate(ROUTE_PATHS.FILE_UPLOAD)}
         >
           <Flex
             bg="seed.subtle"
@@ -105,7 +108,7 @@ export const ProjectListSection = () => {
             align="center"
             justify="center"
           >
-            <PlusIcon color="seed" boxSize="17.5px" />
+            <PlusIcon color="seed" boxSize={4.5} />
           </Flex>
         </Flex>
       </VStack>

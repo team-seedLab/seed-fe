@@ -8,8 +8,8 @@ export const ROUTE_PATHS = {
 
   UPLOAD_LOADING: "/upload/loading",
   UPLOAD_STEP_BASE: "/upload/step",
-  UPLOAD_STEP: "/upload/step/:step",
-  UPLOAD_COMPLETE: "/upload/complete",
+  UPLOAD_STEP: "/upload/step/:projectId/:step",
+  UPLOAD_COMPLETE: "/upload/complete/:projectId",
 
   NOT_FOUND: "*",
 };

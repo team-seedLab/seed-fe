@@ -1,86 +1,57 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { ROUTE_PATHS } from "@/shared";
+import { useGetProjectDetail } from "@/entities";
+import { ROUTE_PATHS, toaster } from "@/shared";
 import {
   CheckCircleIcon,
   ChevronRightIcon,
   CopyIcon,
 } from "@/shared/_assets/icons";
 
-const PROJECT_TITLE = "심리학 개론 보고서";
-const COMPLETED_DATE = "2026-03-09 완료됨";
-
-const GENERATED_ASSETS = [
-  {
-    id: 1,
-    title: "주제 선정 프롬프트",
-    subtitle: "키워드 추출 및 주제 구체화",
-    prompt: `# System Role
-Act as a professional research assistant specializing in psychology.
-# User Context
-Topic: "Introduction to Psychology Report"
-Key Areas: Behavioral Psychology, Cognitive Development, Recent Case Studies.
-# Task
-Please search for and summarize 5 key academic papers or reliable articles published
-within the last 5 years regarding the topic above.
-For each source, provide:
-1. Title & Author
-2. Key Argument (Bullet points)
-3. Relevance to "Modern Behavioral Analysis"
-// Ensure the tone is academic yet accessible.`,
-    result: `"심리학의 기초 이론과 현대 사회에서의 적용 사례를 중심으로 분석하라. 특히 인지심리학적 관점에서 소셜 미디어 사용 패턴을 설명하고, 이것이 청소년의 자존감 형성에 미치는 긍정적/부정적 영향을 3가지 이상 제시하시오."`,
-  },
-  {
-    id: 2,
-    title: "개요 작성 프롬프트",
-    subtitle: "논리적 구조 설계",
-    prompt: `# System Role
-Act as an expert academic writing consultant specializing in psychology reports.
-# Task
-Create a detailed outline for the psychology report based on the research findings.
-# Instructions
-1. Design a 3-section structure (서론, 본론, 결론)
-2. For each section, define 2-3 key subsections
-3. Specify the main arguments for each subsection
-// Return a detailed outline in Korean`,
-    result: "",
-  },
-  {
-    id: 3,
-    title: "초안 생성 결과물",
-    subtitle: "서론 및 본문 초안",
-    prompt: `# System Role
-Act as a professional academic writer with expertise in psychology.
-# Task
-Write the full draft of the psychology report based on the outline provided.
-# Requirements
-- Academic tone and style (APA format references)
-- Minimum 3,000 characters in Korean
-- Logical flow between sections
-// Return a complete report in Korean`,
-    result: "",
-  },
-];
+type Asset = {
+  id: number;
+  title: string;
+  subtitle: string;
+  prompt: string;
+  result: string;
+};
 
 function AssetItem({
   asset,
   defaultOpen,
 }: {
-  asset: (typeof GENERATED_ASSETS)[number];
+  asset: Asset;
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
-  const [copiedResult, setCopiedResult] = useState(false);
 
   const copy = (text: string, setter: (v: boolean) => void) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setter(true);
-      setTimeout(() => setter(false), 2000);
-    });
+    if (!navigator?.clipboard?.writeText) {
+      toaster.create({
+        type: "error",
+        description:
+          "클립보드 복사에 실패했습니다. 브라우저가 클립보드를 지원하지 않습니다.",
+      });
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setter(true);
+        setTimeout(() => setter(false), 2000);
+      })
+      .catch((error) => {
+        console.error("Failed to copy to clipboard", error);
+        toaster.create({
+          type: "error",
+          description:
+            "클립보드 복사에 실패했습니다. 브라우저 권한 또는 HTTPS 환경을 확인해주세요.",
+        });
+      });
   };
 
   return (
@@ -88,7 +59,7 @@ function AssetItem({
       bg="white"
       border="1px solid"
       borderColor="neutral.50"
-      borderRadius="16px"
+      borderRadius="2xl"
       overflow="hidden"
       w="full"
     >
@@ -105,24 +76,18 @@ function AssetItem({
             bg="neutral.50"
             borderRadius="12px"
             flexShrink={0}
-            h="40px"
+            boxSize={10}
             justify="center"
-            w="40px"
           >
-            <Text color="neutral.600" fontSize="14px" fontWeight="bold">
+            <Text color="neutral.600" fontSize="sm" fontWeight="bold">
               {asset.id}
             </Text>
           </Flex>
           <VStack align="flex-start" gap={0.5}>
-            <Text
-              color="neutral.900"
-              fontSize="16px"
-              fontWeight="bold"
-              letterSpacing="-0.32px"
-            >
+            <Text color="neutral.900" fontWeight="bold">
               {asset.title}
             </Text>
-            <Text color="neutral.600" fontSize="12px">
+            <Text color="neutral.600" fontSize="xs">
               {asset.subtitle}
             </Text>
           </VStack>
@@ -143,17 +108,17 @@ function AssetItem({
             bg="neutral.50"
             border="1px solid"
             borderColor="neutral.50"
-            borderRadius="12px"
-            p="21px"
+            borderRadius="xl"
+            p={5}
             w="full"
           >
             <Flex align="center" justify="space-between" mb={2}>
-              <Text color="neutral.600" fontSize="12px" fontWeight="semibold">
-                Generated Prompt
+              <Text color="neutral.600" fontSize="xs" fontWeight="semibold">
+                생성된 프롬프트
               </Text>
               <Button
                 color={copiedPrompt ? "seed" : "neutral.600"}
-                fontSize="12px"
+                fontSize="xs"
                 fontWeight="bold"
                 gap={1.5}
                 onClick={() => copy(asset.prompt, setCopiedPrompt)}
@@ -170,7 +135,7 @@ function AssetItem({
               as="pre"
               color="neutral.900"
               fontFamily="mono"
-              fontSize="12px"
+              fontSize="xs"
               lineHeight="1.4"
               whiteSpace="pre-wrap"
             >
@@ -178,22 +143,22 @@ function AssetItem({
             </Text>
           </Box>
 
-          <Box
+          {/* <Box
             bg="neutral.50"
             border="1px solid"
             borderColor="neutral.50"
-            borderRadius="12px"
-            p="21px"
+            borderRadius="xl"
+            p={5}
             w="full"
           >
             <Flex align="center" justify="space-between" mb={2}>
-              <Text color="neutral.600" fontSize="12px" fontWeight="semibold">
+              <Text color="neutral.600" fontSize="xs" fontWeight="semibold">
                 Prompt Result
               </Text>
               {asset.result && (
                 <Button
                   color="seed"
-                  fontSize="12px"
+                  fontSize="xs"
                   fontWeight="bold"
                   gap={1.5}
                   onClick={() => copy(asset.result, setCopiedResult)}
@@ -208,15 +173,15 @@ function AssetItem({
               )}
             </Flex>
             {asset.result ? (
-              <Text color="neutral.900" fontSize="14px" lineHeight="1.4">
+              <Text color="neutral.900" fontSize="sm" lineHeight="1.4">
                 {asset.result}
               </Text>
             ) : (
-              <Text color="neutral.600" fontSize="14px">
+              <Text color="neutral.600" fontSize="sm">
                 결과가 입력되지 않았습니다.
               </Text>
             )}
-          </Box>
+          </Box> */}
         </VStack>
       )}
     </Box>
@@ -224,9 +189,31 @@ function AssetItem({
 }
 
 export default function UploadCompletePage() {
+  const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
 
+  const { data: project } = useGetProjectDetail(projectId ?? "");
+
+  useEffect(() => {
+    if (!projectId) {
+      navigate(ROUTE_PATHS.MYPAGE);
+    }
+  }, [projectId, navigate]);
+
+  if (!projectId) {
+    return null;
+  }
+
   const goToMyPage = () => navigate(ROUTE_PATHS.MYPAGE);
+
+  const assets: Asset[] =
+    project?.stepResponses?.map((step, index) => ({
+      id: index + 1,
+      title: step.stepName,
+      subtitle: step.stepCode,
+      prompt: step.providedPromptSnapshot,
+      result: "",
+    })) ?? [];
 
   return (
     <Flex
@@ -249,26 +236,24 @@ export default function UploadCompletePage() {
             align="center"
             bg="rgba(152,201,92,0.1)"
             borderRadius="full"
-            h="80px"
+            boxSize={20}
             justify="center"
-            w="80px"
           >
-            <CheckCircleIcon boxSize="33px" color="seed" />
+            <CheckCircleIcon boxSize={8} color="seed" />
           </Flex>
 
           <VStack gap={2}>
             <Text
               color="neutral.900"
-              fontSize="30px"
+              fontSize="3xl"
               fontWeight="bold"
-              letterSpacing="-0.6px"
               lineHeight="1.4"
             >
               과제 압축 완료!
               <br />
               고생하셨습니다.
             </Text>
-            <Text color="neutral.600" fontSize="18px" fontWeight="medium">
+            <Text color="neutral.600" fontSize="lg" fontWeight="medium">
               성공적으로 로드맵을 완주했어요.
             </Text>
           </VStack>
@@ -278,7 +263,7 @@ export default function UploadCompletePage() {
           bg="white"
           border="1px solid"
           borderColor="neutral.50"
-          borderRadius="32px"
+          borderRadius="4xl"
           boxShadow="0px 10px 40px -10px rgba(0,0,0,0.05)"
           mb={4}
           p="33px"
@@ -288,29 +273,18 @@ export default function UploadCompletePage() {
               <Box bg="neutral.50" borderRadius="full" px={3} py={1}>
                 <Text
                   color="neutral.600"
-                  fontSize="12px"
+                  fontSize="xs"
                   fontWeight="semibold"
-                  letterSpacing="0.3px"
                   textTransform="uppercase"
                 >
                   Assignment
                 </Text>
               </Box>
-              <Text
-                color="neutral.900"
-                fontSize="26px"
-                fontWeight="bold"
-                letterSpacing="-0.52px"
-              >
-                {PROJECT_TITLE}
+              <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
+                {project?.title}
               </Text>
-              <Text
-                color="neutral.600"
-                fontSize="14px"
-                fontWeight="medium"
-                letterSpacing="-0.28px"
-              >
-                {COMPLETED_DATE}
+              <Text color="neutral.600" fontSize="sm" fontWeight="medium">
+                {project?.createdAt}
               </Text>
             </VStack>
 
@@ -319,18 +293,12 @@ export default function UploadCompletePage() {
                 align="center"
                 bg="rgba(152,201,92,0.1)"
                 borderRadius="full"
-                h="48px"
+                boxSize={12}
                 justify="center"
-                w="48px"
               >
                 <CheckCircleIcon boxSize="22px" color="seed" />
               </Flex>
-              <Text
-                color="seed"
-                fontSize="12px"
-                fontWeight="bold"
-                letterSpacing="-0.24px"
-              >
+              <Text color="seed" fontSize="xs" fontWeight="bold">
                 로드맵 완료
               </Text>
             </VStack>
@@ -338,17 +306,12 @@ export default function UploadCompletePage() {
         </Box>
 
         <VStack align="flex-start" gap={4} w="full">
-          <Text
-            color="neutral.600"
-            fontSize="14px"
-            fontWeight="semibold"
-            letterSpacing="-0.28px"
-          >
+          <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
             생성된 자산 (Generated Assets)
           </Text>
 
           <VStack gap={4} w="full">
-            {GENERATED_ASSETS.map((asset, i) => (
+            {assets.map((asset, i) => (
               <AssetItem key={asset.id} asset={asset} defaultOpen={i === 0} />
             ))}
           </VStack>
@@ -357,11 +320,11 @@ export default function UploadCompletePage() {
         <Flex justify="center" mt={4}>
           <Button
             bg="seed"
-            borderRadius="16px"
+            borderRadius="2xl"
             color="white"
-            fontSize="18px"
+            fontSize="lg"
             fontWeight="bold"
-            h="60px"
+            h={16}
             maxW="624px"
             onClick={goToMyPage}
             w="full"
