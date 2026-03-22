@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, Text, Textarea, VStack } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 
 import {
+  type ProjectStepResponse,
   ROADMAP_STEP_CODES,
   ROADMAP_STEP_NAMES,
   completeProjectAPI,
@@ -163,39 +163,37 @@ function UploadStepContent({
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [copiedFormat, setCopiedFormat] = useState(false);
 
+  const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
+  const [isStepLoading, setIsStepLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+
   const { data: project } = useGetProjectDetail(projectId);
   const roadmapType = project?.roadmapType;
   const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
   const stepCode = steps[stepNum - 1];
   const isLastStep = stepNum >= steps.length;
 
-  const {
-    mutate: startStep,
-    data: stepData,
-    isPending: isStepLoading,
-  } = useMutation({ mutationFn: startStepAPI });
-  const { mutate: saveResult, isPending: isSaving } = useMutation({
-    mutationFn: saveStepResultAPI,
-  });
-  const { mutate: completeProject, isPending: isCompleting } = useMutation({
-    mutationFn: completeProjectAPI,
-  });
-
   useEffect(() => {
-    if (projectId && stepCode) {
-      startStep(
-        { projectId, stepCode },
-        {
-          onError: (error) => {
-            toaster.create({
-              type: "error",
-              description: getApiErrorMessage(error),
-            });
-          },
-        },
-      );
-    }
-  }, [projectId, stepCode, startStep]);
+    if (!projectId || !stepCode) return;
+
+    const fetchStep = async () => {
+      setIsStepLoading(true);
+      try {
+        const data = await startStepAPI({ projectId, stepCode });
+        setStepData(data);
+      } catch (error) {
+        toaster.create({
+          type: "error",
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        setIsStepLoading(false);
+      }
+    };
+
+    fetchStep();
+  }, [projectId, stepCode]);
 
   const copyToClipboard = (text: string, setter: (v: boolean) => void) => {
     if (!navigator?.clipboard?.writeText) {
@@ -230,7 +228,7 @@ function UploadStepContent({
     }
   };
 
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (
       !projectId ||
       !stepCode ||
@@ -240,38 +238,36 @@ function UploadStepContent({
     )
       return;
 
-    saveResult(
-      { projectId, stepCode, resultText },
-      {
-        onSuccess: () => {
-          if (isLastStep) {
-            completeProject(projectId, {
-              onSuccess: () => {
-                navigate(
-                  ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
-                );
-              },
-              onError: (error) => {
-                toaster.create({
-                  type: "error",
-                  description: getApiErrorMessage(error),
-                });
-              },
-            });
-          } else {
-            navigate(
-              `${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`,
-            );
-          }
-        },
-        onError: (error) => {
+    setIsSaving(true);
+    try {
+      await saveStepResultAPI({ projectId, stepCode, resultText });
+
+      if (isLastStep) {
+        setIsCompleting(true);
+        try {
+          await completeProjectAPI(projectId);
+          navigate(
+            ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
+          );
+        } catch (error) {
           toaster.create({
             type: "error",
             description: getApiErrorMessage(error),
           });
-        },
-      },
-    );
+        } finally {
+          setIsCompleting(false);
+        }
+      } else {
+        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`);
+      }
+    } catch (error) {
+      toaster.create({
+        type: "error",
+        description: getApiErrorMessage(error),
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
