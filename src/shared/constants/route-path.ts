@@ -11,8 +11,12 @@ export const ROUTE_PATHS = {
   UPLOAD_STEP: "/upload/step/:step",
   UPLOAD_COMPLETE: "/upload/complete",
 
+  PROJECT_DETAIL: "/project/:projectId",
+
   NOT_FOUND: "*",
 };
 
 // 동적 라우트 path를 상수로 정의합니다.
-export const DYNAMIC_ROUTE_PATHS = {};
+export const DYNAMIC_ROUTE_PATHS = {
+  getProjectDetail: (projectId: string) => `/project/${projectId}`,
+};
