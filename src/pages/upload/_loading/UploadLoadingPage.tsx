@@ -5,7 +5,7 @@ import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
 import { useUploadFlowStore } from "@/entities";
 import { SproutAnimation } from "@/features";
-import { ROUTE_PATHS, toaster } from "@/shared";
+import { ROUTE_PATHS } from "@/shared";
 import AbstractBackgroundCircle from "@/shared/_assets/images/abstract-background-circle.svg";
 
 const LOADING_STEPS = [
@@ -41,10 +41,6 @@ export default function UploadLoadingPage() {
 
   useEffect(() => {
     if (error) {
-      toaster.create({
-        type: "error",
-        description: "프로젝트 생성에 실패했습니다.",
-      });
       navigate(ROUTE_PATHS.FILE_UPLOAD);
     }
   }, [error, navigate]);

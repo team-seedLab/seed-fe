@@ -26,7 +26,7 @@ export const createProjectAPI = async (
     "/api/projects",
     formData,
     {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": undefined },
       timeout: 60000,
     },
   );

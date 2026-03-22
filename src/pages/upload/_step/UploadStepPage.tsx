@@ -6,7 +6,6 @@ import { Box, Button, Flex, Text, Textarea, VStack } from "@chakra-ui/react";
 import {
   ROADMAP_STEP_CODES,
   ROADMAP_STEP_NAMES,
-  type RoadmapType,
   useGetProjectDetail,
   useSaveStepResult,
   useStartStep,
@@ -163,7 +162,7 @@ function UploadStepContent({
   const [copiedFormat, setCopiedFormat] = useState(false);
 
   const { data: project } = useGetProjectDetail(projectId);
-  const roadmapType = project?.roadmapType as RoadmapType | undefined;
+  const roadmapType = project?.roadmapType;
   const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
   const stepCode = steps[stepNum - 1];
   const isLastStep = stepNum >= steps.length;
@@ -192,10 +191,28 @@ function UploadStepContent({
   }, [projectId, stepCode, startStep]);
 
   const copyToClipboard = (text: string, setter: (v: boolean) => void) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setter(true);
-      setTimeout(() => setter(false), 2000);
-    });
+    if (!navigator?.clipboard?.writeText) {
+      toaster.create({
+        type: "error",
+        description:
+          "클립보드 복사에 실패했습니다. 브라우저가 클립보드를 지원하지 않습니다.",
+      });
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setter(true);
+        setTimeout(() => setter(false), 2000);
+      })
+      .catch((error) => {
+        console.error("Failed to copy to clipboard", error);
+        toaster.create({
+          type: "error",
+          description:
+            "클립보드 복사에 실패했습니다. 브라우저 권한 또는 HTTPS 환경을 확인해주세요.",
+        });
+      });
   };
 
   const goToPrevStep = () => {
@@ -214,7 +231,9 @@ function UploadStepContent({
       {
         onSuccess: () => {
           if (isLastStep) {
-            navigate(`/upload/complete/${projectId}`);
+            navigate(
+              ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
+            );
           } else {
             navigate(
               `${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`,
@@ -518,9 +537,7 @@ function UploadStepContent({
                 bg="seed"
                 borderRadius="xl"
                 color="white"
-                cursor={
-                  resultText.trim() && !isSaving ? "pointer" : "not-allowed"
-                }
+                disabled={!resultText.trim() || isSaving}
                 fontWeight="bold"
                 gap={1}
                 onClick={goToNextStep}

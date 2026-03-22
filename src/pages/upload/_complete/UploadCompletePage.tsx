@@ -28,13 +28,30 @@ function AssetItem({
 }) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
-  // const [copiedResult, setCopiedResult] = useState(false);
 
   const copy = (text: string, setter: (v: boolean) => void) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setter(true);
-      setTimeout(() => setter(false), 2000);
-    });
+    if (!navigator?.clipboard?.writeText) {
+      toaster.create({
+        type: "error",
+        description:
+          "클립보드 복사에 실패했습니다. 브라우저가 클립보드를 지원하지 않습니다.",
+      });
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setter(true);
+        setTimeout(() => setter(false), 2000);
+      })
+      .catch((error) => {
+        console.error("Failed to copy to clipboard", error);
+        toaster.create({
+          type: "error",
+          description:
+            "클립보드 복사에 실패했습니다. 브라우저 권한 또는 HTTPS 환경을 확인해주세요.",
+        });
+      });
   };
 
   return (
@@ -179,17 +196,23 @@ export default function UploadCompletePage() {
   const { mutate: completeProject } = useCompleteProject();
 
   useEffect(() => {
-    if (projectId) {
-      completeProject(projectId, {
-        onError: (error) => {
-          toaster.create({
-            type: "error",
-            description: getApiErrorMessage(error),
-          });
-        },
-      });
+    if (!projectId) {
+      navigate(ROUTE_PATHS.MYPAGE);
+      return;
     }
-  }, [projectId, completeProject]);
+    completeProject(projectId, {
+      onError: (error) => {
+        toaster.create({
+          type: "error",
+          description: getApiErrorMessage(error),
+        });
+      },
+    });
+  }, [projectId, completeProject, navigate]);
+
+  if (!projectId) {
+    return null;
+  }
 
   const goToMyPage = () => navigate(ROUTE_PATHS.MYPAGE);
 

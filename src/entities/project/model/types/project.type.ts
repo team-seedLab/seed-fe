@@ -1,8 +1,8 @@
 export interface Project {
   projectId: string;
   title: string;
-  roadmapType: string;
-  status: string;
+  roadmapType: RoadmapType;
+  status: ProjectStatus;
   createdAt: string;
 }
 
