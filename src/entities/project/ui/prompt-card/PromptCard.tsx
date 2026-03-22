@@ -10,38 +10,17 @@ type Props = {
 };
 
 const PromptLine = ({ line }: { line: string }) => {
+  let color = "neutral.900";
   if (line.startsWith("# ") || line === "#") {
-    return (
-      <Text
-        as="span"
-        color="seed"
-        display="block"
-        fontFamily="mono"
-        fontSize="sm"
-        lineHeight="1.4"
-      >
-        {line}
-      </Text>
-    );
+    color = "seed";
+  } else if (line.startsWith("//")) {
+    color = "neutral.300";
   }
-  if (line.startsWith("//")) {
-    return (
-      <Text
-        as="span"
-        color="neutral.300"
-        display="block"
-        fontFamily="mono"
-        fontSize="sm"
-        lineHeight="1.4"
-      >
-        {line}
-      </Text>
-    );
-  }
+
   return (
     <Text
       as="span"
-      color="neutral.900"
+      color={color}
       display="block"
       fontFamily="mono"
       fontSize="sm"
@@ -60,7 +39,7 @@ export const PromptCard = ({
 }: Props) => {
   const lines = content.split("\n");
   const isPrompt = lines.some(
-    (line) => line.startsWith("# ") || line.startsWith("//"),
+    (line) => line.startsWith("# ") || line === "#" || line.startsWith("//"),
   );
 
   return (
