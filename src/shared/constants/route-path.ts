@@ -18,5 +18,5 @@ export const ROUTE_PATHS = {
 
 // 동적 라우트 path를 상수로 정의합니다.
 export const DYNAMIC_ROUTE_PATHS = {
-  getProjectDetail: (projectId: string) => `/project/${projectId}`,
+  PROJECT_DETAIL: (projectId: string) => ROUTE_PATH.PROJECT_DETAIL.replace(":projectId", projectId),
 };
