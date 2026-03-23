@@ -36,6 +36,7 @@ export const ProjectDetailSection = ({ project }: Props) => {
     >
       {stepResponses.map((step, i) => {
         const promptKey = `prompt-${step.stepCode}`;
+        const resultKey = `result-${step.stepCode}`;
 
         return (
           <VStack align="flex-start" gap={6} key={step.stepCode} w="full">
@@ -59,6 +60,15 @@ export const ProjectDetailSection = ({ project }: Props) => {
               label="생성된 프롬프트"
               onCopy={() => handleCopy(promptKey, step.providedPromptSnapshot)}
             />
+
+            {step.userSubmittedResult && (
+              <PromptCard
+                content={step.userSubmittedResult}
+                copied={copiedMap[resultKey]}
+                label="작업 결과"
+                onCopy={() => handleCopy(resultKey, step.userSubmittedResult!)}
+              />
+            )}
           </VStack>
         );
       })}
