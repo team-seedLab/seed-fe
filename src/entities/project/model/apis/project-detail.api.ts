@@ -1,16 +1,9 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { Project } from "../types";
-
-export interface ProjectStepResponse {
-  stepCode: string;
-  stepName: string;
-  providedPromptSnapshot: string;
-  formatPrompt?: string;
-}
+import type { Project, ProjectStepResponse } from "../types";
 
 export interface ProjectDetailResponse extends Project {
-  stepResponses?: ProjectStepResponse[];
+  stepResponses: ProjectStepResponse[];
 }
 
 export const getProjectDetailAPI = async (
