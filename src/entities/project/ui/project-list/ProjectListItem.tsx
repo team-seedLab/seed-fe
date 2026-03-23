@@ -61,6 +61,7 @@ export const ProjectListItem = ({
             justify="center"
             borderRadius="md"
             p={1.5}
+            cursor="pointer"
             _hover={{ bg: "neutral.100" }}
             transition="background 0.15s"
             onClick={(e) => {
