@@ -1,75 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, Text, Textarea, VStack } from "@chakra-ui/react";
 
-import { ROUTE_PATHS } from "@/shared";
+import {
+  type ProjectStepResponse,
+  ROADMAP_STEP_CODES,
+  ROADMAP_STEP_NAMES,
+  completeProjectAPI,
+  saveStepResultAPI,
+  startStepAPI,
+  useGetProjectDetail,
+} from "@/entities";
+import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CopyIcon,
   DocumentTextIcon,
 } from "@/shared/_assets/icons";
-
-const PROJECT_TITLE = "심리학 개론 보고서";
-const ASSIGNMENT_TYPE = "글쓰기형";
-
-const STEPS = [
-  {
-    id: 1,
-    label: "자료 조사",
-    title: "자료 조사 및 핵심 논점 추출",
-    description:
-      "AI가 과제 주제를 분석하여 최적의 자료 조사를 위한 프롬프트를 생성했습니다. 이 프롬프트를 사용하여 고품질의 레퍼런스를 확보하세요.",
-    prompt: `# System Role
-Act as a professional research assistant specializing in psychology.
-# User Context
-Topic: "Introduction to Psychology Report"
-Key Areas: Behavioral Psychology, Cognitive Development, Recent Case Studies.
-# Task
-Please search for and summarize 5 key academic papers or reliable articles published
-within the last 5 years regarding the topic above.
-For each source, provide:
-1. Title & Author
-2. Key Argument (Bullet points)
-3. Relevance to "Modern Behavioral Analysis"
-// Ensure the tone is academic yet accessible.`,
-  },
-  {
-    id: 2,
-    label: "개요 작성",
-    title: "개요 및 논리 구조 설계",
-    description:
-      "수집한 자료를 바탕으로 보고서의 논리적 흐름을 설계합니다. 서론-본론-결론의 구조에 맞게 각 섹션의 핵심 내용을 배치해보세요.",
-    prompt: `# System Role
-Act as an expert academic writing consultant specializing in psychology reports.
-# Task
-Create a detailed outline for the psychology report based on the research findings.
-# Instructions
-1. Design a 3-section structure (서론, 본론, 결론)
-2. For each section, define 2-3 key subsections
-3. Specify the main arguments for each subsection
-4. Estimate word count distribution
-// Return a detailed outline in Korean`,
-  },
-  {
-    id: 3,
-    label: "초안 생성",
-    title: "초안 작성 및 다듬기",
-    description:
-      "작성된 개요를 바탕으로 실제 보고서 초안을 작성합니다. 학술적 글쓰기 형식을 유지하면서 각 섹션을 채워넣어 완성도 높은 보고서를 만들어보세요.",
-    prompt: `# System Role
-Act as a professional academic writer with expertise in psychology.
-# Task
-Write the full draft of the psychology report based on the outline provided.
-# Requirements
-- Academic tone and style (APA format references)
-- Minimum 3,000 characters in Korean
-- Proper citations and references
-- Logical flow between sections
-// Return a complete report in Korean`,
-  },
-];
 
 function PromptLine({ line }: { line: string }) {
   if (line.startsWith("# ") || line === "#") {
@@ -78,9 +27,9 @@ function PromptLine({ line }: { line: string }) {
         as="span"
         color="seed"
         display="block"
-        fontFamily="mono"
         fontSize="sm"
         lineHeight="1.4"
+        fontFamily="mono"
       >
         {line}
       </Text>
@@ -92,9 +41,9 @@ function PromptLine({ line }: { line: string }) {
         as="span"
         color="neutral.300"
         display="block"
-        fontFamily="mono"
         fontSize="sm"
         lineHeight="1.4"
+        fontFamily="mono"
       >
         {line}
       </Text>
@@ -105,16 +54,22 @@ function PromptLine({ line }: { line: string }) {
       as="span"
       color="neutral.900"
       display="block"
-      fontFamily="mono"
       fontSize="sm"
       lineHeight="1.4"
+      fontFamily="mono"
     >
       {line}
     </Text>
   );
 }
 
-function StepIndicator({ current }: { current: number }) {
+function StepIndicator({
+  current,
+  stepCodes,
+}: {
+  current: number;
+  stepCodes: string[];
+}) {
   return (
     <Box position="relative" px="88px" w="full">
       <Flex
@@ -123,27 +78,23 @@ function StepIndicator({ current }: { current: number }) {
         left="88px"
         maxW="672px"
         position="absolute"
-        px="48px"
+        px={12}
         right="88px"
         top="22px"
       >
-        <Box bg="neutral.100" flex={1} h="2px" />
-        <Box bg="neutral.100" flex={1} h="2px" />
+        {Array.from({ length: stepCodes.length - 1 }, (_, i) => (
+          <Box key={i} bg="neutral.100" flex={1} h="2px" />
+        ))}
       </Flex>
 
       <Flex align="flex-start" justify="space-between" maxW="672px" w="full">
-        {STEPS.map((step) => {
-          const isActive = step.id === current;
-          const isDone = step.id < current;
+        {stepCodes.map((code, i) => {
+          const stepId = i + 1;
+          const isActive = stepId === current;
+          const isDone = stepId < current;
 
           return (
-            <Flex
-              align="center"
-              direction="column"
-              gap={3}
-              key={step.id}
-              w="96px"
-            >
+            <Flex align="center" direction="column" gap={3} key={code} w={24}>
               <Flex
                 align="center"
                 boxSize={12}
@@ -171,12 +122,12 @@ function StepIndicator({ current }: { current: number }) {
                 >
                   <Text
                     color="white"
-                    fontSize="12px"
+                    fontSize="xs"
                     fontWeight="bold"
                     lineHeight="16px"
                     textAlign="center"
                   >
-                    {step.id}
+                    {stepId}
                   </Text>
                 </Flex>
               </Flex>
@@ -187,8 +138,9 @@ function StepIndicator({ current }: { current: number }) {
                 fontWeight={isActive ? "bold" : "medium"}
                 lineHeight="20px"
                 textAlign="center"
+                wordBreak="keep-all"
               >
-                {step.label}
+                {ROADMAP_STEP_NAMES[code] ?? code}
               </Text>
             </Flex>
           );
@@ -198,37 +150,123 @@ function StepIndicator({ current }: { current: number }) {
   );
 }
 
-export default function UploadStepPage() {
-  const { step } = useParams<{ step: string }>();
+function UploadStepContent({
+  projectId,
+  stepNum,
+}: {
+  projectId: string;
+  stepNum: number;
+}) {
   const navigate = useNavigate();
-  const stepNum = parseInt(step ?? "1", 10);
 
   const [resultText, setResultText] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedFormat, setCopiedFormat] = useState(false);
 
-  const current = STEPS[stepNum - 1] ?? STEPS[0];
-  const isLastStep = stepNum >= STEPS.length;
+  const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
+  const [isStepLoading, setIsStepLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
 
-  const copyPrompt = () => {
-    navigator.clipboard.writeText(current.prompt).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+  const { data: project } = useGetProjectDetail(projectId);
+  const roadmapType = project?.roadmapType;
+  const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
+  const stepCode = steps[stepNum - 1];
+  const isLastStep = stepNum >= steps.length;
+
+  useEffect(() => {
+    if (!projectId || !stepCode) return;
+
+    const fetchStep = async () => {
+      setIsStepLoading(true);
+      try {
+        const data = await startStepAPI({ projectId, stepCode });
+        setStepData(data);
+      } catch (error) {
+        toaster.create({
+          type: "error",
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        setIsStepLoading(false);
+      }
+    };
+
+    fetchStep();
+  }, [projectId, stepCode]);
+
+  const copyToClipboard = (text: string, setter: (v: boolean) => void) => {
+    if (!navigator?.clipboard?.writeText) {
+      toaster.create({
+        type: "error",
+        description:
+          "클립보드 복사에 실패했습니다. 브라우저가 클립보드를 지원하지 않습니다.",
+      });
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setter(true);
+        setTimeout(() => setter(false), 2000);
+      })
+      .catch((error) => {
+        console.error("Failed to copy to clipboard", error);
+        toaster.create({
+          type: "error",
+          description:
+            "클립보드 복사에 실패했습니다. 브라우저 권한 또는 HTTPS 환경을 확인해주세요.",
+        });
+      });
   };
 
   const goToPrevStep = () => {
     if (stepNum <= 1) {
       navigate(ROUTE_PATHS.FILE_UPLOAD);
     } else {
-      navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${stepNum - 1}`);
+      navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum - 1}`);
     }
   };
 
-  const goToNextStep = () => {
-    if (isLastStep) {
-      navigate(ROUTE_PATHS.UPLOAD_COMPLETE);
-    } else {
-      navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${stepNum + 1}`);
+  const goToNextStep = async () => {
+    if (
+      !projectId ||
+      !stepCode ||
+      !resultText.trim() ||
+      isSaving ||
+      isCompleting
+    )
+      return;
+
+    setIsSaving(true);
+    try {
+      await saveStepResultAPI({ projectId, stepCode, resultText });
+
+      if (isLastStep) {
+        setIsCompleting(true);
+        try {
+          await completeProjectAPI(projectId);
+          navigate(
+            ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
+          );
+        } catch (error) {
+          toaster.create({
+            type: "error",
+            description: getApiErrorMessage(error),
+          });
+        } finally {
+          setIsCompleting(false);
+        }
+      } else {
+        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`);
+      }
+    } catch (error) {
+      toaster.create({
+        type: "error",
+        description: getApiErrorMessage(error),
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -255,54 +293,45 @@ export default function UploadStepPage() {
             <Box
               bg="neutral.50"
               border="1px solid white"
-              borderRadius="6px"
+              borderRadius="md"
               color="neutral.600"
-              fontSize="10px"
+              fontSize="2xs"
               fontWeight="regular"
               px="9px"
               py="5px"
             >
-              {ASSIGNMENT_TYPE}
+              {project?.roadmapType}
             </Box>
             <Text
               color="neutral.900"
-              fontSize="30px"
+              fontSize="3xl"
               fontWeight="bold"
               lineHeight="1.4"
             >
-              {PROJECT_TITLE}
+              {project?.title}
             </Text>
           </VStack>
         </VStack>
 
-        <StepIndicator current={stepNum} />
+        {steps.length > 0 && (
+          <StepIndicator current={stepNum} stepCodes={steps} />
+        )}
 
         <Box
           bg="white"
           border="1px solid white"
-          borderRadius="32px"
+          borderRadius="4xl"
           boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
           overflow="hidden"
           pb="1px"
         >
           <VStack align="flex-start" gap={8} p={12}>
             <VStack align="flex-start" gap="11px" w="full">
-              <Text
-                color="seed"
-                fontSize="12px"
-                fontWeight="bold"
-                letterSpacing="-0.24px"
-              >
+              <Text color="seed" fontSize="xs" fontWeight="bold">
                 Step {stepNum}
               </Text>
-              <Text
-                color="neutral.900"
-                fontSize="26px"
-                fontWeight="bold"
-                letterSpacing="-0.52px"
-                lineHeight="1.4"
-              >
-                {current.title}
+              <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
+                {stepData?.stepName}
               </Text>
               <Text
                 color="neutral.600"
@@ -310,7 +339,9 @@ export default function UploadStepPage() {
                 lineHeight="1.4"
                 pt="5px"
               >
-                {current.description}
+                AI가 과제 주제를 분석하여 최적의 자료 조사를 위한 프롬프트를
+                생성했습니다.
+                <br />이 프롬프트를 사용하여 고품질의 레퍼런스를 확보하세요.
               </Text>
             </VStack>
 
@@ -318,7 +349,7 @@ export default function UploadStepPage() {
               bg="neutral.50"
               border="1px solid"
               borderColor="neutral.50"
-              borderRadius="16px"
+              borderRadius="2xl"
               overflow="hidden"
               w="full"
             >
@@ -327,19 +358,13 @@ export default function UploadStepPage() {
                 borderBottom="1px solid"
                 borderBottomColor="neutral.50"
                 justify="space-between"
-                pb="17px"
-                pt="16px"
+                py={4}
                 px={6}
               >
                 <Flex align="center" gap={2}>
                   <DocumentTextIcon boxSize={3} color="neutral.600" />
-                  <Text
-                    color="neutral.600"
-                    fontSize="12px"
-                    fontWeight="medium"
-                    letterSpacing="-0.24px"
-                  >
-                    Generated Prompt
+                  <Text color="neutral.600" fontSize="xs" fontWeight="medium">
+                    생성된 프롬프트
                   </Text>
                 </Flex>
 
@@ -348,10 +373,16 @@ export default function UploadStepPage() {
                   bg="white"
                   border="1px solid"
                   borderColor="neutral.50"
-                  borderRadius="8px"
+                  borderRadius="lg"
                   boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
                   cursor="pointer"
-                  onClick={copyPrompt}
+                  onClick={() =>
+                    stepData?.providedPromptSnapshot &&
+                    copyToClipboard(
+                      stepData.providedPromptSnapshot,
+                      setCopiedPrompt,
+                    )
+                  }
                   px="13px"
                   py="7px"
                   _hover={{ boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)" }}
@@ -359,33 +390,126 @@ export default function UploadStepPage() {
                   <Flex align="center" gap="6px">
                     <CopyIcon
                       boxSize={3}
-                      color={copied ? "seed" : "neutral.900"}
+                      color={copiedPrompt ? "seed" : "neutral.900"}
                     />
                     <Text
-                      color={copied ? "seed" : "neutral.900"}
-                      fontSize="12px"
+                      color={copiedPrompt ? "seed" : "neutral.900"}
+                      fontSize="xs"
                       fontWeight="semibold"
                       lineHeight="16px"
                     >
-                      {copied ? "복사됨 ✓" : "복사하기"}
+                      {copiedPrompt ? "복사됨 ✓" : "복사하기"}
                     </Text>
                   </Flex>
                 </Box>
               </Flex>
 
               <Box bg="neutral.50" p="28px">
-                {current.prompt.split("\n").map((line, i) => (
-                  <PromptLine key={i} line={line} />
-                ))}
+                {isStepLoading ? (
+                  <Text
+                    color="neutral.300"
+                    fontFamily="mono"
+                    fontSize="sm"
+                    lineHeight="1.4"
+                  >
+                    프롬프트를 불러오는 중...
+                  </Text>
+                ) : (
+                  stepData?.providedPromptSnapshot
+                    ?.split("\n")
+                    .map((line, i) => <PromptLine key={i} line={line} />)
+                )}
               </Box>
             </Box>
+
+            {stepData?.formatPrompt && (
+              <VStack align="flex-start" gap={6} w="full">
+                <Text
+                  color="neutral.900"
+                  fontSize="2xl"
+                  fontWeight="bold"
+                  lineHeight="1.4"
+                >
+                  결과 추출
+                </Text>
+                <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
+                  이 프롬프트를 사용하여 ai와 함께 작업한 결과를 추출해주세요.
+                </Text>
+                <Box
+                  bg="neutral.50"
+                  border="1px solid"
+                  borderColor="neutral.50"
+                  borderRadius="2xl"
+                  overflow="hidden"
+                  w="full"
+                >
+                  <Flex
+                    align="center"
+                    borderBottom="1px solid"
+                    borderBottomColor="neutral.50"
+                    justify="space-between"
+                    py={4}
+                    px={6}
+                  >
+                    <Flex align="center" gap={2}>
+                      <DocumentTextIcon boxSize={3} color="neutral.600" />
+                      <Text
+                        color="neutral.600"
+                        fontSize="xs"
+                        fontWeight="medium"
+                      >
+                        작업 결과 추출 프롬프트
+                      </Text>
+                    </Flex>
+
+                    <Box
+                      as="button"
+                      bg="white"
+                      border="1px solid"
+                      borderColor="neutral.50"
+                      borderRadius="lg"
+                      boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
+                      cursor="pointer"
+                      onClick={() =>
+                        copyToClipboard(stepData.formatPrompt, setCopiedFormat)
+                      }
+                      px="13px"
+                      py="7px"
+                      _hover={{
+                        boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)",
+                      }}
+                    >
+                      <Flex align="center" gap="6px">
+                        <CopyIcon
+                          boxSize={3}
+                          color={copiedFormat ? "seed" : "neutral.900"}
+                        />
+                        <Text
+                          color={copiedFormat ? "seed" : "neutral.900"}
+                          fontSize="xs"
+                          fontWeight="semibold"
+                          lineHeight="16px"
+                        >
+                          {copiedFormat ? "복사됨 ✓" : "복사하기"}
+                        </Text>
+                      </Flex>
+                    </Box>
+                  </Flex>
+
+                  <Box bg="neutral.50" p="28px">
+                    {stepData.formatPrompt.split("\n").map((line, i) => (
+                      <PromptLine key={i} line={line} />
+                    ))}
+                  </Box>
+                </Box>
+              </VStack>
+            )}
 
             <VStack align="flex-start" gap={6} pt="71px" w="full">
               <Text
                 color="neutral.900"
-                fontSize="26px"
+                fontSize="2xl"
                 fontWeight="bold"
-                letterSpacing="-0.52px"
                 lineHeight="1.4"
               >
                 작업 결과 입력
@@ -400,12 +524,11 @@ export default function UploadStepPage() {
                   _placeholder={{ color: "neutral.300" }}
                   bg="neutral.50"
                   border="none"
-                  borderRadius="12px"
+                  borderRadius="xl"
                   color="neutral.900"
                   fontSize="sm"
                   fontWeight="medium"
-                  letterSpacing="-0.28px"
-                  minH="240px"
+                  minH={60}
                   onChange={(e) => setResultText(e.target.value)}
                   p={6}
                   placeholder="이전 단계 프롬프트로 얻은 AI의 답변을 여기에 붙여넣어 주세요. 정보를 입력하면 다음 단계 로드맵이 더욱 정교해집니다."
@@ -422,13 +545,8 @@ export default function UploadStepPage() {
                   py={1}
                   right="20px"
                 >
-                  <Text
-                    color="neutral.600"
-                    fontSize="12px"
-                    fontWeight="medium"
-                    letterSpacing="-0.24px"
-                  >
-                    Ctrl + V to paste
+                  <Text color="neutral.600" fontSize="xs" fontWeight="medium">
+                    Ctrl + V
                   </Text>
                 </Box>
               </Box>
@@ -437,24 +555,53 @@ export default function UploadStepPage() {
             <Flex justify="flex-end" pt={8} w="full">
               <Button
                 bg="seed"
-                borderRadius="12px"
+                borderRadius="xl"
                 color="white"
-                fontSize="16px"
+                disabled={!resultText.trim() || isSaving}
                 fontWeight="bold"
                 gap={1}
-                letterSpacing="-0.32px"
                 onClick={goToNextStep}
+                opacity={resultText.trim() && !isSaving ? 1 : 0.5}
                 px={10}
                 py={4}
-                _hover={{ opacity: 0.85 }}
+                _hover={{
+                  opacity: resultText.trim() && !isSaving ? 0.85 : 0.5,
+                }}
               >
                 {isLastStep ? "로드맵 완성" : "다음 단계로 진행"}
-                <ArrowRightIcon boxSize="13px" />
+                <ArrowRightIcon boxSize={3} />
               </Button>
             </Flex>
           </VStack>
         </Box>
       </Flex>
     </Flex>
+  );
+}
+
+export default function UploadStepPage() {
+  const navigate = useNavigate();
+  const { projectId, step } = useParams<{
+    projectId: string;
+    step: string;
+  }>();
+  const stepNum = parseInt(step ?? "1", 10);
+
+  useEffect(() => {
+    if (!projectId || isNaN(stepNum) || stepNum < 1) {
+      navigate(ROUTE_PATHS.FILE_UPLOAD, { replace: true });
+    }
+  }, [projectId, stepNum, navigate]);
+
+  if (!projectId || isNaN(stepNum) || stepNum < 1) {
+    return null;
+  }
+
+  return (
+    <UploadStepContent
+      key={`${projectId}-${stepNum}`}
+      projectId={projectId}
+      stepNum={stepNum}
+    />
   );
 }
