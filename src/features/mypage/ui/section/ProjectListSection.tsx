@@ -6,7 +6,7 @@ import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 import { ProjectListItem, useGetProjectList } from "@/entities";
 import { Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
 
-import { ProjectListToolbar } from "../../components";
+import { type ProjectFilter, ProjectListToolbar } from "../../components";
 
 export const ProjectListSection = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const ProjectListSection = () => {
     size: 10,
     sort: "createdAt,DESC",
   });
-  const [filterActive, setFilterActive] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<ProjectFilter>("ALL");
 
   const totalPages = projectsListData?.totalPages ?? 1;
   const projects = projectsListData?.content ?? [];
@@ -33,8 +33,8 @@ export const ProjectListSection = () => {
           내 프로젝트 목록
         </Text>
         <ProjectListToolbar
-          filterActive={filterActive}
-          setFilterActive={setFilterActive}
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
         />
       </Flex>
 
