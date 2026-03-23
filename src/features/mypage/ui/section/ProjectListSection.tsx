@@ -57,7 +57,7 @@ export const ProjectListSection = () => {
             key={project.projectId}
             name={project.title}
             onClick={() =>
-              navigate(DYNAMIC_ROUTE_PATHS.getProjectDetail(project.projectId))
+              navigate(DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(project.projectId))
             }
             updatedAt={project.createdAt}
           />
