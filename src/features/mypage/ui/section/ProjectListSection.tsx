@@ -3,10 +3,14 @@ import { useNavigate } from "react-router";
 
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
-import { ProjectListItem, useGetProjectList } from "@/entities";
+import {
+  type ProjectFilter,
+  ProjectListItem,
+  useGetProjectList,
+} from "@/entities";
 import { Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
 
-import { type ProjectFilter, ProjectListToolbar } from "../../components";
+import { ProjectListToolbar } from "../../components";
 
 export const ProjectListSection = () => {
   const navigate = useNavigate();

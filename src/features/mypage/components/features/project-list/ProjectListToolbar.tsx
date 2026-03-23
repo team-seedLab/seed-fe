@@ -1,6 +1,6 @@
 import { HStack, Text } from "@chakra-ui/react";
 
-export type ProjectFilter = "ALL" | "IN_PROGRESS" | "COMPLETED";
+import type { ProjectFilter } from "@/entities";
 
 const FILTER_TABS: { label: string; value: ProjectFilter }[] = [
   { label: "전체", value: "ALL" },
