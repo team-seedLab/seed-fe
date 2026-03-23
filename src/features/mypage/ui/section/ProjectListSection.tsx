@@ -21,7 +21,6 @@ export const ProjectListSection = () => {
     sort: "createdAt,DESC",
   });
   const [filterActive, setFilterActive] = useState(false);
-  const [manageActive, setManageActive] = useState(false);
 
   const totalPages = projectsListData?.totalPages ?? 1;
   const projects = projectsListData?.content ?? [];
@@ -36,8 +35,6 @@ export const ProjectListSection = () => {
         <ProjectListToolbar
           filterActive={filterActive}
           setFilterActive={setFilterActive}
-          manageActive={manageActive}
-          setManageActive={setManageActive}
         />
       </Flex>
 
