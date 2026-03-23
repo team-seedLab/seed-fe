@@ -3,7 +3,11 @@ import { useNavigate } from "react-router";
 
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
-import { ProjectListItem, useGetProjectList } from "@/entities";
+import {
+  ProjectListItem,
+  useDeleteProject,
+  useGetProjectList,
+} from "@/entities";
 import { Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
 
 import { ProjectListToolbar } from "../../components";
@@ -20,6 +24,7 @@ export const ProjectListSection = () => {
     size: 10,
     sort: "createdAt,DESC",
   });
+  const { mutate: deleteProject } = useDeleteProject();
   const [filterActive, setFilterActive] = useState(false);
   const [manageActive, setManageActive] = useState(false);
 
@@ -52,6 +57,7 @@ export const ProjectListSection = () => {
             key={project.projectId}
             name={project.title}
             updatedAt={project.createdAt}
+            onDelete={() => deleteProject(project.projectId)}
           />
         ))}
 
