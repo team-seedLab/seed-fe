@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { PROJECT_DETAIL_MOCK } from "../../mock";
+import { getProjectDetailAPI } from "../apis";
 import { projectKeys } from "../constants";
 
 export const useGetProjectDetail = (projectId: string) => {
   return useQuery({
     queryKey: projectKeys.detail(projectId),
-    queryFn: () => Promise.resolve(PROJECT_DETAIL_MOCK),
+    queryFn: () => getProjectDetailAPI(projectId),
     enabled: Boolean(projectId),
     throwOnError: false,
     meta: {
