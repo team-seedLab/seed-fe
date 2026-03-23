@@ -24,6 +24,10 @@ export const ProjectListSection = () => {
 
   const totalPages = projectsListData?.totalPages ?? 1;
   const projects = projectsListData?.content ?? [];
+  const filteredProjects =
+    activeFilter === "ALL"
+      ? projects
+      : projects.filter((project) => project.status === activeFilter);
   const isInitialLoading = isLoading && projects.length === 0;
 
   return (
@@ -44,7 +48,7 @@ export const ProjectListSection = () => {
         position="relative"
         minH={{ base: "360px", md: "420px" }}
       >
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <ProjectListItem
             key={project.projectId}
             name={project.title}
