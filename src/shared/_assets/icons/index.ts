@@ -15,6 +15,7 @@ import _ChevronLeftIcon from "@/shared/_assets/icons/chevron-left.svg?react";
 import _ChevronRightIcon from "@/shared/_assets/icons/chevron-right.svg?react";
 import _ClipboardCheckIcon from "@/shared/_assets/icons/clipboard-check.svg?react";
 import _CopyIcon from "@/shared/_assets/icons/copy.svg?react";
+import _DeleteIcon from "@/shared/_assets/icons/delete.svg?react";
 import _DocumentTextIcon from "@/shared/_assets/icons/document-text.svg?react";
 import _DoorOutIcon from "@/shared/_assets/icons/door-out.svg?react";
 import _ErrorIcon from "@/shared/_assets/icons/error.svg?react";
@@ -63,6 +64,7 @@ export const ClipboardCheckIcon = createIcon(
   "ClipboardCheckIcon",
 );
 export const CopyIcon = createIcon(_CopyIcon, "CopyIcon");
+export const DeleteIcon = createIcon(_DeleteIcon, "DeleteIcon");
 export const DocumentTextIcon = createIcon(
   _DocumentTextIcon,
   "DocumentTextIcon",

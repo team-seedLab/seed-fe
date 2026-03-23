@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-import { ChevronRightIcon, DocumentTextIcon } from "@/shared";
+import { ChevronRightIcon, DeleteIcon, DocumentTextIcon } from "@/shared";
 
 import { formatUpdatedAt } from "../../utils";
 
@@ -8,9 +8,15 @@ type Props = {
   name: string;
   updatedAt: string;
   onClick?: () => void;
+  onDelete?: () => void;
 };
 
-export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
+export const ProjectListItem = ({
+  name,
+  updatedAt,
+  onClick,
+  onDelete,
+}: Props) => {
   return (
     <Flex
       bg="container.bg"
@@ -47,7 +53,26 @@ export const ProjectListItem = ({ name, updatedAt, onClick }: Props) => {
           </Text>
         </Flex>
       </Flex>
-      <ChevronRightIcon color="neutral.600" w="7px" h="11px" />
+      <Flex gap={3} align="center">
+        {onDelete && (
+          <Flex
+            as="button"
+            align="center"
+            justify="center"
+            borderRadius="md"
+            p={1.5}
+            _hover={{ bg: "neutral.100" }}
+            transition="background 0.15s"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+          >
+            <DeleteIcon color="neutral.400" boxSize={4} />
+          </Flex>
+        )}
+        <ChevronRightIcon color="neutral.600" w="7px" h="11px" />
+      </Flex>
     </Flex>
   );
 };

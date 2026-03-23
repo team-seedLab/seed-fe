@@ -4,3 +4,4 @@ export * from "./save-step-result.api";
 export * from "./start-step.api";
 export * from "./complete-project.api";
 export * from "./create-project.api";
+export * from "./delete-project.api";
