@@ -70,9 +70,17 @@ export const ProjectListSection = () => {
           <ProjectListItem
             key={project.projectId}
             name={project.title}
-            onClick={() =>
-              navigate(DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(project.projectId))
-            }
+            onClick={() => {
+              if (project.status === "IN_PROGRESS") {
+                navigate(
+                  `${ROUTE_PATHS.UPLOAD_STEP_BASE}/${project.projectId}/1`,
+                );
+              } else {
+                navigate(
+                  DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(project.projectId),
+                );
+              }
+            }}
             updatedAt={project.createdAt}
             status={project.status}
             roadmapType={project.roadmapType}
