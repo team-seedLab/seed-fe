@@ -134,19 +134,19 @@ export const ProjectListSection = () => {
         onPageChange={setCurrentPage}
       />
 
-      <ConfirmDialog
-        open={deleteTarget !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
-        title="프로젝트 삭제"
-        description={`"${deleteTarget?.title}" 프로젝트를 삭제하시겠습니까?`}
-        confirmLabel="삭제"
-        cancelLabel="취소"
-        onConfirm={() => {
-          if (deleteTarget) deleteProject(deleteTarget.id);
-        }}
-      />
+      {deleteTarget && (
+        <ConfirmDialog
+          open
+          onOpenChange={(open) => {
+            if (!open) setDeleteTarget(null);
+          }}
+          title="프로젝트 삭제"
+          description={`"${deleteTarget.title}" 프로젝트를 삭제하시겠습니까?`}
+          confirmLabel="삭제"
+          cancelLabel="취소"
+          onConfirm={() => deleteProject(deleteTarget.id)}
+        />
+      )}
     </VStack>
   );
 };
