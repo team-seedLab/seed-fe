@@ -2,11 +2,11 @@ import { HStack, Text } from "@chakra-ui/react";
 
 import type { ProjectFilter } from "@/entities";
 
-const FILTER_TABS: { label: string; value: ProjectFilter }[] = [
+const FILTER_TABS = [
   { label: "전체", value: "ALL" },
   { label: "진행 중", value: "IN_PROGRESS" },
   { label: "완료", value: "COMPLETED" },
-];
+] as const satisfies readonly { label: string; value: ProjectFilter }[];
 
 type Props = {
   activeFilter: ProjectFilter;
