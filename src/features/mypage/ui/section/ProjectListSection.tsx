@@ -8,7 +8,7 @@ import {
   useDeleteProject,
   useGetProjectList,
 } from "@/entities";
-import { Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
+import { ConfirmDialog, Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
 
 import { ProjectListToolbar } from "../../components";
 
@@ -25,6 +25,10 @@ export const ProjectListSection = () => {
     sort: "createdAt,DESC",
   });
   const { mutate: deleteProject } = useDeleteProject();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
   const [filterActive, setFilterActive] = useState(false);
   const [manageActive, setManageActive] = useState(false);
 
@@ -57,7 +61,12 @@ export const ProjectListSection = () => {
             key={project.projectId}
             name={project.title}
             updatedAt={project.createdAt}
-            onDelete={() => deleteProject(project.projectId)}
+            onDelete={() =>
+              setDeleteTarget({
+                id: project.projectId,
+                title: project.title,
+              })
+            }
           />
         ))}
 
@@ -123,6 +132,20 @@ export const ProjectListSection = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+      />
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        title="프로젝트 삭제"
+        description={`"${deleteTarget?.title}" 프로젝트를 삭제하시겠습니까?`}
+        confirmLabel="삭제"
+        cancelLabel="취소"
+        onConfirm={() => {
+          if (deleteTarget) deleteProject(deleteTarget.id);
+        }}
       />
     </VStack>
   );
