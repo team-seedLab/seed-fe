@@ -4,8 +4,8 @@ import { useNavigate } from "react-router";
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import {
-  type ProjectFilter,
   ProjectListItem,
+  type ProjectStatus,
   useGetProjectList,
 } from "@/entities";
 import { Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
@@ -15,6 +15,9 @@ import { ProjectListToolbar } from "../../components";
 export const ProjectListSection = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeFilter, setActiveFilter] = useState<ProjectStatus | undefined>(
+    undefined,
+  );
   const {
     data: projectsListData,
     isLoading,
@@ -23,15 +26,11 @@ export const ProjectListSection = () => {
     page: currentPage - 1,
     size: 10,
     sort: "createdAt,DESC",
+    status: activeFilter,
   });
-  const [activeFilter, setActiveFilter] = useState<ProjectFilter>("ALL");
 
   const totalPages = projectsListData?.totalPages ?? 1;
   const projects = projectsListData?.content ?? [];
-  const filteredProjects =
-    activeFilter === "ALL"
-      ? projects
-      : projects.filter((project) => project.status === activeFilter);
   const isInitialLoading = isLoading && projects.length === 0;
 
   return (
@@ -42,7 +41,10 @@ export const ProjectListSection = () => {
         </Text>
         <ProjectListToolbar
           activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
+          onFilterChange={(filter) => {
+            setActiveFilter(filter);
+            setCurrentPage(1);
+          }}
         />
       </Flex>
 
@@ -52,7 +54,7 @@ export const ProjectListSection = () => {
         position="relative"
         minH={{ base: "360px", md: "420px" }}
       >
-        {filteredProjects.map((project) => (
+        {projects.map((project) => (
           <ProjectListItem
             key={project.projectId}
             name={project.title}

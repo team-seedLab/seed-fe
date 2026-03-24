@@ -23,8 +23,6 @@ export type RoadmapType =
 
 export type ProjectStatus = "IN_PROGRESS" | "COMPLETED";
 
-export type ProjectFilter = ProjectStatus | "ALL";
-
 export interface ProjectStepResponse {
   stepCode: string;
   stepName: string;

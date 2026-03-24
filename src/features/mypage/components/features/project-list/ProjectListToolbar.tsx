@@ -1,16 +1,16 @@
 import { HStack, Text } from "@chakra-ui/react";
 
-import type { ProjectFilter } from "@/entities";
+import type { ProjectStatus } from "@/entities";
 
-const FILTER_TABS = [
-  { label: "전체", value: "ALL" },
+const FILTER_TABS: { label: string; value: ProjectStatus | undefined }[] = [
+  { label: "전체", value: undefined },
   { label: "진행 중", value: "IN_PROGRESS" },
   { label: "완료", value: "COMPLETED" },
-] as const satisfies readonly { label: string; value: ProjectFilter }[];
+];
 
 type Props = {
-  activeFilter: ProjectFilter;
-  onFilterChange: (filter: ProjectFilter) => void;
+  activeFilter: ProjectStatus | undefined;
+  onFilterChange: (filter: ProjectStatus | undefined) => void;
 };
 
 export const ProjectListToolbar = ({ activeFilter, onFilterChange }: Props) => {
@@ -20,7 +20,7 @@ export const ProjectListToolbar = ({ activeFilter, onFilterChange }: Props) => {
         const isActive = activeFilter === tab.value;
         return (
           <Text
-            key={tab.value}
+            key={tab.label}
             as="button"
             fontSize="sm"
             fontWeight="medium"
