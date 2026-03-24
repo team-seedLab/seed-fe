@@ -1,12 +1,16 @@
 import { Flex, IconButton, Text } from "@chakra-ui/react";
 
-import { ChevronRightIcon, DeleteIcon, DocumentTextIcon } from "@/shared";
+import { ChevronRightIcon, DeleteIcon } from "@/shared";
 
+import { ROADMAP_TYPE_ICON } from "../../model/constants";
+import type { ProjectStatus, RoadmapType } from "../../model/types";
 import { formatUpdatedAt } from "../../utils";
 
 type Props = {
   name: string;
   updatedAt: string;
+  status: ProjectStatus;
+  roadmapType: RoadmapType;
   onClick?: () => void;
   onDelete?: () => void;
 };
@@ -14,9 +18,13 @@ type Props = {
 export const ProjectListItem = ({
   name,
   updatedAt,
+  status,
+  roadmapType,
   onClick,
   onDelete,
 }: Props) => {
+  const Icon = ROADMAP_TYPE_ICON[roadmapType];
+
   return (
     <Flex
       bg="container.bg"
@@ -35,14 +43,18 @@ export const ProjectListItem = ({
     >
       <Flex gap={5} align="center">
         <Flex
-          bg="seed.subtle"
+          bg={status === "COMPLETED" ? "seed.subtle" : "progress.subtle"}
           borderRadius="xl"
           boxSize={12}
           align="center"
           justify="center"
           flexShrink={0}
         >
-          <DocumentTextIcon color="seed" w={4} h={5} />
+          <Icon
+            color={status === "COMPLETED" ? "seed" : "progress"}
+            w={4}
+            h={5}
+          />
         </Flex>
         <Flex flexDir="column" align="flex-start">
           <Text color="text" fontSize="lg" fontWeight="bold">

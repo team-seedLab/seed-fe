@@ -61,6 +61,8 @@ export const ProjectListSection = () => {
             key={project.projectId}
             name={project.title}
             updatedAt={project.createdAt}
+            status={project.status}
+            roadmapType={project.roadmapType}
             onDelete={() =>
               setDeleteTarget({
                 id: project.projectId,
