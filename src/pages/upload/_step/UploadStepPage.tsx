@@ -3,22 +3,13 @@ import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 
+import { PromptCard } from "@/entities";
 import {
-  type ProjectStepResponse,
-  PromptCard,
-  ROADMAP_STEP_CODES,
-  completeProjectAPI,
-  saveStepResultAPI,
-  startStepAPI,
-  useGetProjectDetail,
-} from "@/entities";
-import { UploadStepIndicator, UploadStepResultInput } from "@/features";
-import {
-  ROUTE_PATHS,
-  getApiErrorMessage,
-  toaster,
-  useClipboardCopy,
-} from "@/shared";
+  UploadStepIndicator,
+  UploadStepResultInput,
+  useUploadStepFlow,
+} from "@/features";
+import { ROUTE_PATHS, useClipboardCopy } from "@/shared";
 import { ArrowLeftIcon, ArrowRightIcon } from "@/shared/_assets/icons";
 
 function UploadStepContent({
@@ -28,93 +19,19 @@ function UploadStepContent({
   projectId: string;
   stepNum: number;
 }) {
-  const navigate = useNavigate();
-
   const [resultText, setResultText] = useState("");
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
-
-  const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
-  const [isStepLoading, setIsStepLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [isCompleting, setIsCompleting] = useState(false);
-
-  const { data: project } = useGetProjectDetail(projectId);
-  const roadmapType = project?.roadmapType;
-  const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
-  const stepCode = steps[stepNum - 1];
-  const isLastStep = stepNum >= steps.length;
-
-  useEffect(() => {
-    if (!projectId || !stepCode) return;
-
-    const fetchStep = async () => {
-      setIsStepLoading(true);
-      try {
-        const data = await startStepAPI({ projectId, stepCode });
-        setStepData(data);
-      } catch (error) {
-        toaster.create({
-          type: "error",
-          description: getApiErrorMessage(error),
-        });
-      } finally {
-        setIsStepLoading(false);
-      }
-    };
-
-    fetchStep();
-  }, [projectId, stepCode]);
-
-  const goToPrevStep = () => {
-    if (stepNum <= 1) {
-      navigate(ROUTE_PATHS.FILE_UPLOAD);
-    } else {
-      navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum - 1}`);
-    }
-  };
-
-  const goToNextStep = async () => {
-    if (
-      !projectId ||
-      !stepCode ||
-      !resultText.trim() ||
-      isSaving ||
-      isCompleting
-    )
-      return;
-
-    setIsSaving(true);
-    try {
-      await saveStepResultAPI({ projectId, stepCode, resultText });
-
-      if (isLastStep) {
-        setIsCompleting(true);
-        try {
-          await completeProjectAPI(projectId);
-          navigate(
-            ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
-          );
-        } catch (error) {
-          toaster.create({
-            type: "error",
-            description: getApiErrorMessage(error),
-          });
-        } finally {
-          setIsCompleting(false);
-        }
-      } else {
-        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`);
-      }
-    } catch (error) {
-      toaster.create({
-        type: "error",
-        description: getApiErrorMessage(error),
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  const {
+    project,
+    steps,
+    stepData,
+    isStepLoading,
+    isSubmitting,
+    isLastStep,
+    goToPrevStep,
+    submitStepResult,
+  } = useUploadStepFlow({ projectId, stepNum });
 
   return (
     <Flex bg="white" direction="column" minH="100vh" pb="127px" pt="80px">
@@ -256,15 +173,17 @@ function UploadStepContent({
                 bg="seed"
                 borderRadius="xl"
                 color="white"
-                disabled={!resultText.trim() || isSaving}
+                disabled={!resultText.trim() || isSubmitting}
                 fontWeight="bold"
                 gap={1}
-                onClick={goToNextStep}
-                opacity={resultText.trim() && !isSaving ? 1 : 0.5}
+                onClick={() => {
+                  void submitStepResult(resultText);
+                }}
+                opacity={resultText.trim() && !isSubmitting ? 1 : 0.5}
                 px={10}
                 py={4}
                 _hover={{
-                  opacity: resultText.trim() && !isSaving ? 0.85 : 0.5,
+                  opacity: resultText.trim() && !isSubmitting ? 0.85 : 0.5,
                 }}
               >
                 {isLastStep ? "로드맵 완성" : "다음 단계로 진행"}
