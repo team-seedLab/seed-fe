@@ -5,6 +5,7 @@ import {
   LoginPage,
   MainPage,
   MyPage,
+  ProjectDetailPage,
   UploadCompletePage,
   UploadLoadingPage,
   UploadPage,
@@ -62,6 +63,14 @@ export const Router = () => {
             element={
               <ProtectedRoute>
                 <UploadCompletePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTE_PATHS.PROJECT_DETAIL}
+            element={
+              <ProtectedRoute>
+                <ProjectDetailPage />
               </ProtectedRoute>
             }
           />

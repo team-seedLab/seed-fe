@@ -8,7 +8,13 @@ import {
   useDeleteProject,
   useGetProjectList,
 } from "@/entities";
-import { ConfirmDialog, Pagination, PlusIcon, ROUTE_PATHS } from "@/shared";
+import {
+  ConfirmDialog,
+  DYNAMIC_ROUTE_PATHS,
+  Pagination,
+  PlusIcon,
+  ROUTE_PATHS,
+} from "@/shared";
 
 import { ProjectListToolbar } from "../../components";
 
@@ -60,6 +66,9 @@ export const ProjectListSection = () => {
           <ProjectListItem
             key={project.projectId}
             name={project.title}
+            onClick={() =>
+              navigate(DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(project.projectId))
+            }
             updatedAt={project.createdAt}
             status={project.status}
             roadmapType={project.roadmapType}

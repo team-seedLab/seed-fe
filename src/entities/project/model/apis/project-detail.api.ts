@@ -1,13 +1,8 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type {
-  Project,
-  ProjectInitialContext,
-  ProjectStepResponse,
-} from "../types";
+import type { Project, ProjectStepResponse } from "../types";
 
 export interface ProjectDetailResponse extends Project {
-  initialContext: ProjectInitialContext;
   stepResponses: ProjectStepResponse[];
 }
 
