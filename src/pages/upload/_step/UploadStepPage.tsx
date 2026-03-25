@@ -10,13 +10,16 @@ import {
 } from "@/features";
 import { ROUTE_PATHS, useClipboardCopy } from "@/shared";
 
-function UploadStepContent({
-  projectId,
-  stepNum,
-}: {
-  projectId: string;
-  stepNum: number;
-}) {
+export default function UploadStepPage() {
+  const navigate = useNavigate();
+  const { projectId, step } = useParams<{
+    projectId: string;
+    step: string;
+  }>();
+  const stepNum = parseInt(step ?? "1", 10);
+  const isInvalidRoute = !projectId || isNaN(stepNum) || stepNum < 1;
+  const resolvedProjectId = projectId ?? "";
+  const resolvedStepNum = isNaN(stepNum) ? 1 : stepNum;
   const [resultText, setResultText] = useState("");
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
@@ -29,7 +32,20 @@ function UploadStepContent({
     isLastStep,
     goToPrevStep,
     submitStepResult,
-  } = useUploadStepFlow({ projectId, stepNum });
+  } = useUploadStepFlow({
+    projectId: resolvedProjectId,
+    stepNum: resolvedStepNum,
+  });
+
+  useEffect(() => {
+    if (isInvalidRoute) {
+      navigate(ROUTE_PATHS.FILE_UPLOAD, { replace: true });
+    }
+  }, [isInvalidRoute, navigate]);
+
+  if (isInvalidRoute) {
+    return null;
+  }
 
   return (
     <Flex bg="white" direction="column" minH="100vh" pb="127px" pt="80px">
@@ -68,32 +84,5 @@ function UploadStepContent({
         />
       </Flex>
     </Flex>
-  );
-}
-
-export default function UploadStepPage() {
-  const navigate = useNavigate();
-  const { projectId, step } = useParams<{
-    projectId: string;
-    step: string;
-  }>();
-  const stepNum = parseInt(step ?? "1", 10);
-
-  useEffect(() => {
-    if (!projectId || isNaN(stepNum) || stepNum < 1) {
-      navigate(ROUTE_PATHS.FILE_UPLOAD, { replace: true });
-    }
-  }, [projectId, stepNum, navigate]);
-
-  if (!projectId || isNaN(stepNum) || stepNum < 1) {
-    return null;
-  }
-
-  return (
-    <UploadStepContent
-      key={`${projectId}-${stepNum}`}
-      projectId={projectId}
-      stepNum={stepNum}
-    />
   );
 }
