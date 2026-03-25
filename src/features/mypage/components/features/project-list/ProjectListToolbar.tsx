@@ -1,38 +1,40 @@
-import { HStack } from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 
-import { AdjustmentsVerticalIcon, SettingIcon } from "@/shared/_assets/icons";
+import type { ProjectStatus } from "@/entities";
 
-import { ToolbarToggleButton } from "../../common";
+const FILTER_TABS: { label: string; value: ProjectStatus | undefined }[] = [
+  { label: "전체", value: undefined },
+  { label: "진행 중", value: "IN_PROGRESS" },
+  { label: "완료", value: "COMPLETED" },
+];
 
 type Props = {
-  filterActive: boolean;
-  setFilterActive: React.Dispatch<React.SetStateAction<boolean>>;
-  manageActive: boolean;
-  setManageActive: React.Dispatch<React.SetStateAction<boolean>>;
+  activeFilter: ProjectStatus | undefined;
+  onFilterChange: (filter: ProjectStatus | undefined) => void;
 };
 
-export const ProjectListToolbar = ({
-  filterActive,
-  setFilterActive,
-  manageActive,
-  setManageActive,
-}: Props) => {
+export const ProjectListToolbar = ({ activeFilter, onFilterChange }: Props) => {
   return (
-    <HStack gap={2}>
-      <ToolbarToggleButton
-        isActive={filterActive}
-        onToggle={() => setFilterActive((v) => !v)}
-        label="필터"
-      >
-        <AdjustmentsVerticalIcon boxSize="13.5px" />
-      </ToolbarToggleButton>
-      <ToolbarToggleButton
-        isActive={manageActive}
-        onToggle={() => setManageActive((v) => !v)}
-        label="관리"
-      >
-        <SettingIcon boxSize="15px" />
-      </ToolbarToggleButton>
+    <HStack gap={6} borderBottom="1px solid" borderColor="transparent" pb="1px">
+      {FILTER_TABS.map((tab) => {
+        const isActive = activeFilter === tab.value;
+        return (
+          <Text
+            key={tab.label}
+            as="button"
+            fontSize="sm"
+            fontWeight="medium"
+            color={isActive ? "seed" : "neutral.500"}
+            borderBottom="2px solid"
+            borderColor={isActive ? "seed" : "transparent"}
+            pb="2px"
+            cursor="pointer"
+            onClick={() => onFilterChange(tab.value)}
+          >
+            {tab.label}
+          </Text>
+        );
+      })}
     </HStack>
   );
 };

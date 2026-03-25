@@ -3,7 +3,11 @@ import { useNavigate } from "react-router";
 
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
-import { ProjectListItem, useGetProjectList } from "@/entities";
+import {
+  ProjectListItem,
+  type ProjectStatus,
+  useGetProjectList,
+} from "@/entities";
 import {
   DYNAMIC_ROUTE_PATHS,
   Pagination,
@@ -16,6 +20,9 @@ import { ProjectListToolbar } from "../../components";
 export const ProjectListSection = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeFilter, setActiveFilter] = useState<ProjectStatus | undefined>(
+    undefined,
+  );
   const {
     data: projectsListData,
     isLoading,
@@ -24,9 +31,8 @@ export const ProjectListSection = () => {
     page: currentPage - 1,
     size: 10,
     sort: "createdAt,DESC",
+    status: activeFilter,
   });
-  const [filterActive, setFilterActive] = useState(false);
-  const [manageActive, setManageActive] = useState(false);
 
   const totalPages = projectsListData?.totalPages ?? 1;
   const projects = projectsListData?.content ?? [];
@@ -39,10 +45,11 @@ export const ProjectListSection = () => {
           내 프로젝트 목록
         </Text>
         <ProjectListToolbar
-          filterActive={filterActive}
-          setFilterActive={setFilterActive}
-          manageActive={manageActive}
-          setManageActive={setManageActive}
+          activeFilter={activeFilter}
+          onFilterChange={(filter) => {
+            setActiveFilter(filter);
+            setCurrentPage(1);
+          }}
         />
       </Flex>
 

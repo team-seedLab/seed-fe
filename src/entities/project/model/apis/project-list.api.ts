@@ -1,6 +1,6 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { Project } from "../types";
+import type { Project, ProjectStatus } from "../types";
 
 export interface ProjectListResponse {
   content: Project[];
@@ -15,6 +15,7 @@ export interface ProjectListParameters {
   page?: number;
   size?: number;
   sort?: string;
+  status?: ProjectStatus;
 }
 
 export const getProjectListAPI = async (
