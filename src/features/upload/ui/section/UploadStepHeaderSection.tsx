@@ -1,6 +1,6 @@
-import { Box, Button, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 
-import { ArrowLeftIcon } from "@/shared/_assets/icons";
+import { BackButton } from "@/shared";
 
 import { useUploadStepProject } from "../../hooks";
 import { UploadStepIndicator } from "../UploadStepIndicator";
@@ -21,20 +21,7 @@ export const UploadStepHeaderSection = ({
   return (
     <>
       <VStack align="flex-start" gap={6}>
-        <Button
-          alignSelf="flex-start"
-          color="neutral.600"
-          fontSize="sm"
-          fontWeight="medium"
-          gap={1}
-          onClick={onGoBack}
-          px={0}
-          variant="ghost"
-          _hover={{ color: "neutral.900" }}
-        >
-          <ArrowLeftIcon boxSize={3} />
-          이전 단계로
-        </Button>
+        <BackButton label="이전 단계로" onClick={onGoBack} />
 
         <VStack align="flex-start" gap={2}>
           <Box
