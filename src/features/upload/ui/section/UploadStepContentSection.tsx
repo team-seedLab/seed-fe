@@ -1,0 +1,149 @@
+import { Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
+
+import { PromptCard } from "@/entities";
+import { ArrowRightIcon } from "@/shared/_assets/icons";
+
+import { UploadStepResultInput } from "../UploadStepResultInput";
+
+type Props = {
+  stepNum: number;
+  stepName?: string;
+  providedPromptSnapshot?: string;
+  formatPrompt?: string;
+  resultText: string;
+  copiedPrompt: boolean;
+  copiedFormat: boolean;
+  isStepLoading: boolean;
+  isSubmitting: boolean;
+  isLastStep: boolean;
+  onPromptCopy: () => void;
+  onFormatCopy: () => void;
+  onResultTextChange: (value: string) => void;
+  onSubmit: () => void;
+};
+
+export const UploadStepContentSection = ({
+  stepNum,
+  stepName,
+  providedPromptSnapshot,
+  formatPrompt,
+  resultText,
+  copiedPrompt,
+  copiedFormat,
+  isStepLoading,
+  isSubmitting,
+  isLastStep,
+  onPromptCopy,
+  onFormatCopy,
+  onResultTextChange,
+  onSubmit,
+}: Props) => {
+  return (
+    <Box
+      bg="white"
+      border="1px solid white"
+      borderRadius="4xl"
+      boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
+      overflow="hidden"
+      pb="1px"
+    >
+      <VStack align="flex-start" gap={8} p={12}>
+        <VStack align="flex-start" gap="11px" w="full">
+          <Text color="seed" fontSize="xs" fontWeight="bold">
+            Step {stepNum}
+          </Text>
+          <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
+            {stepName}
+          </Text>
+          <Text
+            color="neutral.600"
+            fontWeight="regular"
+            lineHeight="1.4"
+            pt="5px"
+          >
+            AI가 과제 주제를 분석하여 최적의 자료 조사를 위한 프롬프트를
+            생성했습니다.
+            <br />이 프롬프트를 사용하여 고품질의 레퍼런스를 확보하세요.
+          </Text>
+        </VStack>
+
+        {isStepLoading ? (
+          <Box
+            bg="neutral.50"
+            border="1px solid"
+            borderColor="neutral.50"
+            borderRadius="2xl"
+            overflow="hidden"
+            w="full"
+          >
+            <Box bg="neutral.50" p="28px">
+              <Text
+                color="neutral.300"
+                fontFamily="mono"
+                fontSize="sm"
+                lineHeight="1.4"
+              >
+                프롬프트를 불러오는 중...
+              </Text>
+            </Box>
+          </Box>
+        ) : providedPromptSnapshot ? (
+          <PromptCard
+            content={providedPromptSnapshot}
+            copied={copiedPrompt}
+            label="생성된 프롬프트"
+            onCopy={onPromptCopy}
+          />
+        ) : null}
+
+        {formatPrompt && (
+          <VStack align="flex-start" gap={6} w="full">
+            <Text
+              color="neutral.900"
+              fontSize="2xl"
+              fontWeight="bold"
+              lineHeight="1.4"
+            >
+              결과 추출
+            </Text>
+            <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
+              이 프롬프트를 사용하여 ai와 함께 작업한 결과를 추출해주세요.
+            </Text>
+            <PromptCard
+              content={formatPrompt}
+              copied={copiedFormat}
+              label="작업 결과 추출 프롬프트"
+              onCopy={onFormatCopy}
+            />
+          </VStack>
+        )}
+
+        <UploadStepResultInput
+          value={resultText}
+          onChange={onResultTextChange}
+        />
+
+        <Flex justify="flex-end" pt={8} w="full">
+          <Button
+            bg="seed"
+            borderRadius="xl"
+            color="white"
+            disabled={!resultText.trim() || isSubmitting}
+            fontWeight="bold"
+            gap={1}
+            onClick={onSubmit}
+            opacity={resultText.trim() && !isSubmitting ? 1 : 0.5}
+            px={10}
+            py={4}
+            _hover={{
+              opacity: resultText.trim() && !isSubmitting ? 0.85 : 0.5,
+            }}
+          >
+            {isLastStep ? "로드맵 완성" : "다음 단계로 진행"}
+            <ArrowRightIcon boxSize={3} />
+          </Button>
+        </Flex>
+      </VStack>
+    </Box>
+  );
+};
