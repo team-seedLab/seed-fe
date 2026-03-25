@@ -6,7 +6,9 @@ import { Flex } from "@chakra-ui/react";
 import {
   UploadStepContentSection,
   UploadStepHeaderSection,
-  useUploadStepFlow,
+  useUploadStepActions,
+  useUploadStepData,
+  useUploadStepProject,
 } from "@/features";
 import { ROUTE_PATHS } from "@/shared";
 
@@ -20,20 +22,35 @@ export default function UploadStepPage() {
   const isInvalidRoute = !projectId || isNaN(stepNum) || stepNum < 1;
   const resolvedProjectId = projectId ?? "";
   const resolvedStepNum = isNaN(stepNum) ? 1 : stepNum;
-  const [resultText, setResultText] = useState("");
-  const {
-    project,
-    steps,
-    stepData,
-    isStepLoading,
-    isSubmitting,
-    isLastStep,
-    goToPrevStep,
-    submitStepResult,
-  } = useUploadStepFlow({
+  const [resultTextByStep, setResultTextByStep] = useState<
+    Record<string, string>
+  >({});
+  const { project, steps, stepCode, isLastStep } = useUploadStepProject({
     projectId: resolvedProjectId,
     stepNum: resolvedStepNum,
   });
+  const { stepData, isStepLoading } = useUploadStepData({
+    projectId: resolvedProjectId,
+    stepCode,
+  });
+  const { isSubmitting, goToPrevStep, submitStepResult } = useUploadStepActions(
+    {
+      projectId: resolvedProjectId,
+      stepNum: resolvedStepNum,
+      stepCode,
+      isLastStep,
+    },
+  );
+  const resultTextKey = `${resolvedProjectId}:${resolvedStepNum}`;
+  const savedResultText =
+    stepData?.stepCode === stepCode ? (stepData.userSubmittedResult ?? "") : "";
+  const resultText = resultTextByStep[resultTextKey] ?? savedResultText;
+  const handleResultTextChange = (value: string) => {
+    setResultTextByStep((prev) => ({
+      ...prev,
+      [resultTextKey]: value,
+    }));
+  };
 
   useEffect(() => {
     if (isInvalidRoute) {
@@ -52,7 +69,7 @@ export default function UploadStepPage() {
           onGoBack={goToPrevStep}
           projectTitle={project?.title}
           roadmapType={project?.roadmapType}
-          stepNum={stepNum}
+          stepNum={resolvedStepNum}
           steps={steps}
         />
 
@@ -61,14 +78,14 @@ export default function UploadStepPage() {
           isLastStep={isLastStep}
           isStepLoading={isStepLoading}
           isSubmitting={isSubmitting}
-          onResultTextChange={setResultText}
+          onResultTextChange={handleResultTextChange}
           onSubmit={() => {
             void submitStepResult(resultText);
           }}
           providedPromptSnapshot={stepData?.providedPromptSnapshot}
           resultText={resultText}
           stepName={stepData?.stepName}
-          stepNum={stepNum}
+          stepNum={resolvedStepNum}
         />
       </Flex>
     </Flex>

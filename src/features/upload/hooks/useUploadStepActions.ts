@@ -1,69 +1,31 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 
-import {
-  type ProjectDetailResponse,
-  type ProjectStepResponse,
-  ROADMAP_STEP_CODES,
-  completeProjectAPI,
-  saveStepResultAPI,
-  startStepAPI,
-  useGetProjectDetail,
-} from "@/entities";
+import { completeProjectAPI, saveStepResultAPI } from "@/entities";
 import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
 type Params = {
   projectId: string;
   stepNum: number;
+  stepCode?: string;
+  isLastStep: boolean;
 };
 
 type Result = {
-  project: ProjectDetailResponse | undefined;
-  steps: string[];
-  stepData: ProjectStepResponse | null;
-  isStepLoading: boolean;
-  isSaving: boolean;
-  isCompleting: boolean;
   isSubmitting: boolean;
-  isLastStep: boolean;
   goToPrevStep: () => void;
   submitStepResult: (resultText: string) => Promise<void>;
 };
 
-export const useUploadStepFlow = ({ projectId, stepNum }: Params): Result => {
+export const useUploadStepActions = ({
+  projectId,
+  stepNum,
+  stepCode,
+  isLastStep,
+}: Params): Result => {
   const navigate = useNavigate();
-
-  const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
-  const [isStepLoading, setIsStepLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
-
-  const { data: project } = useGetProjectDetail(projectId);
-  const roadmapType = project?.roadmapType;
-  const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
-  const stepCode = steps[stepNum - 1];
-  const isLastStep = steps.length > 0 && stepNum >= steps.length;
-
-  useEffect(() => {
-    if (!projectId || !stepCode) return;
-
-    const fetchStep = async () => {
-      setIsStepLoading(true);
-      try {
-        const data = await startStepAPI({ projectId, stepCode });
-        setStepData(data);
-      } catch (error) {
-        toaster.create({
-          type: "error",
-          description: getApiErrorMessage(error),
-        });
-      } finally {
-        setIsStepLoading(false);
-      }
-    };
-
-    void fetchStep();
-  }, [projectId, stepCode]);
 
   const goToPrevStep = useCallback(() => {
     if (stepNum <= 1) {
@@ -87,11 +49,13 @@ export const useUploadStepFlow = ({ projectId, stepNum }: Params): Result => {
       }
 
       setIsSaving(true);
+
       try {
         await saveStepResultAPI({ projectId, stepCode, resultText });
 
         if (isLastStep) {
           setIsCompleting(true);
+
           try {
             await completeProjectAPI(projectId);
             navigate(
@@ -105,6 +69,7 @@ export const useUploadStepFlow = ({ projectId, stepNum }: Params): Result => {
           } finally {
             setIsCompleting(false);
           }
+
           return;
         }
 
@@ -130,14 +95,7 @@ export const useUploadStepFlow = ({ projectId, stepNum }: Params): Result => {
   );
 
   return {
-    project,
-    steps,
-    stepData,
-    isStepLoading,
-    isSaving,
-    isCompleting,
     isSubmitting: isSaving || isCompleting,
-    isLastStep,
     goToPrevStep,
     submitStepResult,
   };
