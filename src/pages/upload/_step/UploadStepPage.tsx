@@ -180,25 +180,23 @@ function UploadStepContent({
 
     const stepResponses = project.stepResponses ?? [];
 
-    if (stepResponses.length === 0) {
-      setIsStepResolved(true);
-      return;
+    if (stepNum === 1 && stepResponses.length > 0) {
+      const nextStepIndex = stepResponses.findIndex(
+        (step) => !step.userSubmittedResult,
+      );
+
+      const targetStep =
+        nextStepIndex === -1 ? stepResponses.length : nextStepIndex + 1;
+
+      if (targetStep !== stepNum) {
+        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${targetStep}`, {
+          replace: true,
+        });
+        return;
+      }
     }
 
-    const nextStepIndex = stepResponses.findIndex(
-      (step) => !step.userSubmittedResult,
-    );
-
-    const targetStep =
-      nextStepIndex === -1 ? stepResponses.length : nextStepIndex + 1;
-
-    if (stepNum !== targetStep) {
-      navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${targetStep}`, {
-        replace: true,
-      });
-    } else {
-      setIsStepResolved(true);
-    }
+    setIsStepResolved(true);
   }, [project, stepNum, projectId, navigate]);
 
   useEffect(() => {
