@@ -2,24 +2,28 @@ import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 
 import { useGetProjectDetail } from "@/entities";
-import { ROUTE_PATHS } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS } from "@/shared";
 
 type Params = {
-  projectId?: string;
+  projectId: string;
   stepNum: number;
+  enabled: boolean;
 };
 
 type Result = {
   isResolved: boolean;
 };
 
-export const useUploadStepResumeGuard = ({
+export const useUploadStepResumeRedirect = ({
   projectId,
   stepNum,
+  enabled,
 }: Params): Result => {
   const navigate = useNavigate();
-  const shouldResolveResume = Boolean(projectId) && stepNum === 1;
-  const { data: project, isLoading } = useGetProjectDetail(projectId ?? "");
+  const shouldResolveResume = enabled && stepNum === 1;
+  const { data: project, isLoading } = useGetProjectDetail(
+    enabled ? projectId : "",
+  );
 
   const targetStep = useMemo(() => {
     if (!shouldResolveResume || !project) {
@@ -44,7 +48,7 @@ export const useUploadStepResumeGuard = ({
       return;
     }
 
-    navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${targetStep}`, {
+    navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, targetStep), {
       replace: true,
     });
   }, [navigate, projectId, stepNum, targetStep]);

@@ -73,7 +73,9 @@ export const ProjectListSection = () => {
             onClick={() => {
               if (project.status === "IN_PROGRESS") {
                 navigate(
-                  `${ROUTE_PATHS.UPLOAD_STEP_BASE}/${project.projectId}/1?resume=true`,
+                  DYNAMIC_ROUTE_PATHS.UPLOAD_STEP_RESUME_ENTRY(
+                    project.projectId,
+                  ),
                 );
                 return;
               }

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
 
-import { ROUTE_PATHS } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
 
 type Params = {
   projectId: string;
@@ -24,7 +24,7 @@ export const useUploadStepNavigation = ({
       return;
     }
 
-    navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum - 1}`);
+    navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum - 1));
   }, [navigate, projectId, stepNum]);
 
   return { goToPrevStep };

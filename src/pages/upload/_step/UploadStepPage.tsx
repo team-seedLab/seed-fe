@@ -5,7 +5,7 @@ import { Flex } from "@chakra-ui/react";
 import {
   UploadStepContentSection,
   UploadStepHeaderSection,
-  useUploadStepResumeGuard,
+  useUploadStepResumeRedirect,
 } from "@/features";
 import { ROUTE_PATHS } from "@/shared";
 
@@ -16,14 +16,15 @@ export default function UploadStepPage() {
     step: string;
   }>();
   const stepNum = Number(step);
-  const isInvalidRoute = !projectId || isNaN(stepNum) || stepNum < 1;
+  const isValidStepNum = Number.isInteger(stepNum) && stepNum > 0;
   const shouldResume = searchParams.get("resume") === "true";
-  const { isResolved } = useUploadStepResumeGuard({
-    projectId: !isInvalidRoute && shouldResume ? projectId : undefined,
+  const { isResolved } = useUploadStepResumeRedirect({
+    projectId: projectId ?? "",
     stepNum,
+    enabled: Boolean(projectId) && isValidStepNum && shouldResume,
   });
 
-  if (isInvalidRoute) {
+  if (!projectId || !isValidStepNum) {
     return <Navigate replace to={ROUTE_PATHS.FILE_UPLOAD} />;
   }
 

@@ -5,7 +5,7 @@ import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
 import { useUploadFlowStore } from "@/entities";
 import { SproutAnimation } from "@/features";
-import { ROUTE_PATHS } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
 import AbstractBackgroundCircle from "@/shared/_assets/images/abstract-background-circle.svg";
 
 const LOADING_STEPS = [
@@ -48,7 +48,7 @@ export default function UploadLoadingPage() {
   useEffect(() => {
     if (projectId) {
       const timer = setTimeout(() => {
-        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/1`);
+        navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, 1));
       }, 600);
       return () => clearTimeout(timer);
     }

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { completeProjectAPI, saveStepResultAPI } from "@/entities";
-import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
 type Params = {
   projectId: string;
@@ -48,9 +48,7 @@ export const useUploadStepSubmission = ({
 
           try {
             await completeProjectAPI(projectId);
-            navigate(
-              ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
-            );
+            navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
           } catch (error) {
             toaster.create({
               type: "error",
@@ -63,7 +61,7 @@ export const useUploadStepSubmission = ({
           return;
         }
 
-        navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${stepNum + 1}`);
+        navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum + 1));
       } catch (error) {
         toaster.create({
           type: "error",
