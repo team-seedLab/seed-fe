@@ -1,5 +1,6 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
+import { ROADMAP_TYPE_LABEL } from "@/entities";
 import { BackButton } from "@/shared";
 
 import { useUploadStepNavigation, useUploadStepProject } from "../../hooks";
@@ -30,7 +31,9 @@ export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
             px="9px"
             py="5px"
           >
-            {project?.roadmapType}
+            {project?.roadmapType
+              ? (ROADMAP_TYPE_LABEL[project.roadmapType] ?? project.roadmapType)
+              : ""}
           </Box>
           <Text
             color="neutral.900"
