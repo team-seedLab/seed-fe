@@ -6,9 +6,11 @@ import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 import {
   ProjectListItem,
   type ProjectStatus,
+  useDeleteProject,
   useGetProjectList,
 } from "@/entities";
 import {
+  ConfirmDialog,
   DYNAMIC_ROUTE_PATHS,
   Pagination,
   PlusIcon,
@@ -33,6 +35,11 @@ export const ProjectListSection = () => {
     sort: "createdAt,DESC",
     status: activeFilter,
   });
+  const { mutate: deleteProject } = useDeleteProject();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const totalPages = projectsListData?.totalPages ?? 1;
   const projects = projectsListData?.content ?? [];
@@ -67,6 +74,14 @@ export const ProjectListSection = () => {
               navigate(DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(project.projectId))
             }
             updatedAt={project.createdAt}
+            status={project.status}
+            roadmapType={project.roadmapType}
+            onDelete={() =>
+              setDeleteTarget({
+                id: project.projectId,
+                title: project.title,
+              })
+            }
           />
         ))}
 
@@ -133,6 +148,20 @@ export const ProjectListSection = () => {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
+
+      {deleteTarget && (
+        <ConfirmDialog
+          open
+          onOpenChange={(open) => {
+            if (!open) setDeleteTarget(null);
+          }}
+          title="프로젝트 삭제"
+          description={`"${deleteTarget.title}" 프로젝트를 삭제하시겠습니까?`}
+          confirmLabel="삭제"
+          cancelLabel="취소"
+          onConfirm={() => deleteProject(deleteTarget.id)}
+        />
+      )}
     </VStack>
   );
 };

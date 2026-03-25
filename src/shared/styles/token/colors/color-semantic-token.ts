@@ -19,6 +19,10 @@ export const colorSemanticToken = {
     muted: { value: "{colors.seed.200}" },
     subtle: { value: "{colors.seed.50}" },
   },
+  progress: {
+    DEFAULT: { value: "{colors.yellow.400}" },
+    subtle: { value: "{colors.yellow.50}" },
+  },
   pdf: {
     DEFAULT: { value: "{colors.red.500}" },
     bg: { value: "{colors.red.100}" },
