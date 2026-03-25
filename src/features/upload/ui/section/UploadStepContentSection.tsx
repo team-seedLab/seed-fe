@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { PromptCard } from "@/entities";
+import { useClipboardCopy } from "@/shared";
 import { ArrowRightIcon } from "@/shared/_assets/icons";
 
 import { UploadStepResultInput } from "../UploadStepResultInput";
@@ -11,13 +12,9 @@ type Props = {
   providedPromptSnapshot?: string;
   formatPrompt?: string;
   resultText: string;
-  copiedPrompt: boolean;
-  copiedFormat: boolean;
   isStepLoading: boolean;
   isSubmitting: boolean;
   isLastStep: boolean;
-  onPromptCopy: () => void;
-  onFormatCopy: () => void;
   onResultTextChange: (value: string) => void;
   onSubmit: () => void;
 };
@@ -28,16 +25,15 @@ export const UploadStepContentSection = ({
   providedPromptSnapshot,
   formatPrompt,
   resultText,
-  copiedPrompt,
-  copiedFormat,
   isStepLoading,
   isSubmitting,
   isLastStep,
-  onPromptCopy,
-  onFormatCopy,
   onResultTextChange,
   onSubmit,
 }: Props) => {
+  const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
+  const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
+
   return (
     <Box
       bg="white"
@@ -92,7 +88,9 @@ export const UploadStepContentSection = ({
             content={providedPromptSnapshot}
             copied={copiedPrompt}
             label="생성된 프롬프트"
-            onCopy={onPromptCopy}
+            onCopy={() => {
+              void copyPrompt(providedPromptSnapshot);
+            }}
           />
         ) : null}
 
@@ -113,7 +111,9 @@ export const UploadStepContentSection = ({
               content={formatPrompt}
               copied={copiedFormat}
               label="작업 결과 추출 프롬프트"
-              onCopy={onFormatCopy}
+              onCopy={() => {
+                void copyFormat(formatPrompt);
+              }}
             />
           </VStack>
         )}

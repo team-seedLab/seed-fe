@@ -8,7 +8,7 @@ import {
   UploadStepHeaderSection,
   useUploadStepFlow,
 } from "@/features";
-import { ROUTE_PATHS, useClipboardCopy } from "@/shared";
+import { ROUTE_PATHS } from "@/shared";
 
 export default function UploadStepPage() {
   const navigate = useNavigate();
@@ -21,8 +21,6 @@ export default function UploadStepPage() {
   const resolvedProjectId = projectId ?? "";
   const resolvedStepNum = isNaN(stepNum) ? 1 : stepNum;
   const [resultText, setResultText] = useState("");
-  const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
-  const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
   const {
     project,
     steps,
@@ -59,20 +57,10 @@ export default function UploadStepPage() {
         />
 
         <UploadStepContentSection
-          copiedFormat={copiedFormat}
-          copiedPrompt={copiedPrompt}
           formatPrompt={stepData?.formatPrompt}
           isLastStep={isLastStep}
           isStepLoading={isStepLoading}
           isSubmitting={isSubmitting}
-          onFormatCopy={() => {
-            if (!stepData?.formatPrompt) return;
-            void copyFormat(stepData.formatPrompt);
-          }}
-          onPromptCopy={() => {
-            if (!stepData?.providedPromptSnapshot) return;
-            void copyPrompt(stepData.providedPromptSnapshot);
-          }}
           onResultTextChange={setResultText}
           onSubmit={() => {
             void submitStepResult(resultText);
