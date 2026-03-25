@@ -3,11 +3,7 @@ import { useNavigate, useParams } from "react-router";
 
 import { Flex } from "@chakra-ui/react";
 
-import {
-  UploadStepContentSection,
-  UploadStepHeaderSection,
-  useUploadStepActions,
-} from "@/features";
+import { UploadStepContentSection, UploadStepHeaderSection } from "@/features";
 import { ROUTE_PATHS } from "@/shared";
 
 export default function UploadStepPage() {
@@ -20,12 +16,6 @@ export default function UploadStepPage() {
   const isInvalidRoute = !projectId || isNaN(stepNum) || stepNum < 1;
   const resolvedProjectId = projectId ?? "";
   const resolvedStepNum = isNaN(stepNum) ? 1 : stepNum;
-  const { isSubmitting, goToPrevStep, submitStepResult } = useUploadStepActions(
-    {
-      projectId: resolvedProjectId,
-      stepNum: resolvedStepNum,
-    },
-  );
 
   useEffect(() => {
     if (isInvalidRoute) {
@@ -41,17 +31,12 @@ export default function UploadStepPage() {
     <Flex bg="white" direction="column" minH="100vh" pb="127px" pt="80px">
       <Flex direction="column" gap={10} mx="auto" px={6} w="full" maxW="896px">
         <UploadStepHeaderSection
-          onGoBack={goToPrevStep}
           projectId={resolvedProjectId}
           stepNum={resolvedStepNum}
         />
 
         <UploadStepContentSection
           projectId={resolvedProjectId}
-          isSubmitting={isSubmitting}
-          onSubmit={(resultText) => {
-            void submitStepResult(resultText);
-          }}
           stepNum={resolvedStepNum}
         />
       </Flex>

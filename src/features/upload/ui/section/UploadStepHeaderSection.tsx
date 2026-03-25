@@ -2,26 +2,22 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 
 import { BackButton } from "@/shared";
 
-import { useUploadStepProject } from "../../hooks";
+import { useUploadStepNavigation, useUploadStepProject } from "../../hooks";
 import { UploadStepIndicator } from "../UploadStepIndicator";
 
 type Props = {
   projectId: string;
   stepNum: number;
-  onGoBack: () => void;
 };
 
-export const UploadStepHeaderSection = ({
-  projectId,
-  stepNum,
-  onGoBack,
-}: Props) => {
+export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
   const { project, steps } = useUploadStepProject({ projectId, stepNum });
+  const { goToPrevStep } = useUploadStepNavigation({ projectId, stepNum });
 
   return (
     <>
       <VStack align="flex-start" gap={6}>
-        <BackButton label="이전 단계로" onClick={onGoBack} />
+        <BackButton label="이전 단계로" onClick={goToPrevStep} />
 
         <VStack align="flex-start" gap={2}>
           <Box

@@ -6,22 +6,19 @@ import { PromptCard } from "@/entities";
 import { useClipboardCopy } from "@/shared";
 import { ArrowRightIcon } from "@/shared/_assets/icons";
 
-import { useUploadStepData, useUploadStepProject } from "../../hooks";
+import {
+  useUploadStepData,
+  useUploadStepProject,
+  useUploadStepSubmission,
+} from "../../hooks";
 import { UploadStepResultInput } from "../UploadStepResultInput";
 
 type Props = {
   projectId: string;
   stepNum: number;
-  isSubmitting: boolean;
-  onSubmit: (resultText: string) => void;
 };
 
-export const UploadStepContentSection = ({
-  projectId,
-  stepNum,
-  isSubmitting,
-  onSubmit,
-}: Props) => {
+export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
   const [resultTextByStep, setResultTextByStep] = useState<
     Record<string, string>
   >({});
@@ -31,6 +28,12 @@ export const UploadStepContentSection = ({
   const { stepData, isStepLoading } = useUploadStepData({
     projectId,
     stepCode,
+  });
+  const { isSubmitting, submitStepResult } = useUploadStepSubmission({
+    projectId,
+    stepNum,
+    stepCode,
+    isLastStep,
   });
   const resultTextKey = `${projectId}:${stepNum}`;
   const savedResultText =
@@ -145,7 +148,9 @@ export const UploadStepContentSection = ({
             disabled={!resultText.trim() || isSubmitting}
             fontWeight="bold"
             gap={1}
-            onClick={() => onSubmit(resultText)}
+            onClick={() => {
+              void submitStepResult(resultText);
+            }}
             opacity={resultText.trim() && !isSubmitting ? 1 : 0.5}
             px={10}
             py={4}
