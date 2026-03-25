@@ -3,8 +3,8 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 import { ROADMAP_TYPE_LABEL } from "@/entities";
 import { BackButton } from "@/shared";
 
+import { UploadStepIndicator } from "../../components";
 import { useUploadStepNavigation, useUploadStepProject } from "../../hooks";
-import { UploadStepIndicator } from "../UploadStepIndicator";
 
 type Props = {
   projectId: string;

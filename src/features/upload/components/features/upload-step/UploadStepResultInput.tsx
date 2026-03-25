@@ -14,7 +14,7 @@ export const UploadStepResultInput = ({ value, onChange }: Props) => {
         fontWeight="bold"
         lineHeight="1.4"
       >
-        작업 결과 입력
+        ?묒뾽 寃곌낵 ?낅젰
       </Text>
 
       <Box position="relative" w="full">
@@ -33,7 +33,7 @@ export const UploadStepResultInput = ({ value, onChange }: Props) => {
           minH={60}
           onChange={(e) => onChange(e.target.value)}
           p={6}
-          placeholder="이전 단계 프롬프트로 얻은 AI의 답변을 여기에 붙여넣어 주세요. 정보를 입력하면 다음 단계 로드맵이 더욱 정교해집니다."
+          placeholder="?댁쟾 ?④퀎 ?꾨＼?꾪듃濡??살? AI???듬????ш린??遺숈뿬?ｌ뼱 二쇱꽭?? ?뺣낫瑜??낅젰?섎㈃ ?ㅼ쓬 ?④퀎 濡쒕뱶留듭씠 ?붿슧 ?뺢탳?댁쭛?덈떎."
           resize="vertical"
           value={value}
         />

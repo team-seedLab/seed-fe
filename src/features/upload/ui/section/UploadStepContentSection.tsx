@@ -6,12 +6,12 @@ import { PromptCard } from "@/entities";
 import { useClipboardCopy } from "@/shared";
 import { ArrowRightIcon } from "@/shared/_assets/icons";
 
+import { UploadStepResultInput } from "../../components";
 import {
   useUploadStepData,
   useUploadStepProject,
   useUploadStepSubmission,
 } from "../../hooks";
-import { UploadStepResultInput } from "../UploadStepResultInput";
 
 type Props = {
   projectId: string;
