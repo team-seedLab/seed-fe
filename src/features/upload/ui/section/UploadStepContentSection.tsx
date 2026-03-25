@@ -58,7 +58,6 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
       borderRadius="4xl"
       boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
       overflow="hidden"
-      pb="1px"
     >
       <VStack align="flex-start" gap={8} p={12}>
         <VStack align="flex-start" gap="11px" w="full">
@@ -68,12 +67,7 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
           <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
             {stepName}
           </Text>
-          <Text
-            color="neutral.600"
-            fontWeight="regular"
-            lineHeight="1.4"
-            pt="5px"
-          >
+          <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
             AI가 과제 주제를 분석하여 최적의 자료 조사를 위한 프롬프트를
             생성했습니다.
             <br />이 프롬프트를 사용하여 고품질의 레퍼런스를 확보하세요.

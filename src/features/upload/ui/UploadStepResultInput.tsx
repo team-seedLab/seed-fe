@@ -7,7 +7,7 @@ type Props = {
 
 export const UploadStepResultInput = ({ value, onChange }: Props) => {
   return (
-    <VStack align="flex-start" gap={6} pt="71px" w="full">
+    <VStack align="flex-start" gap={6} w="full">
       <Text
         color="neutral.900"
         fontSize="2xl"
