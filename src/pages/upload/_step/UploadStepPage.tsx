@@ -5,6 +5,7 @@ import { Box, Button, Flex, Text, Textarea, VStack } from "@chakra-ui/react";
 
 import {
   type ProjectStepResponse,
+  PromptCard,
   ROADMAP_STEP_CODES,
   ROADMAP_STEP_NAMES,
   completeProjectAPI,
@@ -12,56 +13,13 @@ import {
   startStepAPI,
   useGetProjectDetail,
 } from "@/entities";
-import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CopyIcon,
-  DocumentTextIcon,
-} from "@/shared/_assets/icons";
-
-function PromptLine({ line }: { line: string }) {
-  if (line.startsWith("# ") || line === "#") {
-    return (
-      <Text
-        as="span"
-        color="seed"
-        display="block"
-        fontSize="sm"
-        lineHeight="1.4"
-        fontFamily="mono"
-      >
-        {line}
-      </Text>
-    );
-  }
-  if (line.startsWith("//")) {
-    return (
-      <Text
-        as="span"
-        color="neutral.300"
-        display="block"
-        fontSize="sm"
-        lineHeight="1.4"
-        fontFamily="mono"
-      >
-        {line}
-      </Text>
-    );
-  }
-  return (
-    <Text
-      as="span"
-      color="neutral.900"
-      display="block"
-      fontSize="sm"
-      lineHeight="1.4"
-      fontFamily="mono"
-    >
-      {line}
-    </Text>
-  );
-}
+  ROUTE_PATHS,
+  getApiErrorMessage,
+  toaster,
+  useClipboardCopy,
+} from "@/shared";
+import { ArrowLeftIcon, ArrowRightIcon } from "@/shared/_assets/icons";
 
 function StepIndicator({
   current,
@@ -160,8 +118,8 @@ function UploadStepContent({
   const navigate = useNavigate();
 
   const [resultText, setResultText] = useState("");
-  const [copiedPrompt, setCopiedPrompt] = useState(false);
-  const [copiedFormat, setCopiedFormat] = useState(false);
+  const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
+  const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
 
   const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
   const [isStepLoading, setIsStepLoading] = useState(false);
@@ -194,31 +152,6 @@ function UploadStepContent({
 
     fetchStep();
   }, [projectId, stepCode]);
-
-  const copyToClipboard = (text: string, setter: (v: boolean) => void) => {
-    if (!navigator?.clipboard?.writeText) {
-      toaster.create({
-        type: "error",
-        description:
-          "클립보드 복사에 실패했습니다. 브라우저가 클립보드를 지원하지 않습니다.",
-      });
-      return;
-    }
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        setter(true);
-        setTimeout(() => setter(false), 2000);
-      })
-      .catch((error) => {
-        console.error("Failed to copy to clipboard", error);
-        toaster.create({
-          type: "error",
-          description:
-            "클립보드 복사에 실패했습니다. 브라우저 권한 또는 HTTPS 환경을 확인해주세요.",
-        });
-      });
-  };
 
   const goToPrevStep = () => {
     if (stepNum <= 1) {
@@ -345,67 +278,16 @@ function UploadStepContent({
               </Text>
             </VStack>
 
-            <Box
-              bg="neutral.50"
-              border="1px solid"
-              borderColor="neutral.50"
-              borderRadius="2xl"
-              overflow="hidden"
-              w="full"
-            >
-              <Flex
-                align="center"
-                borderBottom="1px solid"
-                borderBottomColor="neutral.50"
-                justify="space-between"
-                py={4}
-                px={6}
+            {isStepLoading ? (
+              <Box
+                bg="neutral.50"
+                border="1px solid"
+                borderColor="neutral.50"
+                borderRadius="2xl"
+                overflow="hidden"
+                w="full"
               >
-                <Flex align="center" gap={2}>
-                  <DocumentTextIcon boxSize={3} color="neutral.600" />
-                  <Text color="neutral.600" fontSize="xs" fontWeight="medium">
-                    생성된 프롬프트
-                  </Text>
-                </Flex>
-
-                <Box
-                  as="button"
-                  bg="white"
-                  border="1px solid"
-                  borderColor="neutral.50"
-                  borderRadius="lg"
-                  boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
-                  cursor="pointer"
-                  onClick={() =>
-                    stepData?.providedPromptSnapshot &&
-                    copyToClipboard(
-                      stepData.providedPromptSnapshot,
-                      setCopiedPrompt,
-                    )
-                  }
-                  px="13px"
-                  py="7px"
-                  _hover={{ boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)" }}
-                >
-                  <Flex align="center" gap="6px">
-                    <CopyIcon
-                      boxSize={3}
-                      color={copiedPrompt ? "seed" : "neutral.900"}
-                    />
-                    <Text
-                      color={copiedPrompt ? "seed" : "neutral.900"}
-                      fontSize="xs"
-                      fontWeight="semibold"
-                      lineHeight="16px"
-                    >
-                      {copiedPrompt ? "복사됨 ✓" : "복사하기"}
-                    </Text>
-                  </Flex>
-                </Box>
-              </Flex>
-
-              <Box bg="neutral.50" p="28px">
-                {isStepLoading ? (
+                <Box bg="neutral.50" p="28px">
                   <Text
                     color="neutral.300"
                     fontFamily="mono"
@@ -414,13 +296,18 @@ function UploadStepContent({
                   >
                     프롬프트를 불러오는 중...
                   </Text>
-                ) : (
-                  stepData?.providedPromptSnapshot
-                    ?.split("\n")
-                    .map((line, i) => <PromptLine key={i} line={line} />)
-                )}
+                </Box>
               </Box>
-            </Box>
+            ) : stepData?.providedPromptSnapshot ? (
+              <PromptCard
+                content={stepData.providedPromptSnapshot}
+                copied={copiedPrompt}
+                label="생성된 프롬프트"
+                onCopy={() => {
+                  void copyPrompt(stepData.providedPromptSnapshot);
+                }}
+              />
+            ) : null}
 
             {stepData?.formatPrompt && (
               <VStack align="flex-start" gap={6} w="full">
@@ -435,73 +322,14 @@ function UploadStepContent({
                 <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
                   이 프롬프트를 사용하여 ai와 함께 작업한 결과를 추출해주세요.
                 </Text>
-                <Box
-                  bg="neutral.50"
-                  border="1px solid"
-                  borderColor="neutral.50"
-                  borderRadius="2xl"
-                  overflow="hidden"
-                  w="full"
-                >
-                  <Flex
-                    align="center"
-                    borderBottom="1px solid"
-                    borderBottomColor="neutral.50"
-                    justify="space-between"
-                    py={4}
-                    px={6}
-                  >
-                    <Flex align="center" gap={2}>
-                      <DocumentTextIcon boxSize={3} color="neutral.600" />
-                      <Text
-                        color="neutral.600"
-                        fontSize="xs"
-                        fontWeight="medium"
-                      >
-                        작업 결과 추출 프롬프트
-                      </Text>
-                    </Flex>
-
-                    <Box
-                      as="button"
-                      bg="white"
-                      border="1px solid"
-                      borderColor="neutral.50"
-                      borderRadius="lg"
-                      boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
-                      cursor="pointer"
-                      onClick={() =>
-                        copyToClipboard(stepData.formatPrompt, setCopiedFormat)
-                      }
-                      px="13px"
-                      py="7px"
-                      _hover={{
-                        boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)",
-                      }}
-                    >
-                      <Flex align="center" gap="6px">
-                        <CopyIcon
-                          boxSize={3}
-                          color={copiedFormat ? "seed" : "neutral.900"}
-                        />
-                        <Text
-                          color={copiedFormat ? "seed" : "neutral.900"}
-                          fontSize="xs"
-                          fontWeight="semibold"
-                          lineHeight="16px"
-                        >
-                          {copiedFormat ? "복사됨 ✓" : "복사하기"}
-                        </Text>
-                      </Flex>
-                    </Box>
-                  </Flex>
-
-                  <Box bg="neutral.50" p="28px">
-                    {stepData.formatPrompt.split("\n").map((line, i) => (
-                      <PromptLine key={i} line={line} />
-                    ))}
-                  </Box>
-                </Box>
+                <PromptCard
+                  content={stepData.formatPrompt}
+                  copied={copiedFormat}
+                  label="작업 결과 추출 프롬프트"
+                  onCopy={() => {
+                    void copyFormat(stepData.formatPrompt);
+                  }}
+                />
               </VStack>
             )}
 
