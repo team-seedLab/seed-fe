@@ -4,11 +4,11 @@ import { useNavigate } from "react-router";
 import { completeProjectAPI, saveStepResultAPI } from "@/entities";
 import { ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
+import { useUploadStepProject } from "./useUploadStepProject";
+
 type Params = {
   projectId: string;
   stepNum: number;
-  stepCode?: string;
-  isLastStep: boolean;
 };
 
 type Result = {
@@ -20,12 +20,11 @@ type Result = {
 export const useUploadStepActions = ({
   projectId,
   stepNum,
-  stepCode,
-  isLastStep,
 }: Params): Result => {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const { stepCode, isLastStep } = useUploadStepProject({ projectId, stepNum });
 
   const goToPrevStep = useCallback(() => {
     if (stepNum <= 1) {

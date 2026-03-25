@@ -2,23 +2,22 @@ import { Box, Button, Text, VStack } from "@chakra-ui/react";
 
 import { ArrowLeftIcon } from "@/shared/_assets/icons";
 
+import { useUploadStepProject } from "../../hooks";
 import { UploadStepIndicator } from "../UploadStepIndicator";
 
 type Props = {
-  projectTitle?: string;
-  roadmapType?: string;
+  projectId: string;
   stepNum: number;
-  steps: string[];
   onGoBack: () => void;
 };
 
 export const UploadStepHeaderSection = ({
-  projectTitle,
-  roadmapType,
+  projectId,
   stepNum,
-  steps,
   onGoBack,
 }: Props) => {
+  const { project, steps } = useUploadStepProject({ projectId, stepNum });
+
   return (
     <>
       <VStack align="flex-start" gap={6}>
@@ -48,7 +47,7 @@ export const UploadStepHeaderSection = ({
             px="9px"
             py="5px"
           >
-            {roadmapType}
+            {project?.roadmapType}
           </Box>
           <Text
             color="neutral.900"
@@ -56,7 +55,7 @@ export const UploadStepHeaderSection = ({
             fontWeight="bold"
             lineHeight="1.4"
           >
-            {projectTitle}
+            {project?.title}
           </Text>
         </VStack>
       </VStack>

@@ -1,38 +1,52 @@
+import { useState } from "react";
+
 import { Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { PromptCard } from "@/entities";
 import { useClipboardCopy } from "@/shared";
 import { ArrowRightIcon } from "@/shared/_assets/icons";
 
+import { useUploadStepData, useUploadStepProject } from "../../hooks";
 import { UploadStepResultInput } from "../UploadStepResultInput";
 
 type Props = {
+  projectId: string;
   stepNum: number;
-  stepName?: string;
-  providedPromptSnapshot?: string;
-  formatPrompt?: string;
-  resultText: string;
-  isStepLoading: boolean;
   isSubmitting: boolean;
-  isLastStep: boolean;
-  onResultTextChange: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit: (resultText: string) => void;
 };
 
 export const UploadStepContentSection = ({
+  projectId,
   stepNum,
-  stepName,
-  providedPromptSnapshot,
-  formatPrompt,
-  resultText,
-  isStepLoading,
   isSubmitting,
-  isLastStep,
-  onResultTextChange,
   onSubmit,
 }: Props) => {
+  const [resultTextByStep, setResultTextByStep] = useState<
+    Record<string, string>
+  >({});
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
+  const { stepCode, isLastStep } = useUploadStepProject({ projectId, stepNum });
+  const { stepData, isStepLoading } = useUploadStepData({
+    projectId,
+    stepCode,
+  });
+  const resultTextKey = `${projectId}:${stepNum}`;
+  const savedResultText =
+    stepData?.stepCode === stepCode
+      ? (stepData?.userSubmittedResult ?? "")
+      : "";
+  const resultText = resultTextByStep[resultTextKey] ?? savedResultText;
+  const handleResultTextChange = (value: string) => {
+    setResultTextByStep((prev) => ({
+      ...prev,
+      [resultTextKey]: value,
+    }));
+  };
+  const stepName = stepData?.stepName;
+  const providedPromptSnapshot = stepData?.providedPromptSnapshot;
+  const formatPrompt = stepData?.formatPrompt;
 
   return (
     <Box
@@ -120,7 +134,7 @@ export const UploadStepContentSection = ({
 
         <UploadStepResultInput
           value={resultText}
-          onChange={onResultTextChange}
+          onChange={handleResultTextChange}
         />
 
         <Flex justify="flex-end" pt={8} w="full">
@@ -131,7 +145,7 @@ export const UploadStepContentSection = ({
             disabled={!resultText.trim() || isSubmitting}
             fontWeight="bold"
             gap={1}
-            onClick={onSubmit}
+            onClick={() => onSubmit(resultText)}
             opacity={resultText.trim() && !isSubmitting ? 1 : 0.5}
             px={10}
             py={4}
