@@ -165,6 +165,7 @@ function UploadStepContent({
 
   const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
   const [isStepLoading, setIsStepLoading] = useState(false);
+  const [isStepResolved, setIsStepResolved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
 
@@ -175,7 +176,33 @@ function UploadStepContent({
   const isLastStep = stepNum >= steps.length;
 
   useEffect(() => {
-    if (!projectId || !stepCode) return;
+    if (!project) return;
+
+    const stepResponses = project.stepResponses ?? [];
+
+    if (stepResponses.length === 0) {
+      setIsStepResolved(true);
+      return;
+    }
+
+    const nextStepIndex = stepResponses.findIndex(
+      (step) => !step.userSubmittedResult,
+    );
+
+    const targetStep =
+      nextStepIndex === -1 ? stepResponses.length : nextStepIndex + 1;
+
+    if (stepNum !== targetStep) {
+      navigate(`${ROUTE_PATHS.UPLOAD_STEP_BASE}/${projectId}/${targetStep}`, {
+        replace: true,
+      });
+    } else {
+      setIsStepResolved(true);
+    }
+  }, [project, stepNum, projectId, navigate]);
+
+  useEffect(() => {
+    if (!isStepResolved || !projectId || !stepCode) return;
 
     const fetchStep = async () => {
       setIsStepLoading(true);
@@ -193,7 +220,7 @@ function UploadStepContent({
     };
 
     fetchStep();
-  }, [projectId, stepCode]);
+  }, [isStepResolved, projectId, stepCode]);
 
   const copyToClipboard = (text: string, setter: (v: boolean) => void) => {
     if (!navigator?.clipboard?.writeText) {
