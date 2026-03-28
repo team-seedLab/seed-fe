@@ -27,6 +27,10 @@ export const useUploadLoadingProgress = (): Result => {
   const progress = projectId ? 100 : timerProgress;
 
   useEffect(() => {
+    if (projectId) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimerProgress((prev) => {
         if (prev >= 90) {
@@ -40,7 +44,7 @@ export const useUploadLoadingProgress = (): Result => {
     }, 80);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [projectId]);
 
   useEffect(() => {
     if (error) {
