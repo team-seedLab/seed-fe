@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useUploadFlowStore } from "@/entities";
@@ -12,11 +12,11 @@ const PROGRESS_INTERVAL_MS = 80;
 const STEP_REDIRECT_DELAY_MS = 600;
 
 const LOADING_STEPS = [
-  { threshold: 0, message: "파일 업로드 중.." },
-  { threshold: 20, message: "PDF 텍스트 추출 중.." },
-  { threshold: 50, message: "과제 내용 분석 중.." },
-  { threshold: 75, message: "로드맵 생성 중.." },
   { threshold: 95, message: "마무리 중.." },
+  { threshold: 75, message: "로드맵 생성 중.." },
+  { threshold: 50, message: "과제 내용 분석 중.." },
+  { threshold: 20, message: "파일 텍스트 추출 중.." },
+  { threshold: 0, message: "파일 업로드 중.." },
 ];
 
 type Result = {
@@ -75,13 +75,9 @@ export const useUploadLoadingProgress = (): Result => {
     return () => clearTimeout(timer);
   }, [projectId, navigate]);
 
-  const currentStepMessage = useMemo(() => {
-    const currentStep =
-      [...LOADING_STEPS].reverse().find((step) => progress >= step.threshold) ??
-      LOADING_STEPS[0];
-
-    return currentStep.message;
-  }, [progress]);
+  const currentStepMessage =
+    LOADING_STEPS.find((step) => progress >= step.threshold)?.message ??
+    LOADING_STEPS[LOADING_STEPS.length - 1].message;
 
   return {
     progress,
