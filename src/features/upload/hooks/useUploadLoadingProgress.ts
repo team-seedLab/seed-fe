@@ -4,6 +4,13 @@ import { useNavigate } from "react-router";
 import { useUploadFlowStore } from "@/entities";
 import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
 
+const MAX_TIMER_PROGRESS = 90;
+const PROGRESS_SLOWDOWN_THRESHOLD = 70;
+const FAST_PROGRESS_INCREMENT = 1.2;
+const SLOW_PROGRESS_INCREMENT = 0.6;
+const PROGRESS_INTERVAL_MS = 80;
+const STEP_REDIRECT_DELAY_MS = 600;
+
 const LOADING_STEPS = [
   { threshold: 0, message: "파일 업로드 중.." },
   { threshold: 20, message: "PDF 텍스트 추출 중.." },
@@ -33,15 +40,19 @@ export const useUploadLoadingProgress = (): Result => {
 
     const interval = setInterval(() => {
       setTimerProgress((prev) => {
-        if (prev >= 90) {
+        if (prev >= MAX_TIMER_PROGRESS) {
           clearInterval(interval);
-          return 90;
+          return MAX_TIMER_PROGRESS;
         }
 
-        const increment = prev < 70 ? 1.2 : 0.6;
-        return Math.min(prev + increment, 90);
+        const increment =
+          prev < PROGRESS_SLOWDOWN_THRESHOLD
+            ? FAST_PROGRESS_INCREMENT
+            : SLOW_PROGRESS_INCREMENT;
+
+        return Math.min(prev + increment, MAX_TIMER_PROGRESS);
       });
-    }, 80);
+    }, PROGRESS_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, [projectId]);
@@ -59,7 +70,7 @@ export const useUploadLoadingProgress = (): Result => {
 
     const timer = setTimeout(() => {
       navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, 1));
-    }, 600);
+    }, STEP_REDIRECT_DELAY_MS);
 
     return () => clearTimeout(timer);
   }, [projectId, navigate]);
