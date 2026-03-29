@@ -2,16 +2,8 @@ import type { ChangeEvent, DragEvent, RefObject } from "react";
 
 import { Box, Flex, Text, Textarea, VStack } from "@chakra-ui/react";
 
-import {
-  FilePdfIcon,
-  FilePenIcon,
-  PictureIcon,
-  PlusCircleIcon,
-  XMarkIcon,
-} from "@/shared";
-
+import { UploadFileDropzone, UploadFileList } from "../../components";
 import type { UploadedFile } from "../../hooks";
-import { formatSize } from "../../utils";
 
 type Props = {
   content: string;
@@ -27,54 +19,6 @@ type Props = {
   onDrop: (e: DragEvent) => void;
   onFileInput: (e: ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (id: string) => void;
-};
-
-const isPdf = (file: File) => file.type === "application/pdf";
-const isImage = (file: File) => file.type.startsWith("image/");
-
-const UploadFileIcon = ({ file }: { file: File }) => {
-  if (isPdf(file)) {
-    return (
-      <Flex
-        align="center"
-        bg="pdf.bg"
-        borderRadius="lg"
-        boxSize={9}
-        flexShrink={0}
-        justify="center"
-      >
-        <FilePdfIcon boxSize={4} color="pdf" />
-      </Flex>
-    );
-  }
-
-  if (isImage(file)) {
-    return (
-      <Flex
-        align="center"
-        bg="green.50"
-        borderRadius="lg"
-        boxSize={9}
-        flexShrink={0}
-        justify="center"
-      >
-        <PictureIcon boxSize={4} color="green.500" />
-      </Flex>
-    );
-  }
-
-  return (
-    <Flex
-      align="center"
-      bg="neutral.100"
-      borderRadius="lg"
-      boxSize={9}
-      flexShrink={0}
-      justify="center"
-    >
-      <FilePenIcon boxSize={4} color="neutral.500" />
-    </Flex>
-  );
 };
 
 export const UploadContentAndFileSection = ({
@@ -157,171 +101,23 @@ export const UploadContentAndFileSection = ({
           w={80}
         >
           {uploadedFiles.length === 0 ? (
-            <>
-              <input
-                ref={fileInputRef}
-                accept=".pdf,image/*"
-                multiple
-                style={{ display: "none" }}
-                type="file"
-                onChange={onFileInput}
-              />
-              <Flex
-                align="center"
-                border="2px dashed"
-                borderColor={isDragging ? "seed" : "neutral.300"}
-                borderRadius="2xl"
-                cursor="pointer"
-                direction="column"
-                flex={1}
-                gap={3}
-                justify="center"
-                minH="200px"
-                p={6}
-                transition="border-color 0.15s"
-                onClick={() => fileInputRef.current?.click()}
-                onDragLeave={onDragLeave}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-              >
-                <Flex
-                  align="center"
-                  bg="white"
-                  borderRadius="full"
-                  boxSize={12}
-                  justify="center"
-                >
-                  <Text color="neutral.600" fontSize="2xl">
-                    +
-                  </Text>
-                </Flex>
-                <VStack gap={1}>
-                  <Text
-                    color="neutral.900"
-                    fontSize="sm"
-                    fontWeight="bold"
-                    textAlign="center"
-                  >
-                    파일을 드래그해보세요
-                  </Text>
-                  <Text color="neutral.600" fontSize="xs" textAlign="center">
-                    또는 클릭하여 업로드
-                  </Text>
-                </VStack>
-                <Flex
-                  align="center"
-                  bg="white"
-                  borderRadius="full"
-                  gap={1}
-                  px={3}
-                  py={1}
-                >
-                  <FilePdfIcon boxSize="10px" color="neutral.600" />
-                  <Text color="neutral.600" fontSize="10px">
-                    PDF (최대 {maxFiles}개)
-                  </Text>
-                </Flex>
-              </Flex>
-            </>
+            <UploadFileDropzone
+              fileInputRef={fileInputRef}
+              isDragging={isDragging}
+              maxFiles={maxFiles}
+              onDragLeave={onDragLeave}
+              onDragOver={onDragOver}
+              onDrop={onDrop}
+              onFileInput={onFileInput}
+            />
           ) : (
-            <VStack align="stretch" flex={1} gap={3} justify="space-between">
-              <VStack align="stretch" gap={2}>
-                {uploadedFiles.map(({ id, file }) => (
-                  <Flex
-                    key={id}
-                    align="center"
-                    bg="white"
-                    borderRadius="xl"
-                    boxShadow="0px 2px 8px 0px rgba(0,0,0,0.06)"
-                    gap={3}
-                    p={3}
-                  >
-                    <UploadFileIcon file={file} />
-                    <VStack align="flex-start" flex={1} gap={0} minW={0}>
-                      <Text
-                        color="neutral.900"
-                        fontSize="xs"
-                        fontWeight="semibold"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        whiteSpace="nowrap"
-                        w="full"
-                      >
-                        {file.name}
-                      </Text>
-                      <Text color="neutral.600" fontSize="2xs">
-                        {formatSize(file.size)}
-                      </Text>
-                    </VStack>
-                    <Flex
-                      align="center"
-                      cursor="pointer"
-                      flexShrink={0}
-                      h={6}
-                      justify="center"
-                      w={6}
-                      onClick={() => onRemoveFile(id)}
-                    >
-                      <XMarkIcon boxSize={3} color="neutral.600" />
-                    </Flex>
-                  </Flex>
-                ))}
-
-                {uploadedFiles.length < maxFiles && (
-                  <>
-                    <input
-                      ref={addFileInputRef}
-                      accept=".pdf,image/*"
-                      multiple
-                      style={{ display: "none" }}
-                      type="file"
-                      onChange={onFileInput}
-                    />
-                    <Flex
-                      align="center"
-                      color="neutral.600"
-                      cursor="pointer"
-                      gap={2}
-                      justify="center"
-                      py={2}
-                      transition="color 0.15s"
-                      _hover={{ color: "seed" }}
-                      onClick={() => addFileInputRef.current?.click()}
-                    >
-                      <PlusCircleIcon boxSize={4} />
-                      <Text fontSize="xs" fontWeight="medium">
-                        파일 추가하기
-                      </Text>
-                    </Flex>
-                  </>
-                )}
-              </VStack>
-
-              <VStack align="stretch" gap={1}>
-                <Box
-                  bg="neutral.300"
-                  borderRadius="full"
-                  h={1.5}
-                  overflow="hidden"
-                >
-                  <Box
-                    bg="seed"
-                    borderRadius="full"
-                    h="full"
-                    transition="width 0.3s"
-                    w={`${(uploadedFiles.length / maxFiles) * 100}%`}
-                  />
-                </Box>
-                <Text
-                  color="neutral.600"
-                  fontSize="xs"
-                  fontWeight="medium"
-                  textAlign="right"
-                >
-                  {uploadedFiles.length} / {maxFiles}개 업로드됨
-                </Text>
-              </VStack>
-            </VStack>
+            <UploadFileList
+              addFileInputRef={addFileInputRef}
+              maxFiles={maxFiles}
+              uploadedFiles={uploadedFiles}
+              onFileInput={onFileInput}
+              onRemoveFile={onRemoveFile}
+            />
           )}
         </Flex>
       </Flex>
