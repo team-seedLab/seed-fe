@@ -16,25 +16,7 @@ const MAX_CONTENT_LENGTH = 1000;
 export default function UploadPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
-  const {
-    title,
-    selectedType,
-    content,
-    uploadedFiles,
-    isDragging,
-    isPending,
-    canSubmit,
-    stepCount,
-    setTitle,
-    setSelectedType,
-    setContent,
-    removeFile,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
-    handleFileInput,
-    startAnalysis,
-  } = useUploadPageForm({
+  const { fields, files, submit } = useUploadPageForm({
     initialSelectedType: "글쓰기형",
     maxFiles: MAX_FILES,
   });
@@ -50,7 +32,7 @@ export default function UploadPage() {
         py={20}
         w="full"
       >
-        <UploadTitleSection title={title} onChange={setTitle} />
+        <UploadTitleSection title={fields.title} onChange={fields.setTitle} />
 
         <Flex
           bg="white"
@@ -62,31 +44,31 @@ export default function UploadPage() {
           w="full"
         >
           <UploadAssignmentTypeSection
-            selectedType={selectedType}
-            onSelectType={setSelectedType}
+            selectedType={fields.selectedType}
+            onSelectType={fields.setSelectedType}
           />
 
           <UploadContentAndFileSection
             addFileInputRef={addFileInputRef}
-            content={content}
+            content={fields.content}
             fileInputRef={fileInputRef}
-            isDragging={isDragging}
+            isDragging={files.isDragging}
             maxContentLength={MAX_CONTENT_LENGTH}
             maxFiles={MAX_FILES}
-            uploadedFiles={uploadedFiles}
-            onContentChange={setContent}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onFileInput={handleFileInput}
-            onRemoveFile={removeFile}
+            uploadedFiles={files.uploadedFiles}
+            onContentChange={fields.setContent}
+            onDragLeave={files.handleDragLeave}
+            onDragOver={files.handleDragOver}
+            onDrop={files.handleDrop}
+            onFileInput={files.handleFileInput}
+            onRemoveFile={files.removeFile}
           />
 
           <UploadSubmitSection
-            canSubmit={canSubmit}
-            isPending={isPending}
-            stepCount={stepCount}
-            onSubmit={startAnalysis}
+            canSubmit={submit.canSubmit}
+            isPending={submit.isPending}
+            stepCount={submit.stepCount}
+            onSubmit={submit.startAnalysis}
           />
         </Flex>
       </Flex>

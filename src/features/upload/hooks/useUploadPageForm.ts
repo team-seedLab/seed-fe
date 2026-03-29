@@ -18,23 +18,29 @@ type Params = {
 };
 
 type Result = {
-  title: string;
-  selectedType: AssignmentType;
-  content: string;
-  isDragging: boolean;
-  isPending: boolean;
-  canSubmit: boolean;
-  stepCount: number;
-  uploadedFiles: ReturnType<typeof useUploadFiles>["uploadedFiles"];
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedType: React.Dispatch<React.SetStateAction<AssignmentType>>;
-  setContent: React.Dispatch<React.SetStateAction<string>>;
-  removeFile: ReturnType<typeof useUploadFiles>["removeFile"];
-  handleDragOver: ReturnType<typeof useUploadFiles>["handleDragOver"];
-  handleDragLeave: ReturnType<typeof useUploadFiles>["handleDragLeave"];
-  handleDrop: ReturnType<typeof useUploadFiles>["handleDrop"];
-  handleFileInput: ReturnType<typeof useUploadFiles>["handleFileInput"];
-  startAnalysis: () => void;
+  fields: {
+    title: string;
+    selectedType: AssignmentType;
+    content: string;
+    setTitle: React.Dispatch<React.SetStateAction<string>>;
+    setSelectedType: React.Dispatch<React.SetStateAction<AssignmentType>>;
+    setContent: React.Dispatch<React.SetStateAction<string>>;
+  };
+  files: {
+    uploadedFiles: ReturnType<typeof useUploadFiles>["uploadedFiles"];
+    isDragging: boolean;
+    removeFile: ReturnType<typeof useUploadFiles>["removeFile"];
+    handleDragOver: ReturnType<typeof useUploadFiles>["handleDragOver"];
+    handleDragLeave: ReturnType<typeof useUploadFiles>["handleDragLeave"];
+    handleDrop: ReturnType<typeof useUploadFiles>["handleDrop"];
+    handleFileInput: ReturnType<typeof useUploadFiles>["handleFileInput"];
+  };
+  submit: {
+    isPending: boolean;
+    canSubmit: boolean;
+    stepCount: number;
+    startAnalysis: () => void;
+  };
 };
 
 export const useUploadPageForm = ({
@@ -82,22 +88,28 @@ export const useUploadPageForm = ({
   };
 
   return {
-    title,
-    selectedType,
-    content,
-    isDragging,
-    isPending,
-    canSubmit,
-    stepCount,
-    uploadedFiles,
-    setTitle,
-    setSelectedType,
-    setContent,
-    removeFile,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
-    handleFileInput,
-    startAnalysis,
+    fields: {
+      title,
+      selectedType,
+      content,
+      setTitle,
+      setSelectedType,
+      setContent,
+    },
+    files: {
+      uploadedFiles,
+      isDragging,
+      removeFile,
+      handleDragOver,
+      handleDragLeave,
+      handleDrop,
+      handleFileInput,
+    },
+    submit: {
+      isPending,
+      canSubmit,
+      stepCount,
+      startAnalysis,
+    },
   };
 };
