@@ -1,5 +1,4 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useRef } from "react";
 
 import {
   Box,
@@ -11,14 +10,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import {
-  type AssignmentType,
-  ROADMAP_STEP_CODES,
-  ROADMAP_TYPE_MAP,
-  useCreateProject,
-  useUploadFlowStore,
-} from "@/entities";
-import { formatSize, useUploadFiles } from "@/features";
+import { type AssignmentType } from "@/entities";
+import { formatSize, useUploadPageForm } from "@/features";
 import {
   AcademicCapIcon,
   BeakerIcon,
@@ -28,7 +21,6 @@ import {
   FilePenIcon,
   PictureIcon,
   PlusCircleIcon,
-  ROUTE_PATHS,
   StudyIcon,
   XMarkIcon,
 } from "@/shared";
@@ -52,44 +44,30 @@ const isPdf = (file: File) => file.type === "application/pdf";
 const isImage = (file: File) => file.type.startsWith("image/");
 
 export default function UploadPage() {
-  const [title, setTitle] = useState("");
-  const [selectedType, setSelectedType] = useState<AssignmentType>("글쓰기형");
-  const [content, setContent] = useState("");
-  const navigate = useNavigate();
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
   const {
+    title,
+    selectedType,
+    content,
     uploadedFiles,
     isDragging,
+    isPending,
+    canSubmit,
+    stepCount,
+    setTitle,
+    setSelectedType,
+    setContent,
     removeFile,
     handleDragOver,
     handleDragLeave,
     handleDrop,
     handleFileInput,
-  } = useUploadFiles({ maxFiles: MAX_FILES });
-
-  const { mutate: createProject, isPending } = useCreateProject();
-  const reset = useUploadFlowStore((state) => state.reset);
-
-  const canSubmit =
-    title.trim().length > 0 &&
-    (uploadedFiles.length > 0 || content.trim().length > 0);
-
-  const stepCount = ROADMAP_STEP_CODES[ROADMAP_TYPE_MAP[selectedType]].length;
-
-  const startAnalysis = () => {
-    if (!canSubmit || isPending) return;
-
-    reset();
-    createProject({
-      title,
-      roadmapType: ROADMAP_TYPE_MAP[selectedType],
-      userIntent: content,
-      files: uploadedFiles.map((f) => f.file),
-    });
-    navigate(ROUTE_PATHS.UPLOAD_LOADING);
-  };
+    startAnalysis,
+  } = useUploadPageForm({
+    initialSelectedType: ASSIGNMENT_TYPES[0].label,
+    maxFiles: MAX_FILES,
+  });
 
   const FileIcon = ({ file }: { file: File }) => {
     if (isPdf(file))
