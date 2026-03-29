@@ -1,11 +1,12 @@
 import { useRef } from "react";
 
-import { Box, Flex, Input } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import {
   UploadAssignmentTypeSection,
   UploadContentAndFileSection,
   UploadSubmitSection,
+  UploadTitleSection,
   useUploadPageForm,
 } from "@/features";
 
@@ -49,19 +50,7 @@ export default function UploadPage() {
         py={20}
         w="full"
       >
-        <Box maxW="768px" w="full">
-          <Input
-            border="none"
-            color={title ? "neutral.900" : "neutral.300"}
-            fontSize="4xl"
-            fontWeight="bold"
-            placeholder="프로젝트 제목을 입력하세요"
-            textAlign="center"
-            value={title}
-            _focusVisible={{ outline: "none", boxShadow: "none" }}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </Box>
+        <UploadTitleSection title={title} onChange={setTitle} />
 
         <Flex
           bg="white"
