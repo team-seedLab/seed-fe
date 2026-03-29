@@ -18,7 +18,7 @@ import {
   useCreateProject,
   useUploadFlowStore,
 } from "@/entities";
-import { formatSize } from "@/features";
+import { formatSize, useUploadFiles } from "@/features";
 import {
   AcademicCapIcon,
   BeakerIcon,
@@ -32,11 +32,6 @@ import {
   StudyIcon,
   XMarkIcon,
 } from "@/shared";
-
-type UploadedFile = {
-  id: string;
-  file: File;
-};
 
 const MAX_FILES = 3;
 const MAX_CONTENT_LENGTH = 1000;
@@ -60,13 +55,19 @@ export default function UploadPage() {
   const [title, setTitle] = useState("");
   const [selectedType, setSelectedType] = useState<AssignmentType>("글쓰기형");
   const [content, setContent] = useState("");
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
-
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
+  const {
+    uploadedFiles,
+    isDragging,
+    removeFile,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    handleFileInput,
+  } = useUploadFiles({ maxFiles: MAX_FILES });
 
   const { mutate: createProject, isPending } = useCreateProject();
   const reset = useUploadFlowStore((state) => state.reset);
@@ -76,39 +77,6 @@ export default function UploadPage() {
     (uploadedFiles.length > 0 || content.trim().length > 0);
 
   const stepCount = ROADMAP_STEP_CODES[ROADMAP_TYPE_MAP[selectedType]].length;
-
-  const addFiles = (newFiles: File[]) => {
-    setUploadedFiles((prev) => {
-      const remaining = MAX_FILES - prev.length;
-      const toAdd = newFiles.slice(0, remaining);
-      return [
-        ...prev,
-        ...toAdd.map((file) => ({ id: crypto.randomUUID(), file })),
-      ];
-    });
-  };
-
-  const removeFile = (id: string) => {
-    setUploadedFiles((prev) => prev.filter((f) => f.id !== id));
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => setIsDragging(false);
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    addFiles(Array.from(e.dataTransfer.files));
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) addFiles(Array.from(e.target.files));
-    e.target.value = "";
-  };
 
   const startAnalysis = () => {
     if (!canSubmit || isPending) return;
