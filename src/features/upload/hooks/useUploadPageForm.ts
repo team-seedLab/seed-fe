@@ -10,10 +10,11 @@ import {
 } from "@/entities";
 import { ROUTE_PATHS } from "@/shared";
 
+import { DEFAULT_UPLOAD_ASSIGNMENT_TYPE } from "../constants";
+
 import { useUploadFiles } from "./useUploadFiles";
 
 type Params = {
-  initialSelectedType: AssignmentType;
   maxFiles: number;
 };
 
@@ -43,13 +44,11 @@ type Result = {
   };
 };
 
-export const useUploadPageForm = ({
-  initialSelectedType,
-  maxFiles,
-}: Params): Result => {
+export const useUploadPageForm = ({ maxFiles }: Params): Result => {
   const [title, setTitle] = useState("");
-  const [selectedType, setSelectedType] =
-    useState<AssignmentType>(initialSelectedType);
+  const [selectedType, setSelectedType] = useState<AssignmentType>(
+    DEFAULT_UPLOAD_ASSIGNMENT_TYPE,
+  );
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();

@@ -16,10 +16,7 @@ const MAX_CONTENT_LENGTH = 1000;
 export default function UploadPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
-  const { fields, files, submit } = useUploadPageForm({
-    initialSelectedType: "글쓰기형",
-    maxFiles: MAX_FILES,
-  });
+  const { fields, files, submit } = useUploadPageForm({ maxFiles: MAX_FILES });
 
   return (
     <Flex align="center" bg="white" direction="column" minH="100vh">
