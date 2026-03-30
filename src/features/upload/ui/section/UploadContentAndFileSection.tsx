@@ -92,7 +92,6 @@ export const UploadContentAndFileSection = ({
         <Flex
           bg="neutral.50"
           borderColor="neutral.50"
-          borderLeft="1px solid"
           direction="column"
           flexShrink={0}
           justify="center"
