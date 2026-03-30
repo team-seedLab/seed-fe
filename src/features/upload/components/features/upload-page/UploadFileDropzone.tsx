@@ -4,6 +4,8 @@ import { Flex, Text, VStack } from "@chakra-ui/react";
 
 import { FilePdfIcon } from "@/shared";
 
+import { UPLOAD_FILE_ACCEPT, UPLOAD_FILE_TYPE_LABEL } from "../../../constants";
+
 type Props = {
   isDragging: boolean;
   maxFiles: number;
@@ -27,7 +29,7 @@ export const UploadFileDropzone = ({
     <>
       <input
         ref={fileInputRef}
-        accept=".pdf,image/*"
+        accept={UPLOAD_FILE_ACCEPT}
         multiple
         style={{ display: "none" }}
         type="file"
@@ -85,7 +87,7 @@ export const UploadFileDropzone = ({
         >
           <FilePdfIcon boxSize="10px" color="neutral.600" />
           <Text color="neutral.600" fontSize="10px">
-            PDF (최대 {maxFiles}개)
+            {UPLOAD_FILE_TYPE_LABEL} (최대 {maxFiles}개)
           </Text>
         </Flex>
       </Flex>

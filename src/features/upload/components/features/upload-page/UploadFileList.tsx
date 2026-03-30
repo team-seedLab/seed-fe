@@ -4,6 +4,7 @@ import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { PlusCircleIcon } from "@/shared";
 
+import { UPLOAD_FILE_ACCEPT } from "../../../constants";
 import type { UploadedFile } from "../../../hooks";
 
 import { UploadFileItem } from "./UploadFileItem";
@@ -38,7 +39,7 @@ export const UploadFileList = ({
           <>
             <input
               ref={addFileInputRef}
-              accept=".pdf,image/*"
+              accept={UPLOAD_FILE_ACCEPT}
               multiple
               style={{ display: "none" }}
               type="file"

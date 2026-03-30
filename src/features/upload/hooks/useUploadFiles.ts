@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+import { toaster } from "@/shared";
+
+import { UPLOAD_FILE_TYPE_LABEL } from "../constants";
+
 export type UploadedFile = {
   id: string;
   file: File;
@@ -20,14 +24,38 @@ type Result = {
   handleFileInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
+const isSupportedUploadFile = (file: File) => {
+  const lowerCaseName = file.name.toLowerCase();
+
+  return (
+    file.type === "application/pdf" ||
+    file.type.startsWith("image/") ||
+    lowerCaseName.endsWith(".pdf")
+  );
+};
+
 export const useUploadFiles = ({ maxFiles }: Params): Result => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
   const addFiles = (newFiles: File[]) => {
+    const validFiles = newFiles.filter(isSupportedUploadFile);
+    const invalidFileCount = newFiles.length - validFiles.length;
+
+    if (invalidFileCount > 0) {
+      toaster.create({
+        type: "error",
+        description: `${UPLOAD_FILE_TYPE_LABEL} 파일만 업로드할 수 있습니다.`,
+      });
+    }
+
+    if (validFiles.length === 0) {
+      return;
+    }
+
     setUploadedFiles((prev) => {
       const remaining = maxFiles - prev.length;
-      const toAdd = newFiles.slice(0, remaining);
+      const toAdd = validFiles.slice(0, remaining);
 
       return [
         ...prev,
