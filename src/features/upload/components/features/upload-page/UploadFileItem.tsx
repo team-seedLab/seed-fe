@@ -2,18 +2,15 @@ import { Flex, Text, VStack } from "@chakra-ui/react";
 
 import { FilePdfIcon, FilePenIcon, PictureIcon, XMarkIcon } from "@/shared";
 
-import { formatSize } from "../../../utils";
+import { formatSize, isImageUploadFile, isPdfUploadFile } from "../../../utils";
 
 type Props = {
   file: File;
   onRemove: () => void;
 };
 
-const isPdf = (file: File) => file.type === "application/pdf";
-const isImage = (file: File) => file.type.startsWith("image/");
-
 const UploadFileIcon = ({ file }: { file: File }) => {
-  if (isPdf(file)) {
+  if (isPdfUploadFile(file)) {
     return (
       <Flex
         align="center"
@@ -28,7 +25,7 @@ const UploadFileIcon = ({ file }: { file: File }) => {
     );
   }
 
-  if (isImage(file)) {
+  if (isImageUploadFile(file)) {
     return (
       <Flex
         align="center"

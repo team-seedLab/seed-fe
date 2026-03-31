@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toaster } from "@/shared";
 
 import { UPLOAD_FILE_TYPE_LABEL } from "../constants";
+import { isSupportedUploadFile } from "../utils";
 
 export type UploadedFile = {
   id: string;
@@ -22,16 +23,6 @@ type Result = {
   handleDragLeave: () => void;
   handleDrop: (e: React.DragEvent) => void;
   handleFileInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const isSupportedUploadFile = (file: File) => {
-  const lowerCaseName = file.name.toLowerCase();
-
-  return (
-    file.type === "application/pdf" ||
-    file.type.startsWith("image/") ||
-    lowerCaseName.endsWith(".pdf")
-  );
 };
 
 export const useUploadFiles = ({ maxFiles }: Params): Result => {
