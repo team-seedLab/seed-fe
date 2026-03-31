@@ -44,15 +44,29 @@ export const useUploadFiles = ({ maxFiles }: Params): Result => {
       return;
     }
 
-    setUploadedFiles((prev) => {
-      const remaining = maxFiles - prev.length;
-      const toAdd = validFiles.slice(0, remaining);
+    const remaining = maxFiles - uploadedFiles.length;
 
-      return [
-        ...prev,
-        ...toAdd.map((file) => ({ id: crypto.randomUUID(), file })),
-      ];
-    });
+    if (remaining <= 0) {
+      toaster.create({
+        type: "warning",
+        description: `최대 ${maxFiles}개의 파일만 업로드할 수 있습니다.`,
+      });
+      return;
+    }
+
+    const toAdd = validFiles.slice(0, remaining);
+
+    if (validFiles.length > remaining) {
+      toaster.create({
+        type: "warning",
+        description: `최대 ${maxFiles}개까지만 업로드할 수 있어 일부 파일은 제외되었습니다.`,
+      });
+    }
+
+    setUploadedFiles((prev) => [
+      ...prev,
+      ...toAdd.map((file) => ({ id: crypto.randomUUID(), file })),
+    ]);
   };
 
   const removeFile = (id: string) => {
