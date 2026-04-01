@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
 import { AssignmentHelpSection, ExecutionOnlySection } from "@/features";
-import { CheckIcon, CopyIcon, SparklesIcon } from "@/shared";
+import { CheckIcon, CopyIcon, ROUTE_PATHS, SparklesIcon } from "@/shared";
 
 export default function MainPage() {
   const [isSolutionSectionReady, setIsSolutionSectionReady] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Flex flexDir="column" align="center" bg="white">
@@ -17,10 +19,10 @@ export default function MainPage() {
         w="full"
       >
         <Flex
-          align="center"
-          direction="column"
+          align={{ base: "stretch", md: "center" }}
+          direction={{ base: "column", md: "row" }}
           gap={{ base: 6, lg: 12 }}
-          justify="center"
+          justify={{ base: "center", lg: "space-between" }}
           maxW="1200px"
           mx="auto"
           px={{ base: 6, lg: 10 }}
@@ -83,16 +85,39 @@ export default function MainPage() {
               과제 로드맵부터 최적화 프롬프트까지.
             </Text>
           </VStack>
+
+          <VStack
+            align="stretch"
+            gap={4}
+            justify="center"
+            maxW="486px"
+            w="full"
+          >
+            <Button
+              bg="button.bg"
+              borderRadius={20}
+              color="button.foreground"
+              fontSize="xl"
+              fontWeight="bold"
+              p={6}
+              w={{ base: "full", lg: "auto" }}
+              _active={{ bg: "seed.active" }}
+              _hover={{ bg: "seed.hover" }}
+              onClick={() => navigate(ROUTE_PATHS.LOGIN)}
+            >
+              시작하기
+            </Button>
+          </VStack>
         </Flex>
       </Box>
       <AssignmentHelpSection
         onSolutionReadyChange={setIsSolutionSectionReady}
       />
       <ExecutionOnlySection isActivated={isSolutionSectionReady} />
-      <Box bg="white" py={{ base: 16, md: 20, lg: 24 }} w="full">
+      <Box bg="white" py={{ base: 20, md: 24, lg: 28 }} w="full">
         <VStack
           align="stretch"
-          gap={{ base: 6, lg: 8 }}
+          gap={{ base: 10, lg: 14 }}
           maxW="1200px"
           mx="auto"
           px={{ base: 4, lg: 10 }}
@@ -100,7 +125,7 @@ export default function MainPage() {
         >
           <VStack
             align="start"
-            gap={3}
+            gap={5}
             maxW="780px"
             w="full"
             px={{ base: 4, xl: 0 }}
@@ -153,9 +178,9 @@ export default function MainPage() {
             align={{ base: "stretch", md: "center" }}
             justify="center"
             direction={{ base: "column", md: "row" }}
-            gap={{ base: 4, lg: 16 }}
+            gap={{ base: 6, lg: 16 }}
             px={{ base: 0, lg: 6 }}
-            py={{ base: 0, lg: 6 }}
+            py={{ base: 2, lg: 10 }}
             w="full"
           >
             <Box flex="1 1 0">
@@ -331,7 +356,7 @@ export default function MainPage() {
         display="flex"
         h="100dvh"
         justifyContent="center"
-        py={11}
+        py={{ base: 16, md: 20, lg: 24 }}
         w="full"
       >
         <VStack align="center" gap={{ base: 3, lg: 5 }} px={4} w="full">
