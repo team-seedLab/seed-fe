@@ -2,11 +2,7 @@ import { useState } from "react";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import {
-  AssignmentHelpSection,
-  ExecutionOnlySection,
-  SendEmailSection,
-} from "@/features";
+import { AssignmentHelpSection, ExecutionOnlySection } from "@/features";
 import { CheckIcon, CopyIcon, SparklesIcon } from "@/shared";
 
 export default function MainPage() {
@@ -21,10 +17,10 @@ export default function MainPage() {
         w="full"
       >
         <Flex
-          align={{ base: "stretch", md: "center" }}
-          direction={{ base: "column", md: "row" }}
+          align="center"
+          direction="column"
           gap={{ base: 6, lg: 12 }}
-          justify={{ base: "center", lg: "space-between" }}
+          justify="center"
           maxW="1200px"
           mx="auto"
           px={{ base: 6, lg: 10 }}
@@ -87,8 +83,6 @@ export default function MainPage() {
               과제 로드맵부터 최적화 프롬프트까지.
             </Text>
           </VStack>
-
-          <SendEmailSection />
         </Flex>
       </Box>
       <AssignmentHelpSection
