@@ -87,7 +87,7 @@ export default function MainPage() {
           </VStack>
 
           <VStack
-            align="stretch"
+            align={{ base: "stretch", lg: "flex-start" }}
             gap={4}
             justify="center"
             maxW="486px"
@@ -354,7 +354,7 @@ export default function MainPage() {
         as="section"
         bg="white"
         display="flex"
-        h="100dvh"
+        minH="100dvh"
         justifyContent="center"
         py={{ base: 16, md: 20, lg: 24 }}
         w="full"
