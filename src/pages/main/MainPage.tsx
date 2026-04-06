@@ -3,12 +3,18 @@ import { useNavigate } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
+import { useAuth } from "@/entities";
 import { AssignmentHelpSection, ExecutionOnlySection } from "@/features";
 import { CheckIcon, CopyIcon, ROUTE_PATHS, SparklesIcon } from "@/shared";
 
 export default function MainPage() {
   const [isSolutionSectionReady, setIsSolutionSectionReady] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  const handleStartClick = () => {
+    navigate(isAuthenticated ? ROUTE_PATHS.MYPAGE : ROUTE_PATHS.LOGIN);
+  };
 
   return (
     <Flex flexDir="column" align="center" bg="white">
@@ -97,13 +103,18 @@ export default function MainPage() {
               bg="button.bg"
               borderRadius={20}
               color="button.foreground"
+              disabled={isLoading}
               fontSize="xl"
               fontWeight="bold"
               p={6}
-              w={{ base: "full", lg: "auto" }}
+              w="full"
               _active={{ bg: "seed.active" }}
+              _disabled={{
+                cursor: "not-allowed",
+                opacity: 0.5,
+              }}
               _hover={{ bg: "seed.hover" }}
-              onClick={() => navigate(ROUTE_PATHS.LOGIN)}
+              onClick={handleStartClick}
             >
               시작하기
             </Button>
