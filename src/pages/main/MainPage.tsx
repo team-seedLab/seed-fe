@@ -3,12 +3,27 @@ import { useNavigate } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
+import { useAuth } from "@/entities";
 import { AssignmentHelpSection, ExecutionOnlySection } from "@/features";
 import { CheckIcon, CopyIcon, ROUTE_PATHS, SparklesIcon } from "@/shared";
 
 export default function MainPage() {
   const [isSolutionSectionReady, setIsSolutionSectionReady] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  const startButtonTargetPath = isAuthenticated
+    ? ROUTE_PATHS.MYPAGE
+    : ROUTE_PATHS.LOGIN;
+  const isStartButtonDisabled = isLoading;
+
+  const handleStartClick = () => {
+    if (isStartButtonDisabled) {
+      return;
+    }
+
+    navigate(startButtonTargetPath);
+  };
 
   return (
     <Flex flexDir="column" align="center" bg="white">
@@ -97,13 +112,18 @@ export default function MainPage() {
               bg="button.bg"
               borderRadius={20}
               color="button.foreground"
+              cursor={isStartButtonDisabled ? "not-allowed" : "pointer"}
+              disabled={isStartButtonDisabled}
               fontSize="xl"
               fontWeight="bold"
+              opacity={isStartButtonDisabled ? 0.5 : 1}
               p={6}
               w="full"
               _active={{ bg: "seed.active" }}
-              _hover={{ bg: "seed.hover" }}
-              onClick={() => navigate(ROUTE_PATHS.LOGIN)}
+              _hover={{
+                bg: isStartButtonDisabled ? "button.bg" : "seed.hover",
+              }}
+              onClick={handleStartClick}
             >
               시작하기
             </Button>
