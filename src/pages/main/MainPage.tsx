@@ -100,7 +100,7 @@ export default function MainPage() {
               fontSize="xl"
               fontWeight="bold"
               p={6}
-              w={{ base: "full", lg: "auto" }}
+              w="full"
               _active={{ bg: "seed.active" }}
               _hover={{ bg: "seed.hover" }}
               onClick={() => navigate(ROUTE_PATHS.LOGIN)}
