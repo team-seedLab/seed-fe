@@ -12,17 +12,8 @@ export default function MainPage() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
 
-  const startButtonTargetPath = isAuthenticated
-    ? ROUTE_PATHS.MYPAGE
-    : ROUTE_PATHS.LOGIN;
-  const isStartButtonDisabled = isLoading;
-
   const handleStartClick = () => {
-    if (isStartButtonDisabled) {
-      return;
-    }
-
-    navigate(startButtonTargetPath);
+    navigate(isAuthenticated ? ROUTE_PATHS.MYPAGE : ROUTE_PATHS.LOGIN);
   };
 
   return (
@@ -112,17 +103,17 @@ export default function MainPage() {
               bg="button.bg"
               borderRadius={20}
               color="button.foreground"
-              cursor={isStartButtonDisabled ? "not-allowed" : "pointer"}
-              disabled={isStartButtonDisabled}
+              disabled={isLoading}
               fontSize="xl"
               fontWeight="bold"
-              opacity={isStartButtonDisabled ? 0.5 : 1}
               p={6}
               w="full"
               _active={{ bg: "seed.active" }}
-              _hover={{
-                bg: isStartButtonDisabled ? "button.bg" : "seed.hover",
+              _disabled={{
+                cursor: "not-allowed",
+                opacity: 0.5,
               }}
+              _hover={{ bg: "seed.hover" }}
               onClick={handleStartClick}
             >
               시작하기
