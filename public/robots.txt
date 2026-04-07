@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /mypage
+Disallow: /upload
+Disallow: /project/
+
+Sitemap: https://www.seedlab.cloud/sitemap.xml

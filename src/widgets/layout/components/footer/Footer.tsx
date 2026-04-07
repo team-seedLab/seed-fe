@@ -18,13 +18,7 @@ export const Footer = () => {
           position="relative"
         >
           <Link to={ROUTE_PATHS.ROOT}>
-            <Image
-              src={Logo}
-              alt="Seed Logo"
-              h={6}
-              w="auto"
-              objectFit="contain"
-            />
+            <Image src={Logo} alt="SEED" h={6} w="auto" objectFit="contain" />
           </Link>
           <HStack
             display={{ base: "none", md: "flex" }}

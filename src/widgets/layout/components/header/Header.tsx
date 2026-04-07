@@ -39,13 +39,7 @@ export const Header = () => {
         position="relative"
       >
         <Link to={ROUTE_PATHS.ROOT}>
-          <Image
-            src={Logo}
-            alt="Seed Logo"
-            h={8}
-            w="auto"
-            objectFit="contain"
-          />
+          <Image src={Logo} alt="SEED" h={8} w="auto" objectFit="contain" />
         </Link>
         {!isAuthenticated && (
           <HStack
