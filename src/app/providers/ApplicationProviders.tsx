@@ -1,3 +1,5 @@
+import { HelmetProvider } from "react-helmet-async";
+
 import { Toaster } from "@/shared";
 
 import { AuthProvider, QueryProvider, ThemeProvider } from "./components";
@@ -8,13 +10,15 @@ type Props = {
 
 export const ApplicationProviders = ({ children }: Props) => {
   return (
-    <QueryProvider>
-      <AuthProvider>
-        <ThemeProvider>
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </AuthProvider>
-    </QueryProvider>
+    <HelmetProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </AuthProvider>
+      </QueryProvider>
+    </HelmetProvider>
   );
 };
