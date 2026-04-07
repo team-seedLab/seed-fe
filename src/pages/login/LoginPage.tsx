@@ -5,10 +5,12 @@ import {
   LoginHelpSection,
   LoginTitleText,
 } from "@/features";
+import { LOGIN_PAGE_SEO, Seo } from "@/shared";
 
 export default function LoginPage() {
   return (
     <Box bg="neutral.0" w="full">
+      <Seo config={LOGIN_PAGE_SEO} />
       <Flex
         direction="column"
         align="center"
