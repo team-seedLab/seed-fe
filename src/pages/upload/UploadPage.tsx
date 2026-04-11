@@ -23,10 +23,10 @@ export default function UploadPage() {
       <Flex
         align="center"
         direction="column"
-        gap={12}
+        gap={{ base: 8, md: 12 }}
         maxW="1024px"
-        px={6}
-        py={20}
+        px={{ base: 4, md: 6 }}
+        py={{ base: 8, md: 14, lg: 20 }}
         w="full"
       >
         <UploadTitleSection title={fields.title} onChange={fields.setTitle} />
