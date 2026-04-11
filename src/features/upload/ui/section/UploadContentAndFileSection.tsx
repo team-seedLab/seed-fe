@@ -48,27 +48,35 @@ export const UploadContentAndFileSection = ({
       </Text>
 
       <Flex
+        direction={{ base: "column", md: "row" }}
         border="1px solid"
         borderColor="neutral.50"
-        borderRadius="4xl"
+        borderRadius={{ base: "3xl", md: "4xl" }}
         boxShadow="0px 4px 20px 0px rgba(0,0,0,0.02)"
         overflow="hidden"
         w="full"
       >
-        <Flex bg="white" direction="column" flex={1} p={8}>
+        <Flex bg="white" direction="column" flex={1} p={{ base: 4, md: 8 }}>
           <Textarea
             border="none"
             color="neutral.900"
             flex={1}
-            h={64}
+            fontSize={{ base: "sm", md: "md" }}
+            lineHeight="1.6"
             maxLength={maxContentLength}
+            minH={{ base: "320px", md: "256px" }}
             placeholder={
               "교수님이 제시한 과제 주제나 요구사항을 자유롭게 적어주세요.\n예: '마케팅 전략 분석 리포트 작성, 2000자 이내, SWOT 분석 포함 필수'"
             }
             resize="none"
             value={content}
             _focusVisible={{ outline: "none", boxShadow: "none" }}
-            _placeholder={{ color: "neutral.300" }}
+            _placeholder={{
+              color: "neutral.300",
+              lineHeight: "1.6",
+              whiteSpace: "pre-wrap",
+              wordBreak: "keep-all",
+            }}
             onChange={(e) => onContentChange(e.target.value)}
           />
           <Flex
@@ -76,7 +84,7 @@ export const UploadContentAndFileSection = ({
             borderTop="1px solid"
             borderColor="neutral.50"
             justify="space-between"
-            pt={4}
+            pt={{ base: 3, md: 4 }}
           >
             <Box bg="neutral.50" borderRadius="md" px={2} py={1}>
               <Text color="neutral.600" fontSize="xs" fontWeight="medium">
@@ -92,12 +100,14 @@ export const UploadContentAndFileSection = ({
         <Flex
           bg="neutral.50"
           borderColor="neutral.50"
+          borderLeftWidth={{ base: "0px", md: "1px" }}
+          borderTopWidth={{ base: "1px", md: "0px" }}
           direction="column"
           flexShrink={0}
           justify="center"
-          minH="377px"
-          p={8}
-          w={80}
+          minH={{ base: "auto", md: "377px" }}
+          p={{ base: 4, md: 8 }}
+          w={{ base: "full", md: 80 }}
         >
           {uploadedFiles.length === 0 ? (
             <UploadFileDropzone
