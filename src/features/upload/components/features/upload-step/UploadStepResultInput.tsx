@@ -30,7 +30,7 @@ export const UploadStepResultInput = ({ value, onChange }: Props) => {
           color="neutral.900"
           fontSize={{ base: "xs", md: "sm" }}
           fontWeight="medium"
-          minH={{ base: "240px", md: 60 }}
+          minH={60}
           onChange={(e) => onChange(e.target.value)}
           p={{ base: 4, md: 6 }}
           placeholder="이전 단계 프롬프트로 얻은 AI의 답변을 여기에 붙여넣어 주세요. 정보를 입력하면 다음 단계 로드맵이 더욱 정교해집니다."
