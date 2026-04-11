@@ -27,7 +27,6 @@ export const UploadSubmitSection = ({
         fontWeight="bold"
         h={{ base: 12, md: 14 }}
         maxW={{ base: "full", md: "384px" }}
-        opacity={isDisabled ? 0.5 : 1}
         px={{ base: 6, md: 8 }}
         transition="opacity 0.15s, background-color 0.15s"
         w="full"
