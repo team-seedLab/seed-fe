@@ -1,4 +1,4 @@
-import { Flex, Text, VStack } from "@chakra-ui/react";
+import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { type AssignmentType } from "@/entities";
 
@@ -23,10 +23,9 @@ export const UploadAssignmentTypeSection = ({
           const isActive = selectedType === label;
 
           return (
-            <Flex
-              as="button"
+            <Button
+              aria-pressed={isActive}
               key={label}
-              align="center"
               bg={isActive ? "seed.subtle" : "neutral.50"}
               border="2px solid"
               borderColor={isActive ? "seed" : "neutral.50"}
@@ -34,10 +33,16 @@ export const UploadAssignmentTypeSection = ({
               cursor="pointer"
               gap={2}
               h={{ base: 12, md: 14 }}
-              justify="center"
               minW={{ base: "calc(50% - 4px)", md: "120px" }}
               px={{ base: 3, md: 5 }}
               transition="all 0.15s"
+              type="button"
+              variant="plain"
+              _focusVisible={{
+                outline: "2px solid",
+                outlineColor: "seed",
+                outlineOffset: "2px",
+              }}
               onClick={() => onSelectType(label)}
             >
               <Icon boxSize="15px" color={isActive ? "seed" : "neutral.900"} />
@@ -49,7 +54,7 @@ export const UploadAssignmentTypeSection = ({
               >
                 {label}
               </Text>
-            </Flex>
+            </Button>
           );
         })}
       </Flex>
