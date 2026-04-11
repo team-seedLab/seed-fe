@@ -68,26 +68,36 @@ function AssetItem({
         cursor="pointer"
         justify="space-between"
         onClick={() => setOpen((v) => !v)}
-        p={5}
+        p={{ base: 4, md: 5 }}
       >
-        <HStack gap={5}>
+        <HStack gap={{ base: 3, md: 5 }}>
           <Flex
             align="center"
             bg="neutral.50"
             borderRadius="12px"
             flexShrink={0}
-            boxSize={10}
+            boxSize={{ base: 8, md: 10 }}
             justify="center"
           >
-            <Text color="neutral.600" fontSize="sm" fontWeight="bold">
+            <Text
+              color="neutral.600"
+              fontSize={{ base: "xs", md: "sm" }}
+              fontWeight="bold"
+            >
               {asset.id}
             </Text>
           </Flex>
           <VStack align="flex-start" gap={0.5}>
-            <Text color="neutral.900" fontWeight="bold">
+            <Text
+              color="neutral.900"
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="bold"
+              lineHeight="1.4"
+              wordBreak="keep-all"
+            >
               {asset.title}
             </Text>
-            <Text color="neutral.600" fontSize="xs">
+            <Text color="neutral.600" fontSize={{ base: "2xs", md: "xs" }}>
               {asset.subtitle}
             </Text>
           </VStack>
@@ -98,7 +108,7 @@ function AssetItem({
             transition: "transform 0.2s",
           }}
         >
-          <ChevronRightIcon boxSize={4} color="neutral.600" />
+          <ChevronRightIcon boxSize={{ base: 3, md: 4 }} color="neutral.600" />
         </Box>
       </Flex>
 
