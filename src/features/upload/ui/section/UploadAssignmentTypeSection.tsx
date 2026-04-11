@@ -1,4 +1,4 @@
-import { Flex, HStack, Text, VStack } from "@chakra-ui/react";
+import { Flex, Text, VStack } from "@chakra-ui/react";
 
 import { type AssignmentType } from "@/entities";
 
@@ -18,12 +18,13 @@ export const UploadAssignmentTypeSection = ({
       <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
         과제 유형
       </Text>
-      <HStack flexWrap="wrap" gap={3}>
+      <Flex gap={{ base: 2, md: 3 }} wrap="wrap" w="full">
         {UPLOAD_ASSIGNMENT_TYPES.map(({ label, Icon }) => {
           const isActive = selectedType === label;
 
           return (
             <Flex
+              as="button"
               key={label}
               align="center"
               bg={isActive ? "seed.subtle" : "neutral.50"}
@@ -32,10 +33,10 @@ export const UploadAssignmentTypeSection = ({
               borderRadius="3xl"
               cursor="pointer"
               gap={2}
-              h={14}
+              h={{ base: 12, md: 14 }}
               justify="center"
-              minW="120px"
-              px={5}
+              minW={{ base: "calc(50% - 4px)", md: "120px" }}
+              px={{ base: 3, md: 5 }}
               transition="all 0.15s"
               onClick={() => onSelectType(label)}
             >
@@ -51,7 +52,7 @@ export const UploadAssignmentTypeSection = ({
             </Flex>
           );
         })}
-      </HStack>
+      </Flex>
     </VStack>
   );
 };
