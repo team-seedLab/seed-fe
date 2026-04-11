@@ -1,6 +1,6 @@
 import type { ChangeEvent, DragEvent, RefObject } from "react";
 
-import { Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { FilePdfIcon } from "@/shared";
 
@@ -43,10 +43,10 @@ export const UploadFileDropzone = ({
         cursor="pointer"
         direction="column"
         flex={1}
-        gap={3}
+        gap={{ base: 2.5, md: 3 }}
         justify="center"
-        minH="200px"
-        p={6}
+        minH={{ base: "160px", md: "200px" }}
+        p={{ base: 5, md: 6 }}
         transition="border-color 0.15s"
         onClick={() => fileInputRef.current?.click()}
         onDragLeave={onDragLeave}
@@ -57,10 +57,10 @@ export const UploadFileDropzone = ({
           align="center"
           bg="white"
           borderRadius="full"
-          boxSize={12}
+          boxSize={{ base: 10, md: 12 }}
           justify="center"
         >
-          <Text color="neutral.600" fontSize="2xl">
+          <Text color="neutral.600" fontSize={{ base: "xl", md: "2xl" }}>
             +
           </Text>
         </Flex>
@@ -71,10 +71,20 @@ export const UploadFileDropzone = ({
             fontWeight="bold"
             textAlign="center"
           >
-            파일을 드래그해보세요
+            <Box as="span" display={{ base: "inline", md: "none" }}>
+              파일을 선택해보세요
+            </Box>
+            <Box as="span" display={{ base: "none", md: "inline" }}>
+              파일을 드래그해보세요
+            </Box>
           </Text>
           <Text color="neutral.600" fontSize="xs" textAlign="center">
-            또는 클릭하여 업로드
+            <Box as="span" display={{ base: "inline", md: "none" }}>
+              탭해서 업로드
+            </Box>
+            <Box as="span" display={{ base: "none", md: "inline" }}>
+              또는 클릭해서 업로드
+            </Box>
           </Text>
         </VStack>
         <Flex
@@ -82,7 +92,7 @@ export const UploadFileDropzone = ({
           bg="white"
           borderRadius="full"
           gap={1}
-          px={3}
+          px={{ base: 2.5, md: 3 }}
           py={1}
         >
           <FilePdfIcon boxSize="10px" color="neutral.600" />

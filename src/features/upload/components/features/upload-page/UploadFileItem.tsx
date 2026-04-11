@@ -61,8 +61,8 @@ export const UploadFileItem = ({ file, onRemove }: Props) => {
       bg="white"
       borderRadius="xl"
       boxShadow="0px 2px 8px 0px rgba(0,0,0,0.06)"
-      gap={3}
-      p={3}
+      gap={{ base: 2.5, md: 3 }}
+      p={{ base: 2.5, md: 3 }}
     >
       <UploadFileIcon file={file} />
       <VStack align="flex-start" flex={1} gap={0} minW={0}>

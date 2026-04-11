@@ -33,11 +33,11 @@ export default function UploadPage() {
 
         <Flex
           bg="white"
-          borderRadius="4xl"
+          borderRadius={{ base: "3xl", md: "4xl" }}
           boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
           direction="column"
-          gap={12}
-          p={12}
+          gap={{ base: 8, md: 12 }}
+          p={{ base: 4, md: 8, lg: 12 }}
           w="full"
         >
           <UploadAssignmentTypeSection

@@ -25,7 +25,7 @@ export const UploadFileList = ({
   onRemoveFile,
 }: Props) => {
   return (
-    <VStack align="stretch" flex={1} gap={3} justify="space-between">
+    <VStack align="stretch" flex={1} gap={3} justify="space-between" w="full">
       <VStack align="stretch" gap={2}>
         {uploadedFiles.map(({ id, file }) => (
           <UploadFileItem
@@ -51,7 +51,7 @@ export const UploadFileList = ({
               cursor="pointer"
               gap={2}
               justify="center"
-              py={2}
+              py={{ base: 3, md: 2 }}
               transition="color 0.15s"
               _hover={{ color: "seed" }}
               onClick={() => addFileInputRef.current?.click()}
