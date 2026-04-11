@@ -3,13 +3,9 @@ import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { useGetProjectDetail } from "@/entities";
+import { PromptCard, useGetProjectDetail } from "@/entities";
 import { ROUTE_PATHS, toaster } from "@/shared";
-import {
-  CheckCircleIcon,
-  ChevronRightIcon,
-  CopyIcon,
-} from "@/shared/_assets/icons";
+import { CheckCircleIcon, ChevronRightIcon } from "@/shared/_assets/icons";
 
 type Asset = {
   id: number;
@@ -28,6 +24,7 @@ function AssetItem({
 }) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedResult, setCopiedResult] = useState(false);
 
   const copy = (text: string, setter: (v: boolean) => void) => {
     if (!navigator?.clipboard?.writeText) {
@@ -38,6 +35,7 @@ function AssetItem({
       });
       return;
     }
+
     navigator.clipboard
       .writeText(text)
       .then(() => {
@@ -75,8 +73,8 @@ function AssetItem({
             align="center"
             bg="neutral.50"
             borderRadius="12px"
-            flexShrink={0}
             boxSize={{ base: 8, md: 10 }}
+            flexShrink={0}
             justify="center"
           >
             <Text
@@ -87,6 +85,7 @@ function AssetItem({
               {asset.id}
             </Text>
           </Flex>
+
           <VStack align="flex-start" gap={0.5}>
             <Text
               color="neutral.900"
@@ -102,6 +101,7 @@ function AssetItem({
             </Text>
           </VStack>
         </HStack>
+
         <Box
           style={{
             transform: open ? "rotate(270deg)" : "rotate(90deg)",
@@ -113,85 +113,28 @@ function AssetItem({
       </Flex>
 
       {open && (
-        <VStack align="flex-start" gap="10px" pb="17px" px={5}>
-          <Box
-            bg="neutral.50"
-            border="1px solid"
-            borderColor="neutral.50"
-            borderRadius="xl"
-            p={5}
-            w="full"
-          >
-            <Flex align="center" justify="space-between" mb={2}>
-              <Text color="neutral.600" fontSize="xs" fontWeight="semibold">
-                생성된 프롬프트
-              </Text>
-              <Button
-                color={copiedPrompt ? "seed" : "neutral.600"}
-                fontSize="xs"
-                fontWeight="bold"
-                gap={1.5}
-                onClick={() => copy(asset.prompt, setCopiedPrompt)}
-                px={2}
-                py={1.5}
-                size="xs"
-                variant="ghost"
-              >
-                <CopyIcon boxSize={3} />
-                {copiedPrompt ? "복사됨 ✓" : "복사하기"}
-              </Button>
-            </Flex>
-            <Text
-              as="pre"
-              color="neutral.900"
-              fontFamily="mono"
-              fontSize="xs"
-              lineHeight="1.4"
-              whiteSpace="pre-wrap"
-            >
-              {asset.prompt}
-            </Text>
-          </Box>
+        <VStack
+          align="flex-start"
+          gap={{ base: 3, md: "10px" }}
+          pb={{ base: 4, md: "17px" }}
+          px={{ base: 4, md: 5 }}
+          w="full"
+        >
+          <PromptCard
+            content={asset.prompt}
+            copied={copiedPrompt}
+            label="생성된 프롬프트"
+            onCopy={() => copy(asset.prompt, setCopiedPrompt)}
+          />
 
-          {/* <Box
-            bg="neutral.50"
-            border="1px solid"
-            borderColor="neutral.50"
-            borderRadius="xl"
-            p={5}
-            w="full"
-          >
-            <Flex align="center" justify="space-between" mb={2}>
-              <Text color="neutral.600" fontSize="xs" fontWeight="semibold">
-                Prompt Result
-              </Text>
-              {asset.result && (
-                <Button
-                  color="seed"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  gap={1.5}
-                  onClick={() => copy(asset.result, setCopiedResult)}
-                  px={2}
-                  py={1.5}
-                  size="xs"
-                  variant="ghost"
-                >
-                  <CopyIcon boxSize={3} />
-                  {copiedResult ? "복사됨 ✓" : "복사하기"}
-                </Button>
-              )}
-            </Flex>
-            {asset.result ? (
-              <Text color="neutral.900" fontSize="sm" lineHeight="1.4">
-                {asset.result}
-              </Text>
-            ) : (
-              <Text color="neutral.600" fontSize="sm">
-                결과가 입력되지 않았습니다.
-              </Text>
-            )}
-          </Box> */}
+          {asset.result && (
+            <PromptCard
+              content={asset.result}
+              copied={copiedResult}
+              label="작업 결과"
+              onCopy={() => copy(asset.result, setCopiedResult)}
+            />
+          )}
         </VStack>
       )}
     </Box>
@@ -222,7 +165,7 @@ export default function UploadCompletePage() {
       title: step.stepName,
       subtitle: step.stepCode,
       prompt: step.providedPromptSnapshot,
-      result: "",
+      result: step.userSubmittedResult ?? "",
     })) ?? [];
 
   return (
@@ -266,16 +209,16 @@ export default function UploadCompletePage() {
               fontWeight="bold"
               lineHeight="1.4"
             >
-              과제 압축 완료!
+              과제 수행 완료!
               <br />
-              고생하셨습니다.
+              고생하셨습니다
             </Text>
             <Text
               color="neutral.600"
               fontSize={{ base: "sm", md: "lg" }}
               fontWeight="medium"
             >
-              성공적으로 로드맵을 완주했어요.
+              성공적으로 로드맵을 완성했어요.
             </Text>
           </VStack>
         </Flex>
