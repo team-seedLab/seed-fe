@@ -235,24 +235,24 @@ export default function UploadCompletePage() {
         <Flex
           align="center"
           direction="column"
-          gap="14px"
-          pb={10}
+          gap={{ base: 3, md: "14px" }}
+          pb={{ base: 8, md: 10 }}
           textAlign="center"
         >
           <Flex
             align="center"
             bg="rgba(152,201,92,0.1)"
             borderRadius="full"
-            boxSize={20}
+            boxSize={{ base: 16, md: 20 }}
             justify="center"
           >
-            <CheckCircleIcon boxSize={8} color="seed" />
+            <CheckCircleIcon boxSize={{ base: 6, md: 8 }} color="seed" />
           </Flex>
 
-          <VStack gap={2}>
+          <VStack gap={{ base: 1.5, md: 2 }}>
             <Text
               color="neutral.900"
-              fontSize="3xl"
+              fontSize={{ base: "2xl", md: "3xl" }}
               fontWeight="bold"
               lineHeight="1.4"
             >
@@ -260,7 +260,11 @@ export default function UploadCompletePage() {
               <br />
               고생하셨습니다.
             </Text>
-            <Text color="neutral.600" fontSize="lg" fontWeight="medium">
+            <Text
+              color="neutral.600"
+              fontSize={{ base: "sm", md: "lg" }}
+              fontWeight="medium"
+            >
               성공적으로 로드맵을 완주했어요.
             </Text>
           </VStack>
