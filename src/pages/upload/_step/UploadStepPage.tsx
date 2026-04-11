@@ -33,8 +33,21 @@ export default function UploadStepPage() {
   }
 
   return (
-    <Flex bg="white" direction="column" minH="100vh" pb="127px" pt="80px">
-      <Flex direction="column" gap={10} mx="auto" px={6} w="full" maxW="896px">
+    <Flex
+      bg="white"
+      direction="column"
+      minH="100vh"
+      pb={{ base: "72px", md: "127px" }}
+      pt={{ base: "40px", md: "80px" }}
+    >
+      <Flex
+        direction="column"
+        gap={{ base: 6, md: 10 }}
+        maxW="896px"
+        mx="auto"
+        px={{ base: 4, md: 6 }}
+        w="full"
+      >
         <UploadStepHeaderSection projectId={projectId} stepNum={stepNum} />
 
         <UploadStepContentSection projectId={projectId} stepNum={stepNum} />

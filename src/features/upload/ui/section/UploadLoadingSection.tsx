@@ -25,8 +25,8 @@ export const UploadLoadingSection = ({
       <Box
         bg="seed.subtle"
         borderRadius="full"
-        filter="blur(32px)"
         boxSize="800px"
+        filter="blur(32px)"
         left="50%"
         opacity={0.5}
         position="absolute"
@@ -36,11 +36,11 @@ export const UploadLoadingSection = ({
       />
 
       <VStack
-        gap={6}
+        gap={{ base: 4, md: 6 }}
         left="50%"
         maxW="576px"
         position="absolute"
-        px={6}
+        px={{ base: 4, md: 6 }}
         textAlign="center"
         top="50%"
         transform="translate(-50%, -50%)"
@@ -49,35 +49,47 @@ export const UploadLoadingSection = ({
       >
         <Image
           alt="background circle"
-          src={AbstractBackgroundCircle}
           boxSize={30}
           objectFit="contain"
+          src={AbstractBackgroundCircle}
         />
 
         <SproutAnimation progress={progress} />
 
-        <VStack gap={4}>
+        <VStack gap={{ base: 3, md: 4 }}>
           <Text
             color="neutral.900"
-            fontSize="4xl"
+            fontSize={{ base: "2xl", md: "4xl" }}
             fontWeight="bold"
-            lineHeight="40px"
+            lineHeight={{ base: "1.35", md: "40px" }}
           >
             AI가 과제의 핵심을
             <br />
             분석하고 있어요
           </Text>
-          <Text color="neutral.600" fontSize="lg" fontWeight="medium">
+          <Text
+            color="neutral.600"
+            fontSize={{ base: "sm", md: "lg" }}
+            fontWeight="medium"
+          >
             분석이 완료되면 나만의 로드맵이 펼쳐집니다.
           </Text>
         </VStack>
 
-        <VStack gap={3} maxW={80} w="full">
+        <VStack gap={{ base: 2, md: 3 }} maxW={80} w="full">
           <Flex align="center" justify="space-between" w="full">
-            <Text color="seed" fontSize="xs" fontWeight="medium">
+            <Text
+              color="seed"
+              fontSize={{ base: "2xs", md: "xs" }}
+              fontWeight="medium"
+            >
               {currentStepMessage}
             </Text>
-            <Text color="seed" fontSize="xs" fontWeight="medium">
+            <Text
+              color="seed"
+              fontSize={{ base: "2xs", md: "xs" }}
+              fontWeight="medium"
+            >
               {Math.round(progress)}%
             </Text>
           </Flex>
@@ -98,7 +110,11 @@ export const UploadLoadingSection = ({
             />
           </Box>
 
-          <Text color="neutral.600" fontSize="xs" pt={2}>
+          <Text
+            color="neutral.600"
+            fontSize={{ base: "2xs", md: "xs" }}
+            pt={{ base: 1, md: 2 }}
+          >
             잠시만 기다려주세요, 거의 다 되었습니다.
           </Text>
         </VStack>
