@@ -302,14 +302,14 @@ export default function UploadCompletePage() {
           </VStack>
         </VStack>
 
-        <Flex justify="center" mt={4}>
+        <Flex justify="center" mt={{ base: 2, md: 4 }}>
           <Button
             bg="seed"
             borderRadius="2xl"
             color="white"
-            fontSize="lg"
+            fontSize={{ base: "md", md: "lg" }}
             fontWeight="bold"
-            h={16}
+            h={{ base: 12, md: 16 }}
             maxW="624px"
             onClick={goToMyPage}
             w="full"
