@@ -13,10 +13,10 @@ export const UploadStepIndicator = ({ current, stepCodes }: Props) => {
       <Flex
         align="flex-start"
         justify={{ base: "flex-start", md: "space-between" }}
-        maxW={{ base: "max-content", md: "672px" }}
-        minW={{ base: "max-content", md: "full" }}
-        px={{ base: 1, md: "88px" }}
-        w="full"
+        maxW={{ base: "none", md: "672px" }}
+        mx={{ base: 0, md: "auto" }}
+        px={{ base: 4, md: 0 }}
+        w={{ base: "max-content", md: "full" }}
       >
         {stepCodes.map((code, i) => {
           const stepId = i + 1;
