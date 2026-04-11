@@ -274,12 +274,17 @@ export default function UploadCompletePage() {
           bg="white"
           border="1px solid"
           borderColor="neutral.50"
-          borderRadius="4xl"
+          borderRadius={{ base: "3xl", md: "4xl" }}
           boxShadow="0px 10px 40px -10px rgba(0,0,0,0.05)"
-          mb={4}
-          p="33px"
+          mb={{ base: 2, md: 4 }}
+          p={{ base: 5, md: 8 }}
         >
-          <Flex align="center" justify="space-between">
+          <Flex
+            align={{ base: "flex-start", md: "center" }}
+            direction="row"
+            gap={{ base: 4, md: 0 }}
+            justify="space-between"
+          >
             <VStack align="flex-start" gap={1}>
               <Box bg="neutral.50" borderRadius="full" px={3} py={1}>
                 <Text
@@ -291,25 +296,41 @@ export default function UploadCompletePage() {
                   Assignment
                 </Text>
               </Box>
-              <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
+              <Text
+                color="neutral.900"
+                fontSize={{ base: "xl", md: "2xl" }}
+                fontWeight="bold"
+                lineHeight="1.4"
+              >
                 {project?.title}
               </Text>
-              <Text color="neutral.600" fontSize="sm" fontWeight="medium">
+              <Text
+                color="neutral.600"
+                fontSize={{ base: "xs", md: "sm" }}
+                fontWeight="medium"
+              >
                 {project?.createdAt}
               </Text>
             </VStack>
 
-            <VStack align="center" gap={1}>
+            <VStack align={{ base: "flex-start", md: "center" }} gap={1}>
               <Flex
                 align="center"
                 bg="rgba(152,201,92,0.1)"
                 borderRadius="full"
-                boxSize={12}
+                boxSize={{ base: 10, md: 12 }}
                 justify="center"
               >
-                <CheckCircleIcon boxSize="22px" color="seed" />
+                <CheckCircleIcon
+                  boxSize={{ base: 5, md: "22px" }}
+                  color="seed"
+                />
               </Flex>
-              <Text color="seed" fontSize="xs" fontWeight="bold">
+              <Text
+                color="seed"
+                fontSize={{ base: "2xs", md: "xs" }}
+                fontWeight="bold"
+              >
                 로드맵 완료
               </Text>
             </VStack>
