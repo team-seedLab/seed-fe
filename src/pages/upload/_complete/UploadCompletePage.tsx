@@ -3,7 +3,11 @@ import { useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { PromptCard, useGetProjectDetail } from "@/entities";
+import {
+  PromptCard,
+  ROADMAP_TYPE_LABEL,
+  useGetProjectDetail,
+} from "@/entities";
 import { ROUTE_PATHS, toaster } from "@/shared";
 import { CheckCircleIcon, ChevronRightIcon } from "@/shared/_assets/icons";
 
@@ -240,13 +244,11 @@ export default function UploadCompletePage() {
           >
             <VStack align="flex-start" gap={1}>
               <Box bg="neutral.50" borderRadius="full" px={3} py={1}>
-                <Text
-                  color="neutral.600"
-                  fontSize="xs"
-                  fontWeight="semibold"
-                  textTransform="uppercase"
-                >
-                  Assignment
+                <Text color="neutral.600" fontSize="xs" fontWeight="semibold">
+                  {project
+                    ? (ROADMAP_TYPE_LABEL[project.roadmapType] ??
+                      project.roadmapType)
+                    : ""}
                 </Text>
               </Box>
               <Text
