@@ -221,10 +221,17 @@ export default function UploadCompletePage() {
       direction="column"
       justify="center"
       minH="100vh"
-      pb="160px"
-      pt="128px"
+      pb={{ base: "96px", md: "160px" }}
+      pt={{ base: "72px", md: "128px" }}
     >
-      <Flex direction="column" gap={8} mx="auto" px={6} w="full" maxW="896px">
+      <Flex
+        direction="column"
+        gap={{ base: 6, md: 8 }}
+        maxW="896px"
+        mx="auto"
+        px={{ base: 4, md: 6 }}
+        w="full"
+      >
         <Flex
           align="center"
           direction="column"
