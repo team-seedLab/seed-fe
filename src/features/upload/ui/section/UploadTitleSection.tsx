@@ -7,13 +7,15 @@ type Props = {
 
 export const UploadTitleSection = ({ title, onChange }: Props) => {
   return (
-    <Box maxW="768px" w="full">
+    <Box maxW={{ base: "full", md: "768px" }} w="full">
       <Input
         border="none"
         color={title ? "neutral.900" : "neutral.300"}
-        fontSize="4xl"
+        fontSize={{ base: "2xl", md: "4xl" }}
         fontWeight="bold"
+        minH={{ base: "56px", md: "auto" }}
         placeholder="프로젝트 제목을 입력하세요"
+        py={{ base: 2, md: 0 }}
         textAlign="center"
         value={title}
         _focusVisible={{ outline: "none", boxShadow: "none" }}

@@ -23,21 +23,21 @@ export default function UploadPage() {
       <Flex
         align="center"
         direction="column"
-        gap={12}
+        gap={{ base: 8, md: 12 }}
         maxW="1024px"
-        px={6}
-        py={20}
+        px={{ base: 4, md: 6 }}
+        py={{ base: 8, md: 14, lg: 20 }}
         w="full"
       >
         <UploadTitleSection title={fields.title} onChange={fields.setTitle} />
 
         <Flex
           bg="white"
-          borderRadius="4xl"
+          borderRadius={{ base: "3xl", md: "4xl" }}
           boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
           direction="column"
-          gap={12}
-          p={12}
+          gap={{ base: 8, md: 12 }}
+          p={{ base: 4, md: 8, lg: 12 }}
           w="full"
         >
           <UploadAssignmentTypeSection
