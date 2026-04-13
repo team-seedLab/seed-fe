@@ -55,19 +55,35 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
     <Box
       bg="white"
       border="1px solid white"
-      borderRadius="4xl"
+      borderRadius={{ base: "3xl", md: "4xl" }}
       boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
       overflow="hidden"
     >
-      <VStack align="flex-start" gap={8} p={12}>
-        <VStack align="flex-start" gap="11px" w="full">
+      <VStack
+        align="flex-start"
+        gap={{ base: 6, md: 8 }}
+        p={{ base: 4, md: 12 }}
+      >
+        <VStack align="flex-start" gap={{ base: 2, md: "11px" }} w="full">
           <Text color="seed" fontSize="xs" fontWeight="bold">
             Step {stepNum}
           </Text>
-          <Text color="neutral.900" fontSize="2xl" fontWeight="bold">
+          <Text
+            color="neutral.900"
+            fontSize={{ base: "xl", md: "2xl" }}
+            fontWeight="bold"
+            lineHeight="1.4"
+            wordBreak="keep-all"
+          >
             {stepName}
           </Text>
-          <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
+          <Text
+            color="neutral.600"
+            fontSize={{ base: "sm", md: "md" }}
+            fontWeight="regular"
+            lineHeight="1.5"
+            wordBreak="keep-all"
+          >
             AI가 과제 주제를 분석하여 최적의 자료 조사를 위한 프롬프트를
             생성했습니다.
             <br />이 프롬프트를 사용하여 고품질의 레퍼런스를 확보하세요.
@@ -83,7 +99,7 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
             overflow="hidden"
             w="full"
           >
-            <Box bg="neutral.50" p="28px">
+            <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
               <Text
                 color="neutral.300"
                 fontFamily="mono"
@@ -106,16 +122,22 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
         ) : null}
 
         {formatPrompt && (
-          <VStack align="flex-start" gap={6} w="full">
+          <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
             <Text
               color="neutral.900"
-              fontSize="2xl"
+              fontSize={{ base: "xl", md: "2xl" }}
               fontWeight="bold"
               lineHeight="1.4"
             >
               결과 추출
             </Text>
-            <Text color="neutral.600" fontWeight="regular" lineHeight="1.4">
+            <Text
+              color="neutral.600"
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="regular"
+              lineHeight="1.5"
+              wordBreak="keep-all"
+            >
               이 프롬프트를 사용하여 ai와 함께 작업한 결과를 추출해주세요.
             </Text>
             <PromptCard
@@ -134,20 +156,27 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
           onChange={handleResultTextChange}
         />
 
-        <Flex justify="flex-end" pt={8} w="full">
+        <Flex
+          justify={{ base: "stretch", md: "flex-end" }}
+          pt={{ base: 2, md: 8 }}
+          w="full"
+        >
           <Button
             bg="seed"
             borderRadius="xl"
             color="white"
             disabled={!resultText.trim() || isSubmitting}
+            fontSize={{ base: "sm", md: "md" }}
             fontWeight="bold"
             gap={1}
+            h={{ base: 12, md: "auto" }}
             onClick={() => {
               void submitStepResult(resultText);
             }}
-            opacity={resultText.trim() && !isSubmitting ? 1 : 0.5}
-            px={10}
-            py={4}
+            px={{ base: 6, md: 10 }}
+            py={{ base: 3, md: 4 }}
+            w={{ base: "full", md: "auto" }}
+            _disabled={{ opacity: 0.5 }}
             _hover={{
               opacity: resultText.trim() && !isSubmitting ? 0.85 : 0.5,
             }}

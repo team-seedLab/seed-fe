@@ -9,77 +9,90 @@ type Props = {
 
 export const UploadStepIndicator = ({ current, stepCodes }: Props) => {
   return (
-    <Box position="relative" px="88px" w="full">
+    <Box overflowX={{ base: "auto", md: "visible" }} w="full">
       <Flex
-        align="center"
-        justify="space-between"
-        left="88px"
-        maxW="672px"
-        position="absolute"
-        px={12}
-        right="88px"
-        top="22px"
+        align="flex-start"
+        justify={{ base: "flex-start", md: "space-between" }}
+        maxW={{ base: "none", md: "672px" }}
+        mx={{ base: 0, md: "auto" }}
+        px={{ base: 4, md: 0 }}
+        w={{ base: "max-content", md: "full" }}
       >
-        {Array.from({ length: stepCodes.length - 1 }, (_, i) => (
-          <Box key={i} bg="neutral.100" flex={1} h="2px" />
-        ))}
-      </Flex>
-
-      <Flex align="flex-start" justify="space-between" maxW="672px" w="full">
         {stepCodes.map((code, i) => {
           const stepId = i + 1;
           const isActive = stepId === current;
           const isDone = stepId < current;
+          const isLast = i === stepCodes.length - 1;
 
           return (
-            <Flex align="center" direction="column" gap={3} key={code} w={24}>
+            <Flex align="flex-start" flexShrink={0} key={code}>
               <Flex
                 align="center"
-                boxSize={12}
-                justify="center"
-                position="relative"
+                direction="column"
+                gap={{ base: 2, md: 3 }}
+                px={{ base: 2, md: 0 }}
+                w={{ base: "88px", md: "96px" }}
               >
-                <Box
-                  bg={isActive ? "seed" : "neutral.100"}
-                  borderRadius="full"
-                  bottom={0}
-                  left={0}
-                  opacity={isActive ? 0.3 : 0.6}
-                  position="absolute"
-                  right={0}
-                  top={0}
-                />
                 <Flex
                   align="center"
-                  bg={isActive || isDone ? "seed" : "neutral.300"}
-                  borderRadius="full"
-                  boxSize={7}
+                  boxSize={{ base: 10, md: 12 }}
                   justify="center"
                   position="relative"
-                  zIndex={1}
                 >
-                  <Text
-                    color="white"
-                    fontSize="xs"
-                    fontWeight="bold"
-                    lineHeight="16px"
-                    textAlign="center"
+                  <Box
+                    bg={isActive ? "seed" : "neutral.100"}
+                    borderRadius="full"
+                    bottom={0}
+                    left={0}
+                    opacity={isActive ? 0.3 : 0.6}
+                    position="absolute"
+                    right={0}
+                    top={0}
+                  />
+                  <Flex
+                    align="center"
+                    bg={isActive || isDone ? "seed" : "neutral.300"}
+                    borderRadius="full"
+                    boxSize={{ base: 6, md: 7 }}
+                    justify="center"
+                    position="relative"
+                    zIndex={1}
                   >
-                    {stepId}
-                  </Text>
+                    <Text
+                      color="white"
+                      fontSize={{ base: "2xs", md: "xs" }}
+                      fontWeight="bold"
+                      lineHeight="1"
+                      textAlign="center"
+                    >
+                      {stepId}
+                    </Text>
+                  </Flex>
                 </Flex>
+
+                <Text
+                  color={isActive ? "neutral.900" : "neutral.600"}
+                  fontSize={{ base: "xs", md: "sm" }}
+                  fontWeight={isActive ? "bold" : "medium"}
+                  lineHeight={{ base: "1.4", md: "20px" }}
+                  textAlign="center"
+                  whiteSpace="normal"
+                  wordBreak="keep-all"
+                >
+                  {ROADMAP_STEP_NAMES[code] ?? code}
+                </Text>
               </Flex>
 
-              <Text
-                color={isActive ? "neutral.900" : "neutral.600"}
-                fontSize="sm"
-                fontWeight={isActive ? "bold" : "medium"}
-                lineHeight="20px"
-                textAlign="center"
-                wordBreak="keep-all"
-              >
-                {ROADMAP_STEP_NAMES[code] ?? code}
-              </Text>
+              {!isLast && (
+                <Box
+                  alignSelf="flex-start"
+                  bg="neutral.100"
+                  flexShrink={0}
+                  h="2px"
+                  mt={{ base: "19px", md: "23px" }}
+                  w={{ base: "24px", md: "48px" }}
+                />
+              )}
             </Flex>
           );
         })}

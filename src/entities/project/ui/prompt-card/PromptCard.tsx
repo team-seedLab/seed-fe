@@ -23,8 +23,8 @@ const PromptLine = ({ line }: { line: string }) => {
       color={color}
       display="block"
       fontFamily="mono"
-      fontSize="sm"
-      lineHeight="1.4"
+      fontSize={{ base: "xs", md: "sm" }}
+      lineHeight="1.5"
     >
       {line}
     </Text>
@@ -47,28 +47,35 @@ export const PromptCard = ({
       bg="neutral.50"
       border="1px solid"
       borderColor="neutral.50"
-      borderRadius="2xl"
+      borderRadius={{ base: "xl", md: "2xl" }}
       overflow="hidden"
       w="full"
     >
       <Flex
-        align="center"
+        align={{ base: "flex-start", md: "center" }}
         borderBottom="1px solid"
         borderBottomColor="neutral.50"
+        direction="row"
+        gap={{ base: 3, md: 0 }}
         justify="space-between"
-        pb="17px"
-        pt="16px"
-        px={6}
+        pb={{ base: 3, md: "17px" }}
+        pt={{ base: 3, md: "16px" }}
+        px={{ base: 4, md: 6 }}
       >
         <Flex align="center" gap={2}>
           <DocumentTextIcon boxSize={3} color="neutral.600" />
-          <Text color="neutral.600" fontSize="xs" fontWeight="medium">
+          <Text
+            color="neutral.600"
+            fontSize={{ base: "2xs", md: "xs" }}
+            fontWeight="medium"
+          >
             {label}
           </Text>
         </Flex>
 
         <Box
           as="button"
+          alignSelf={{ base: "flex-start", md: "auto" }}
           bg="white"
           border="1px solid"
           borderColor="neutral.50"
@@ -76,17 +83,17 @@ export const PromptCard = ({
           boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
           cursor="pointer"
           onClick={onCopy}
-          px="13px"
-          py="7px"
+          px={{ base: 3, md: "13px" }}
+          py={{ base: 1.5, md: "7px" }}
           _hover={{ boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)" }}
         >
-          <Flex align="center" gap="6px">
+          <Flex align="center" gap={{ base: 1.5, md: "6px" }}>
             <CopyIcon boxSize={3} color={copied ? "seed" : "neutral.900"} />
             <Text
               color={copied ? "seed" : "neutral.900"}
-              fontSize="xs"
+              fontSize={{ base: "2xs", md: "xs" }}
               fontWeight="semibold"
-              lineHeight="16px"
+              lineHeight="1.4"
             >
               {copied ? "복사됨 ✓" : "복사하기"}
             </Text>
@@ -94,15 +101,15 @@ export const PromptCard = ({
         </Box>
       </Flex>
 
-      <Box bg="neutral.50" p="28px">
+      <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
         {isPrompt ? (
           lines.map((line, i) => <PromptLine key={i} line={line} />)
         ) : (
           <Text
             color="neutral.900"
-            fontSize="sm"
+            fontSize={{ base: "xs", md: "sm" }}
             fontWeight="medium"
-            lineHeight="1.4"
+            lineHeight="1.5"
             whiteSpace="pre-wrap"
           >
             {content}
