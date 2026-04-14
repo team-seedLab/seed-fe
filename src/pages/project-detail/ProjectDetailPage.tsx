@@ -17,7 +17,7 @@ export default function ProjectDetailPage() {
       direction="column"
       minH="100vh"
       pb={{ base: "72px", md: "127px" }}
-      pt={{ base: 6, md: "80px" }}
+      pt={{ base: 10, md: 20 }}
     >
       <Flex
         direction="column"
