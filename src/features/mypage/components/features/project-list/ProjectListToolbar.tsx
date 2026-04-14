@@ -15,7 +15,12 @@ type Props = {
 
 export const ProjectListToolbar = ({ activeFilter, onFilterChange }: Props) => {
   return (
-    <HStack gap={6} borderBottom="1px solid" borderColor="transparent" pb="1px">
+    <HStack
+      borderBottom="1px solid"
+      borderColor="transparent"
+      gap={{ base: 4, md: 6 }}
+      pb="1px"
+    >
       {FILTER_TABS.map((tab) => {
         const isActive = activeFilter === tab.value;
         return (

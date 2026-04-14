@@ -46,8 +46,20 @@ export const ProjectListSection = () => {
   const isInitialLoading = isLoading && projects.length === 0;
 
   return (
-    <VStack gap={6} align="flex-start" pt={4} w="full">
-      <Flex w="full" align="center" justify="space-between" px={2}>
+    <VStack
+      align="flex-start"
+      gap={{ base: 4, md: 6 }}
+      pt={{ base: 2, md: 4 }}
+      w="full"
+    >
+      <Flex
+        align={{ base: "flex-start", md: "center" }}
+        direction={{ base: "column", md: "row" }}
+        gap={{ base: 3, md: 0 }}
+        justify="space-between"
+        px={2}
+        w="full"
+      >
         <Text color="text" fontSize="xl" fontWeight="bold">
           내 프로젝트 목록
         </Text>
