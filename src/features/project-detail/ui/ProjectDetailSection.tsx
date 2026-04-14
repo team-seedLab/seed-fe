@@ -27,11 +27,11 @@ export const ProjectDetailSection = ({ project }: Props) => {
       align="flex-start"
       bg="white"
       border="1px solid white"
-      borderRadius="4xl"
+      borderRadius={{ base: "3xl", md: "4xl" }}
       boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
-      gap={12}
+      gap={{ base: 8, md: 12 }}
       overflow="hidden"
-      p={12}
+      p={{ base: 4, md: 12 }}
       w="full"
     >
       {stepResponses.map((step, i) => {
@@ -39,14 +39,19 @@ export const ProjectDetailSection = ({ project }: Props) => {
         const resultKey = `result-${step.stepCode}`;
 
         return (
-          <VStack align="flex-start" gap={6} key={step.stepCode} w="full">
-            <VStack align="flex-start" gap="10px" w="full">
+          <VStack
+            align="flex-start"
+            gap={{ base: 4, md: 6 }}
+            key={step.stepCode}
+            w="full"
+          >
+            <VStack align="flex-start" gap={{ base: 2, md: "10px" }} w="full">
               <Text color="seed" fontSize="xs" fontWeight="bold">
                 Step {i + 1}
               </Text>
               <Text
                 color="neutral.900"
-                fontSize="26px"
+                fontSize={{ base: "xl", md: "26px" }}
                 fontWeight="bold"
                 lineHeight="1.4"
               >

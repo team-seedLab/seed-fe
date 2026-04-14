@@ -12,13 +12,26 @@ export default function ProjectDetailPage() {
   const { data: project, isLoading } = useGetProjectDetail(projectId ?? "");
 
   return (
-    <Flex bg="white" direction="column" minH="100vh" pb="127px" pt="80px">
-      <Flex direction="column" gap={10} mx="auto" px={6} w="full" maxW="896px">
-        <VStack align="flex-start" gap={6}>
+    <Flex
+      bg="white"
+      direction="column"
+      minH="100vh"
+      pb={{ base: "72px", md: "127px" }}
+      pt={{ base: 10, md: 20 }}
+    >
+      <Flex
+        direction="column"
+        gap={{ base: 6, md: 10 }}
+        maxW="896px"
+        mx="auto"
+        px={{ base: 4, md: 6 }}
+        w="full"
+      >
+        <VStack align="flex-start" gap={{ base: 4, md: 6 }}>
           <Button
             alignSelf="flex-start"
             color="neutral.600"
-            fontSize="sm"
+            fontSize={{ base: "xs", md: "sm" }}
             fontWeight="medium"
             gap={1}
             onClick={() => navigate(ROUTE_PATHS.MYPAGE)}
@@ -36,23 +49,23 @@ export default function ProjectDetailPage() {
             </Flex>
           ) : project ? (
             <>
-              <VStack align="flex-start" gap={2}>
+              <VStack align="flex-start" gap={{ base: 1.5, md: 2 }}>
                 <Box
                   bg="neutral.50"
                   border="1px solid white"
                   borderRadius="md"
                   color="neutral.600"
-                  fontSize="10px"
+                  fontSize={{ base: "2xs", md: "10px" }}
                   fontWeight="regular"
-                  px="9px"
-                  py="5px"
+                  px={{ base: 2, md: "9px" }}
+                  py={{ base: 1, md: "5px" }}
                 >
                   {ROADMAP_TYPE_LABEL[project.roadmapType] ??
                     project.roadmapType}
                 </Box>
                 <Text
                   color="neutral.900"
-                  fontSize="3xl"
+                  fontSize={{ base: "2xl", md: "3xl" }}
                   fontWeight="bold"
                   lineHeight="1.4"
                 >
