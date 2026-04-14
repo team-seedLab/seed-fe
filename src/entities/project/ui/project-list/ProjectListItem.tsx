@@ -32,7 +32,7 @@ export const ProjectListItem = ({
       borderColor="container.border"
       borderRadius="2xl"
       boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
-      p="25px"
+      p={{ base: 4, md: "25px" }}
       w="full"
       align="center"
       justify="space-between"
@@ -41,31 +41,37 @@ export const ProjectListItem = ({
       transition="background 0.15s"
       onClick={onClick}
     >
-      <Flex gap={5} align="center">
+      <Flex align="center" gap={{ base: 3, md: 5 }} minW={0}>
         <Flex
           bg={status === "COMPLETED" ? "seed.subtle" : "progress.subtle"}
           borderRadius="xl"
-          boxSize={12}
+          boxSize={{ base: 10, md: 12 }}
           align="center"
           justify="center"
           flexShrink={0}
         >
           <Icon
             color={status === "COMPLETED" ? "seed" : "progress"}
-            w={4}
-            h={5}
+            w={{ base: 3.5, md: 4 }}
+            h={{ base: 4.5, md: 5 }}
           />
         </Flex>
-        <Flex flexDir="column" align="flex-start">
-          <Text color="text" fontSize="lg" fontWeight="bold">
+        <Flex align="flex-start" flexDir="column" minW={0}>
+          <Text
+            color="text"
+            fontSize={{ base: "md", md: "lg" }}
+            fontWeight="bold"
+            lineHeight="1.4"
+            wordBreak="keep-all"
+          >
             {name}
           </Text>
-          <Text color="text.secondary" fontSize="xs">
+          <Text color="text.secondary" fontSize={{ base: "2xs", md: "xs" }}>
             {formatUpdatedAt(updatedAt)}
           </Text>
         </Flex>
       </Flex>
-      <Flex gap={3} align="center">
+      <Flex align="center" gap={{ base: 2, md: 3 }}>
         {onDelete && (
           <IconButton
             aria-label="프로젝트 삭제"
@@ -78,10 +84,14 @@ export const ProjectListItem = ({
               onDelete();
             }}
           >
-            <DeleteIcon color="neutral.400" boxSize={4} />
+            <DeleteIcon color="neutral.400" boxSize={{ base: 3.5, md: 4 }} />
           </IconButton>
         )}
-        <ChevronRightIcon color="neutral.600" w="7px" h="11px" />
+        <ChevronRightIcon
+          color="neutral.600"
+          w={{ base: "6px", md: "7px" }}
+          h={{ base: "10px", md: "11px" }}
+        />
       </Flex>
     </Flex>
   );
