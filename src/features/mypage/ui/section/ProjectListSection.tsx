@@ -143,23 +143,23 @@ export const ProjectListSection = () => {
           borderColor="container.border.dashed"
           borderRadius="2xl"
           boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
-          h={24}
-          w="full"
           align="center"
-          justify="center"
           cursor="pointer"
+          h={{ base: 20, md: 24 }}
+          justify="center"
           _hover={{ bg: "neutral.50" }}
-          transition="background 0.15s"
           onClick={() => navigate(ROUTE_PATHS.FILE_UPLOAD)}
+          transition="background 0.15s"
+          w="full"
         >
           <Flex
+            align="center"
             bg="seed.subtle"
             borderRadius="full"
-            boxSize={10}
-            align="center"
+            boxSize={{ base: 9, md: 10 }}
             justify="center"
           >
-            <PlusIcon color="seed" boxSize={4.5} />
+            <PlusIcon color="seed" boxSize={{ base: 4, md: 4.5 }} />
           </Flex>
         </Flex>
       </VStack>
