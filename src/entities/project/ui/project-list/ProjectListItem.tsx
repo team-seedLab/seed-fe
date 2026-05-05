@@ -41,7 +41,7 @@ export const ProjectListItem = ({
       transition="background 0.15s"
       onClick={onClick}
     >
-      <Flex align="center" gap={{ base: 3, md: 5 }} minW={0}>
+      <Flex align="center" flex={1} gap={{ base: 3, md: 5 }} minW={0}>
         <Flex
           bg={status === "COMPLETED" ? "seed.subtle" : "progress.subtle"}
           borderRadius="xl"
@@ -62,7 +62,10 @@ export const ProjectListItem = ({
             fontSize={{ base: "md", md: "lg" }}
             fontWeight="bold"
             lineHeight="1.4"
-            wordBreak="keep-all"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            w="full"
           >
             {name}
           </Text>
@@ -71,7 +74,7 @@ export const ProjectListItem = ({
           </Text>
         </Flex>
       </Flex>
-      <Flex align="center" gap={{ base: 2, md: 3 }}>
+      <Flex align="center" flexShrink={0} gap={{ base: 2, md: 3 }}>
         {onDelete && (
           <IconButton
             aria-label="프로젝트 삭제"
