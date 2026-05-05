@@ -45,7 +45,7 @@ export const ProjectDetailSection = ({ project }: Props) => {
             key={step.stepCode}
             w="full"
           >
-            <VStack align="flex-start" gap={{ base: 2, md: "10px" }} w="full">
+            <VStack align="flex-start" gap={{ base: 2, md: 2.5 }} w="full">
               <Text color="seed" fontSize="xs" fontWeight="bold">
                 Step {i + 1}
               </Text>
