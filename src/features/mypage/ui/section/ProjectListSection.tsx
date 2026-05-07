@@ -46,8 +46,20 @@ export const ProjectListSection = () => {
   const isInitialLoading = isLoading && projects.length === 0;
 
   return (
-    <VStack gap={6} align="flex-start" pt={4} w="full">
-      <Flex w="full" align="center" justify="space-between" px={2}>
+    <VStack
+      align="flex-start"
+      gap={{ base: 4, md: 6 }}
+      pt={{ base: 2, md: 4 }}
+      w="full"
+    >
+      <Flex
+        align={{ base: "flex-start", md: "center" }}
+        direction={{ base: "column", md: "row" }}
+        gap={{ base: 3, md: 0 }}
+        justify="space-between"
+        px={2}
+        w="full"
+      >
         <Text color="text" fontSize="xl" fontWeight="bold">
           내 프로젝트 목록
         </Text>
@@ -131,23 +143,23 @@ export const ProjectListSection = () => {
           borderColor="container.border.dashed"
           borderRadius="2xl"
           boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
-          h={24}
-          w="full"
           align="center"
-          justify="center"
           cursor="pointer"
+          h={{ base: 20, md: 24 }}
+          justify="center"
           _hover={{ bg: "neutral.50" }}
-          transition="background 0.15s"
           onClick={() => navigate(ROUTE_PATHS.FILE_UPLOAD)}
+          transition="background 0.15s"
+          w="full"
         >
           <Flex
+            align="center"
             bg="seed.subtle"
             borderRadius="full"
-            boxSize={10}
-            align="center"
+            boxSize={{ base: 9, md: 10 }}
             justify="center"
           >
-            <PlusIcon color="seed" boxSize={4.5} />
+            <PlusIcon color="seed" boxSize={{ base: 4, md: 4.5 }} />
           </Flex>
         </Flex>
       </VStack>

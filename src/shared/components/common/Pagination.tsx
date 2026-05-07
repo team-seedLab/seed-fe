@@ -29,17 +29,17 @@ export const Pagination = ({
   );
 
   return (
-    <HStack gap={2} justify="center" w="full" pt={4}>
+    <HStack gap={{ base: 1, md: 2 }} justify="center" pt={4} w="full">
       <IconButton
         aria-label="이전 페이지"
         variant="ghost"
         disabled={currentPage === 1}
         borderRadius="lg"
-        boxSize={8}
-        minW={8}
+        boxSize={{ base: 7, md: 8 }}
+        minW={{ base: 7, md: 8 }}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        <ChevronLeftIcon boxSize={2.5} color="text" />
+        <ChevronLeftIcon boxSize={{ base: 2, md: 2.5 }} color="text" />
       </IconButton>
 
       {visiblePages.map((page) => (
@@ -47,7 +47,7 @@ export const Pagination = ({
           key={page}
           align="center"
           justify="center"
-          boxSize={8}
+          boxSize={{ base: 7, md: 8 }}
           borderRadius="lg"
           aria-label={`Page ${page}`}
           bg={currentPage === page ? "button.bg" : "transparent"}
@@ -69,7 +69,7 @@ export const Pagination = ({
                 ? "button.foreground"
                 : "button.foreground.secondary"
             }
-            fontSize="sm"
+            fontSize={{ base: "xs", md: "sm" }}
             fontWeight={currentPage === page ? "semibold" : "medium"}
           >
             {page}
@@ -82,11 +82,11 @@ export const Pagination = ({
         variant="ghost"
         disabled={currentPage === totalPages}
         borderRadius="lg"
-        boxSize={8}
-        minW={8}
+        boxSize={{ base: 7, md: 8 }}
+        minW={{ base: 7, md: 8 }}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        <ChevronRightIcon boxSize={2.5} color="text.DEFAULT" />
+        <ChevronRightIcon boxSize={{ base: 2, md: 2.5 }} color="text.DEFAULT" />
       </IconButton>
     </HStack>
   );
