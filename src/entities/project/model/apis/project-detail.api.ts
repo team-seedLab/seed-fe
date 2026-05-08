@@ -6,12 +6,22 @@ export interface ProjectDetailResponse extends Project {
   stepResponses: ProjectStepResponse[];
 }
 
+interface ProjectDetailApiResponse {
+  summary: Project;
+  stepResponses: ProjectStepResponse[];
+}
+
 export const getProjectDetailAPI = async (
   projectId: string,
 ): Promise<ProjectDetailResponse> => {
-  const response = await fetchInstance.get<ApiResponse<ProjectDetailResponse>>(
-    `/api/projects/${projectId}`,
-  );
+  const response = await fetchInstance.get<
+    ApiResponse<ProjectDetailApiResponse>
+  >(`/api/projects/${projectId}`);
 
-  return processApiResponse(response.data);
+  const data = processApiResponse(response.data);
+
+  return {
+    ...data.summary,
+    stepResponses: data.stepResponses,
+  };
 };
