@@ -19,9 +19,14 @@ export const getProjectDetailAPI = async (
   >(`/api/projects/${projectId}`);
 
   const data = processApiResponse(response.data);
+  const summary = data.summary;
 
   return {
-    ...data.summary,
+    projectId: summary.projectId,
+    title: summary.title,
+    roadmapType: summary.roadmapType,
+    status: summary.status,
+    createdAt: summary.createdAt,
     stepResponses: data.stepResponses,
   };
 };
