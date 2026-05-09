@@ -1,6 +1,6 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { RoadmapType } from "../types";
+import type { Project, RoadmapType } from "../types";
 
 export interface CreateProjectRequest {
   title: string;
@@ -9,9 +9,7 @@ export interface CreateProjectRequest {
   files: File[];
 }
 
-export interface CreateProjectResponse {
-  projectId: string;
-}
+export type CreateProjectResponse = Project;
 
 export const createProjectAPI = async (
   params: CreateProjectRequest,
