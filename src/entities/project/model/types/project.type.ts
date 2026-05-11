@@ -29,4 +29,6 @@ export interface ProjectStepResponse {
   providedPromptSnapshot: string;
   formatPrompt: string;
   userSubmittedResult: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
