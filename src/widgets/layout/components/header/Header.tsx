@@ -13,14 +13,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { useAuth, useUserInfoStore } from "@/entities";
-import {
-  DoorOutIcon,
-  FolderIcon,
-  PersonIcon,
-  ROUTE_PATHS,
-  getUserEntryRoutePath,
-} from "@/shared";
+import { getUserEntryRoutePath, useAuth, useUserInfoStore } from "@/entities";
+import { DoorOutIcon, FolderIcon, PersonIcon, ROUTE_PATHS } from "@/shared";
 
 export const Header = () => {
   const navigate = useNavigate();

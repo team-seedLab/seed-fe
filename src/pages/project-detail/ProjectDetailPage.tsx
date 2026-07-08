@@ -4,11 +4,12 @@ import { Box, Button, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import {
   ROADMAP_TYPE_LABEL,
+  getUserEntryRoutePath,
   useGetProjectDetail,
   useUserInfoStore,
 } from "@/entities";
 import { ProjectDetailSection } from "@/features";
-import { ArrowLeftIcon, getUserEntryRoutePath } from "@/shared";
+import { ArrowLeftIcon } from "@/shared";
 
 export default function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>();

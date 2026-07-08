@@ -15,21 +15,6 @@ export const ROUTE_PATHS = {
   NOT_FOUND: "*",
 };
 
-export const USER_ENTRY_ROUTE_PATHS = {
-  MENTEE: ROUTE_PATHS.MYPAGE,
-} as const;
-
-export const getUserEntryRoutePath = (role?: string | null) => {
-  if (!role) {
-    return ROUTE_PATHS.MYPAGE;
-  }
-
-  return (
-    USER_ENTRY_ROUTE_PATHS[role as keyof typeof USER_ENTRY_ROUTE_PATHS] ??
-    ROUTE_PATHS.MYPAGE
-  );
-};
-
 export const DYNAMIC_ROUTE_PATHS = {
   PROJECT_DETAIL: (projectId: string) =>
     ROUTE_PATHS.PROJECT_DETAIL.replace(":projectId", projectId),
