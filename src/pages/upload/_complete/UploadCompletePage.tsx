@@ -148,7 +148,6 @@ function AssetItem({
 export default function UploadCompletePage() {
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
-
   const { data: project } = useGetProjectDetail(projectId ?? "");
 
   useEffect(() => {

@@ -14,11 +14,20 @@ import {
 } from "@chakra-ui/react";
 
 import { useAuth, useUserInfoStore } from "@/entities";
-import { DoorOutIcon, FolderIcon, PersonIcon, ROUTE_PATHS } from "@/shared";
+import {
+  DoorOutIcon,
+  FolderIcon,
+  PersonIcon,
+  ROUTE_PATHS,
+  getUserEntryRoutePath,
+} from "@/shared";
 
 export const Header = () => {
   const navigate = useNavigate();
   const userInfo = useUserInfoStore((state) => state.userInfo);
+  const role = useUserInfoStore((state) => {
+    return state.userInfo?.role ?? state.persistedProfile?.role;
+  });
   const { logout, isAuthenticated } = useAuth();
 
   const handleLogout = () => {
@@ -110,7 +119,7 @@ export const Header = () => {
                   >
                     <Menu.Item
                       value="my-projects"
-                      onClick={() => navigate(ROUTE_PATHS.MYPAGE)}
+                      onClick={() => navigate(getUserEntryRoutePath(role))}
                       _hover={{ bg: "neutral.50" }}
                       px={3}
                       py={2}
