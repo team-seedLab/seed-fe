@@ -1,9 +1,12 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
+export type UserRole = "MENTOR" | "MENTEE";
+
 export interface UserInfoResponse {
   userId: string;
   nickname: string;
   profileUrl: string;
+  role?: UserRole;
 }
 
 export const getUserInfoAPI = async (): Promise<UserInfoResponse> => {

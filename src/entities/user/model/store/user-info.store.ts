@@ -9,7 +9,10 @@ import { immer } from "zustand/middleware/immer";
 
 import type { UserInfoResponse } from "../apis";
 
-type PersistedUserProfile = Pick<UserInfoResponse, "nickname" | "profileUrl">;
+type PersistedUserProfile = Pick<
+  UserInfoResponse,
+  "nickname" | "profileUrl" | "role"
+>;
 
 type UserInfoState = {
   userInfo: UserInfoResponse | null;
@@ -37,6 +40,7 @@ export const useUserInfoStore = create<UserInfoState & UserInfoActions>()(
               state.persistedProfile = {
                 nickname: userInfo.nickname,
                 profileUrl: userInfo.profileUrl,
+                role: userInfo.role,
               };
             }),
           clearUserInfo: () =>
