@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 
-import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
+import { Button, Input, Text, VStack } from "@chakra-ui/react";
 
 type Props = {
   email: string;
@@ -29,7 +29,7 @@ export const MentorLoginFormSection = ({
   };
 
   return (
-    <Box as="form" onSubmit={handleSubmit} w="full">
+    <form onSubmit={handleSubmit}>
       <VStack align="stretch" gap={3} w="full">
         <Input
           autoComplete="email"
@@ -104,6 +104,6 @@ export const MentorLoginFormSection = ({
           로그인
         </Button>
       </VStack>
-    </Box>
+    </form>
   );
 };
