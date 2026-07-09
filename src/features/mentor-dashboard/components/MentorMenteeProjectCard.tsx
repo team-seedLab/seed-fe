@@ -13,6 +13,7 @@ type Props = {
 export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
   return (
     <Flex
+      as="button"
       bg="container.bg"
       border="1px solid"
       borderColor="neutral.50"
@@ -22,7 +23,9 @@ export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
       direction="column"
       gap={3}
       p={{ base: 5, md: "25px" }}
+      textAlign="left"
       transition="background 0.15s"
+      type="button"
       w="full"
       _hover={{ bg: "neutral.50" }}
       onClick={onClick}
