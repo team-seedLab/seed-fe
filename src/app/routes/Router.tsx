@@ -4,6 +4,7 @@ import {
   ErrorPage,
   LoginPage,
   MainPage,
+  MentorLoginPage,
   MyPage,
   ProjectDetailPage,
   UploadCompletePage,
@@ -23,6 +24,10 @@ export const Router = () => {
         <Route element={<RootLayout />}>
           <Route path={ROUTE_PATHS.MAIN} element={<MainPage />} />
           <Route path={ROUTE_PATHS.LOGIN} element={<LoginPage />} />
+          <Route
+            path={ROUTE_PATHS.MENTOR_LOGIN}
+            element={<MentorLoginPage />}
+          />
 
           <Route path={ROUTE_PATHS.NOT_FOUND} element={<ErrorPage />} />
 
