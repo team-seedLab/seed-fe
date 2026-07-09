@@ -6,6 +6,7 @@ import {
   MainPage,
   MentorDashboardPage,
   MentorLoginPage,
+  MentorMenteeProjectsPage,
   MyPage,
   ProjectDetailPage,
   UploadCompletePage,
@@ -34,6 +35,14 @@ export const Router = () => {
             element={
               <ProtectedRoute>
                 <MentorDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTE_PATHS.MENTOR_MENTEE_PROJECTS}
+            element={
+              <ProtectedRoute>
+                <MentorMenteeProjectsPage />
               </ProtectedRoute>
             }
           />
