@@ -6,24 +6,32 @@ import { formatSubmittedDate } from "../utils";
 
 type Props = {
   mentee: MentorDashboardMentee;
+  onClick: () => void;
 };
 
 const DESKTOP_VALUE_GRID_TEMPLATE = "80px 112px 72px";
 
-export const MentorMenteeListItem = ({ mentee }: Props) => {
+export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
   return (
     <Flex
+      as="button"
       align={{ base: "stretch", md: "center" }}
       bg="container.bg"
       border="1px solid"
       borderColor="container.border.card"
       borderRadius="2xl"
       boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
+      cursor="pointer"
       direction={{ base: "column", md: "row" }}
       gap={{ base: 4, md: 6 }}
       justify="space-between"
       p={{ base: 5, md: "25px" }}
+      textAlign="left"
+      transition="background 0.15s"
+      type="button"
       w="full"
+      _hover={{ bg: "neutral.50" }}
+      onClick={onClick}
     >
       <Flex align="center" gap={{ base: 4, md: 5 }} minW={0}>
         <Flex

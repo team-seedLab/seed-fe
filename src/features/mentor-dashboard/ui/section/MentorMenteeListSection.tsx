@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router";
+
 import { Grid, Text, VStack } from "@chakra-ui/react";
+
+import { DYNAMIC_ROUTE_PATHS } from "@/shared";
 
 import { MentorMenteeListItem } from "../../components";
 import type { MentorDashboardMentee } from "../../types";
@@ -10,6 +14,8 @@ type Props = {
 const HEADER_GRID_TEMPLATE = "80px 112px 72px";
 
 export const MentorMenteeListSection = ({ mentees }: Props) => {
+  const navigate = useNavigate();
+
   return (
     <VStack align="stretch" gap={{ base: 4, md: 7 }} w="full">
       <Grid
@@ -47,7 +53,17 @@ export const MentorMenteeListSection = ({ mentees }: Props) => {
 
       <VStack align="stretch" gap={3} w="full">
         {mentees.map((mentee) => {
-          return <MentorMenteeListItem key={mentee.menteeId} mentee={mentee} />;
+          return (
+            <MentorMenteeListItem
+              key={mentee.menteeId}
+              mentee={mentee}
+              onClick={() =>
+                navigate(
+                  DYNAMIC_ROUTE_PATHS.MENTOR_MENTEE_PROJECTS(mentee.menteeId),
+                )
+              }
+            />
+          );
         })}
       </VStack>
     </VStack>
