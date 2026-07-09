@@ -21,7 +21,7 @@ export const MentorLoginFormSection = ({
   onPasswordChange,
   onSubmit,
 }: Props) => {
-  const handleSubmit = (e: FormEvent<HTMLDivElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
   };
