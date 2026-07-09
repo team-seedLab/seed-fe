@@ -36,6 +36,11 @@ export const useMentorLoginForm = ({ onSubmit }: Params = {}): Result => {
       return;
     }
 
+    if (!canSubmit) {
+      setErrorMessage("이메일과 비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMessage(null);
 
