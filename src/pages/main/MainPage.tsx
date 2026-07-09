@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { useAuth } from "@/entities";
+import { getUserEntryRoutePath, useAuth, useUserInfoStore } from "@/entities";
 import { AssignmentHelpSection, ExecutionOnlySection } from "@/features";
 import { CheckIcon, CopyIcon, ROUTE_PATHS, Seo, SparklesIcon } from "@/shared";
 
@@ -11,9 +11,12 @@ export default function MainPage() {
   const [isSolutionSectionReady, setIsSolutionSectionReady] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
+  const role = useUserInfoStore((state) => {
+    return state.userInfo?.role ?? state.persistedProfile?.role;
+  });
 
   const handleStartClick = () => {
-    navigate(isAuthenticated ? ROUTE_PATHS.MYPAGE : ROUTE_PATHS.LOGIN);
+    navigate(isAuthenticated ? getUserEntryRoutePath(role) : ROUTE_PATHS.LOGIN);
   };
 
   return (

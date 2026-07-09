@@ -1,4 +1,3 @@
-// 기본적인 router path를 상수로 정의합니다.
 export const ROUTE_PATHS = {
   ROOT: "/",
   MAIN: "/",
@@ -16,7 +15,6 @@ export const ROUTE_PATHS = {
   NOT_FOUND: "*",
 };
 
-// 동적 라우트 path를 상수로 정의합니다.
 export const DYNAMIC_ROUTE_PATHS = {
   PROJECT_DETAIL: (projectId: string) =>
     ROUTE_PATHS.PROJECT_DETAIL.replace(":projectId", projectId),
