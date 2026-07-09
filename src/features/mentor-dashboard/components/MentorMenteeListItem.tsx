@@ -28,7 +28,6 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
       p={{ base: 5, md: "25px" }}
       textAlign="left"
       transition="background 0.15s"
-      type="button"
       w="full"
       _hover={{ bg: "neutral.50" }}
       onClick={onClick}
