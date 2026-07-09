@@ -1,13 +1,14 @@
-import { useState } from "react";
-
 import { Box, Flex, VStack } from "@chakra-ui/react";
 
-import { MentorLoginFormSection, MentorLoginTitleText } from "@/features";
+import {
+  MentorLoginFormSection,
+  MentorLoginTitleText,
+  useMentorLoginForm,
+} from "@/features";
 import { MENTOR_LOGIN_PAGE_SEO, Seo } from "@/shared";
 
 export default function MentorLoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { fields, submit } = useMentorLoginForm();
 
   return (
     <Box bg="neutral.0" w="full">
@@ -28,11 +29,13 @@ export default function MentorLoginPage() {
         >
           <MentorLoginTitleText />
           <MentorLoginFormSection
-            email={email}
-            password={password}
-            onEmailChange={setEmail}
-            onPasswordChange={setPassword}
-            onSubmit={() => undefined}
+            email={fields.email}
+            errorMessage={submit.errorMessage}
+            isSubmitting={submit.isSubmitting}
+            password={fields.password}
+            onEmailChange={fields.setEmail}
+            onPasswordChange={fields.setPassword}
+            onSubmit={submit.submitMentorLogin}
           />
         </VStack>
       </Flex>
