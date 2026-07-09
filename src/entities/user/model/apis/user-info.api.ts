@@ -1,6 +1,6 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-export type UserRole = "MENTOR" | "MENTEE";
+import type { UserRole } from "../types";
 
 export interface UserInfoResponse {
   userId: string;

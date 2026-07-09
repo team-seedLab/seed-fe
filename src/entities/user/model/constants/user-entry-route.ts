@@ -1,6 +1,6 @@
 import { ROUTE_PATHS } from "@/shared";
 
-import type { UserRole } from "../apis";
+import type { UserRole } from "../types";
 
 const USER_ENTRY_ROUTE_PATHS: Partial<Record<UserRole, string>> = {
   MENTEE: ROUTE_PATHS.MYPAGE,
