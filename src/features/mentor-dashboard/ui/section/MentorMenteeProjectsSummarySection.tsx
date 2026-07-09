@@ -1,7 +1,7 @@
-import { Box, Flex, Grid, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Grid, Skeleton, Text, VStack } from "@chakra-ui/react";
 
 type Props = {
-  menteeName: string;
+  menteeName?: string | null;
   totalProjectCount: number;
   completedProjectCount: number;
 };
@@ -39,15 +39,23 @@ export const MentorMenteeProjectsSummarySection = ({
           flexShrink={0}
           justify="center"
         />
-        <Text
-          color="text"
-          fontSize={{ base: "2xl", md: "3xl" }}
-          fontWeight="bold"
-          lineHeight="1.4"
-          wordBreak="keep-all"
-        >
-          {menteeName}
-        </Text>
+        {menteeName ? (
+          <Text
+            color="text"
+            fontSize={{ base: "2xl", md: "3xl" }}
+            fontWeight="bold"
+            lineHeight="1.4"
+            wordBreak="keep-all"
+          >
+            {menteeName}
+          </Text>
+        ) : (
+          <Skeleton
+            h={{ base: 9, md: 11 }}
+            maxW="240px"
+            w={{ base: "140px", md: "180px" }}
+          />
+        )}
       </Flex>
 
       <Grid

@@ -1,50 +1,20 @@
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 
-import { Button, Flex, Text, VStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import {
+  type MentorMenteeProject,
   MentorMenteeProjectListSection,
   MentorMenteeProjectsSummarySection,
-  getMentorMenteeProjectGroup,
 } from "@/features";
-import { ROUTE_PATHS } from "@/shared";
+
+const MENTOR_MENTEE_PROJECTS: MentorMenteeProject[] = [];
 
 export default function MentorMenteeProjectsPage() {
-  const navigate = useNavigate();
   const { menteeId } = useParams<{ menteeId: string }>();
-  const menteeProjectGroup = getMentorMenteeProjectGroup(menteeId ?? "");
-
-  if (!menteeProjectGroup) {
-    return (
-      <Flex
-        align="center"
-        bg="container.bg"
-        direction="column"
-        justify="center"
-        minH="100vh"
-        px={4}
-      >
-        <VStack gap={4}>
-          <Text
-            color="text"
-            fontSize={{ base: "lg", md: "xl" }}
-            fontWeight="bold"
-          >
-            멘티 정보를 찾을 수 없습니다.
-          </Text>
-          <Button onClick={() => navigate(ROUTE_PATHS.MENTOR_DASHBOARD)}>
-            대시보드로 이동
-          </Button>
-        </VStack>
-      </Flex>
-    );
-  }
-
-  const completedProjectCount = menteeProjectGroup.projects.filter(
-    (project) => {
-      return project.status === "COMPLETED";
-    },
-  ).length;
+  const completedProjectCount = MENTOR_MENTEE_PROJECTS.filter((project) => {
+    return project.status === "COMPLETED";
+  }).length;
 
   return (
     <Flex align="center" bg="container.bg" direction="column" minH="100vh">
@@ -58,12 +28,12 @@ export default function MentorMenteeProjectsPage() {
       >
         <MentorMenteeProjectsSummarySection
           completedProjectCount={completedProjectCount}
-          menteeName={menteeProjectGroup.menteeName}
-          totalProjectCount={menteeProjectGroup.projects.length}
+          menteeName={null}
+          totalProjectCount={MENTOR_MENTEE_PROJECTS.length}
         />
         <MentorMenteeProjectListSection
-          menteeId={menteeProjectGroup.menteeId}
-          projects={menteeProjectGroup.projects}
+          menteeId={menteeId ?? ""}
+          projects={MENTOR_MENTEE_PROJECTS}
         />
       </Flex>
     </Flex>

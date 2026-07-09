@@ -2,10 +2,12 @@ import { Flex } from "@chakra-ui/react";
 
 import { useUserInfoStore } from "@/entities";
 import {
-  MENTOR_DASHBOARD_MENTEES,
+  type MentorDashboardMentee,
   MentorDashboardSummarySection,
   MentorMenteeListSection,
 } from "@/features";
+
+const MENTOR_DASHBOARD_MENTEES: MentorDashboardMentee[] = [];
 
 export default function MentorDashboardPage() {
   const nickname = useUserInfoStore((state) => {
