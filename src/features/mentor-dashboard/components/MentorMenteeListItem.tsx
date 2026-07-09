@@ -83,50 +83,29 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
         gap={3}
         templateColumns="repeat(3, minmax(0, 1fr))"
       >
-        <VStack
-          align="flex-start"
-          bg="neutral.50"
-          borderRadius="xl"
-          gap={1}
-          px={3}
-          py={2.5}
-        >
+        <VStack align="flex-start" gap={1}>
           <Text color="text.secondary" fontSize="2xs" fontWeight="medium">
             프로젝트 수
           </Text>
-          <Text color="text" fontSize="sm" fontWeight="semibold">
+          <Text color="text" fontSize="sm" fontWeight="medium">
             {mentee.projectCount}
           </Text>
         </VStack>
 
-        <VStack
-          align="flex-start"
-          bg="neutral.50"
-          borderRadius="xl"
-          gap={1}
-          px={3}
-          py={2.5}
-        >
+        <VStack align="flex-start" gap={1}>
           <Text color="text.secondary" fontSize="2xs" fontWeight="medium">
             최근 제출
           </Text>
-          <Text color="text" fontSize="sm" fontWeight="semibold">
+          <Text color="text" fontSize="sm" fontWeight="medium">
             {formatSubmittedDate(mentee.latestSubmittedAt)}
           </Text>
         </VStack>
 
-        <VStack
-          align="flex-start"
-          bg="neutral.50"
-          borderRadius="xl"
-          gap={1}
-          px={3}
-          py={2.5}
-        >
+        <VStack align="flex-start" gap={1}>
           <Text color="text.secondary" fontSize="2xs" fontWeight="medium">
             검토 상태
           </Text>
-          <Text color="text" fontSize="sm" fontWeight="semibold">
+          <Text color="text" fontSize="sm" fontWeight="medium">
             {REVIEW_STATUS_LABEL[mentee.reviewStatus]}
           </Text>
         </VStack>

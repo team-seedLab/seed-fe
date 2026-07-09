@@ -76,17 +76,7 @@ export const MentorDashboardSummarySection = ({ mentees, nickname }: Props) => {
       >
         {summaryItems.map((item) => {
           return (
-            <VStack
-              align="flex-start"
-              bg="container.bg"
-              border="1px solid"
-              borderColor="container.border.card"
-              borderRadius="2xl"
-              gap={1}
-              key={item.label}
-              px={4}
-              py={3.5}
-            >
+            <VStack align="flex-start" gap={1} key={item.label}>
               <Text color="text.secondary" fontSize="xs" fontWeight="medium">
                 {item.label}
               </Text>

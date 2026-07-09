@@ -1,4 +1,4 @@
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Grid, Text, VStack } from "@chakra-ui/react";
 
 type Props = {
   menteeName: string;
@@ -50,27 +50,37 @@ export const MentorMenteeProjectsSummarySection = ({
         </Text>
       </Flex>
 
-      <Flex align="stretch" gap={0}>
+      <Grid
+        display={{ base: "grid", lg: "none" }}
+        gap={3}
+        templateColumns="repeat(2, minmax(0, 1fr))"
+        w="full"
+      >
+        {summaryItems.map((item) => {
+          return (
+            <VStack align="flex-start" gap={1} key={item.label}>
+              <Text color="text.secondary" fontSize="xs" fontWeight="medium">
+                {item.label}
+              </Text>
+              <Text color="text" fontSize="2xl" fontWeight="semibold">
+                {item.value}
+              </Text>
+            </VStack>
+          );
+        })}
+      </Grid>
+
+      <Flex align="stretch" display={{ base: "none", lg: "flex" }} gap={0}>
         {summaryItems.map((item, index) => {
           const isLast = index === summaryItems.length - 1;
 
           return (
             <Flex key={item.label}>
-              <VStack
-                align="flex-start"
-                gap={0.5}
-                minW="92px"
-                px={{ base: 5, md: 6 }}
-                py={3}
-              >
+              <VStack align="flex-start" gap={0.5} minW="92px" px={6} py={3}>
                 <Text color="text.secondary" fontSize="xs" fontWeight="regular">
                   {item.label}
                 </Text>
-                <Text
-                  color="text"
-                  fontSize={{ base: "2xl", md: "3xl" }}
-                  fontWeight="semibold"
-                >
+                <Text color="text" fontSize="3xl" fontWeight="semibold">
                   {item.value}
                 </Text>
               </VStack>
