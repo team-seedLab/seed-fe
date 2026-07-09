@@ -41,6 +41,10 @@ export const MentorMenteeProjectListSection = ({
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
+  const emptyMessage =
+    projects.length === 0
+      ? "프로젝트 목록이 준비되면 여기에 표시됩니다."
+      : "선택한 상태의 프로젝트가 없습니다.";
 
   return (
     <VStack align="stretch" gap={{ base: 5, md: 7 }} w="full">
@@ -101,7 +105,7 @@ export const MentorMenteeProjectListSection = ({
             minH="200px"
             px={6}
           >
-            선택한 상태의 프로젝트가 없습니다.
+            {emptyMessage}
           </Flex>
         )}
       </VStack>

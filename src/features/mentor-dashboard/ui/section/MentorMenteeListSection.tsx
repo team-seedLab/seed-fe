@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import { Grid, Text, VStack } from "@chakra-ui/react";
+import { Flex, Grid, Text, VStack } from "@chakra-ui/react";
 
 import { DYNAMIC_ROUTE_PATHS } from "@/shared";
 
@@ -60,19 +60,36 @@ export const MentorMenteeListSection = ({ mentees }: Props) => {
       </Grid>
 
       <VStack align="stretch" gap={3} w="full">
-        {mentees.map((mentee) => {
-          return (
-            <MentorMenteeListItem
-              key={mentee.menteeId}
-              mentee={mentee}
-              onClick={() =>
-                navigate(
-                  DYNAMIC_ROUTE_PATHS.MENTOR_MENTEE_PROJECTS(mentee.menteeId),
-                )
-              }
-            />
-          );
-        })}
+        {mentees.length > 0 ? (
+          mentees.map((mentee) => {
+            return (
+              <MentorMenteeListItem
+                key={mentee.menteeId}
+                mentee={mentee}
+                onClick={() =>
+                  navigate(
+                    DYNAMIC_ROUTE_PATHS.MENTOR_MENTEE_PROJECTS(mentee.menteeId),
+                  )
+                }
+              />
+            );
+          })
+        ) : (
+          <Flex
+            align="center"
+            bg="container.bg"
+            border="1px solid"
+            borderColor="container.border.card"
+            borderRadius="2xl"
+            boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
+            color="text.secondary"
+            justify="center"
+            minH="180px"
+            px={6}
+          >
+            멘티 목록이 준비되면 여기에 표시됩니다.
+          </Flex>
+        )}
       </VStack>
     </VStack>
   );
