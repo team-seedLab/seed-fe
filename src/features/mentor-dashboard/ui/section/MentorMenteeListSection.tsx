@@ -5,13 +5,16 @@ import { Grid, Text, VStack } from "@chakra-ui/react";
 import { DYNAMIC_ROUTE_PATHS } from "@/shared";
 
 import { MentorMenteeListItem } from "../../components";
+import {
+  MENTOR_MENTEE_LIST_DESKTOP_INSET,
+  MENTOR_MENTEE_LIST_DESKTOP_TEMPLATE,
+  MENTOR_MENTEE_LIST_VALUE_GRID_TEMPLATE,
+} from "../../constants";
 import type { MentorDashboardMentee } from "../../types";
 
 type Props = {
   mentees: MentorDashboardMentee[];
 };
-
-const HEADER_GRID_TEMPLATE = "80px 112px 72px";
 
 export const MentorMenteeListSection = ({ mentees }: Props) => {
   const navigate = useNavigate();
@@ -20,9 +23,13 @@ export const MentorMenteeListSection = ({ mentees }: Props) => {
     <VStack align="stretch" gap={{ base: 4, md: 7 }} w="full">
       <Grid
         alignItems="center"
-        gap={6}
-        gridTemplateColumns={{ base: "1fr", md: "1fr 344px" }}
-        px={{ base: 1, md: 3 }}
+        columnGap={{ base: 0, md: 6 }}
+        gridTemplateColumns={{
+          base: "1fr",
+          md: MENTOR_MENTEE_LIST_DESKTOP_TEMPLATE,
+        }}
+        px={{ base: 1, md: MENTOR_MENTEE_LIST_DESKTOP_INSET }}
+        rowGap={3}
       >
         <Text
           color="text"
@@ -36,8 +43,9 @@ export const MentorMenteeListSection = ({ mentees }: Props) => {
           alignItems="center"
           display={{ base: "none", md: "grid" }}
           gap={10}
-          templateColumns={HEADER_GRID_TEMPLATE}
+          templateColumns={MENTOR_MENTEE_LIST_VALUE_GRID_TEMPLATE}
           textAlign="center"
+          w="full"
         >
           <Text color="text" fontSize="sm" fontWeight="bold">
             프로젝트 수

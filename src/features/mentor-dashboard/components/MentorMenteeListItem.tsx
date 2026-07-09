@@ -1,6 +1,11 @@
 import { Flex, Grid, Text, VStack } from "@chakra-ui/react";
 
-import { REVIEW_STATUS_LABEL } from "../constants";
+import {
+  MENTOR_MENTEE_LIST_DESKTOP_INSET,
+  MENTOR_MENTEE_LIST_DESKTOP_TEMPLATE,
+  MENTOR_MENTEE_LIST_VALUE_GRID_TEMPLATE,
+  REVIEW_STATUS_LABEL,
+} from "../constants";
 import type { MentorDashboardMentee } from "../types";
 import { formatSubmittedDate } from "../utils";
 
@@ -9,23 +14,25 @@ type Props = {
   onClick: () => void;
 };
 
-const DESKTOP_VALUE_GRID_TEMPLATE = "80px 112px 72px";
-
 export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
   return (
-    <Flex
+    <Grid
       as="button"
-      align={{ base: "stretch", md: "center" }}
+      alignItems={{ base: "stretch", md: "center" }}
       bg="container.bg"
       border="1px solid"
       borderColor="container.border.card"
       borderRadius="2xl"
       boxShadow="0px 8px 30px 0px rgba(0,0,0,0.04)"
+      columnGap={{ base: 0, md: 6 }}
       cursor="pointer"
-      direction={{ base: "column", md: "row" }}
-      gap={{ base: 4, md: 6 }}
-      justify="space-between"
-      p={{ base: 5, md: "25px" }}
+      gridTemplateColumns={{
+        base: "1fr",
+        md: MENTOR_MENTEE_LIST_DESKTOP_TEMPLATE,
+      }}
+      px={{ base: 5, md: MENTOR_MENTEE_LIST_DESKTOP_INSET }}
+      py={{ base: 5, md: "25px" }}
+      rowGap={{ base: 4, md: 0 }}
       textAlign="left"
       transition="background 0.15s"
       w="full"
@@ -56,9 +63,9 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
         alignItems="center"
         display={{ base: "none", md: "grid" }}
         gap={10}
-        templateColumns={DESKTOP_VALUE_GRID_TEMPLATE}
+        templateColumns={MENTOR_MENTEE_LIST_VALUE_GRID_TEMPLATE}
         textAlign="center"
-        w="344px"
+        w="full"
       >
         <Text color="text" fontSize="sm" fontWeight="medium">
           {mentee.projectCount}
@@ -124,6 +131,6 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
           </Text>
         </VStack>
       </Grid>
-    </Flex>
+    </Grid>
   );
 };
