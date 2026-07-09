@@ -46,7 +46,7 @@ describe("MainPage", () => {
       },
     });
 
-    const [startButton] = screen.getAllByRole("button");
+    const startButton = screen.getByRole("button", { name: "시작하기" });
     fireEvent.click(startButton);
 
     expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.MYPAGE);
@@ -60,7 +60,7 @@ describe("MainPage", () => {
       },
     });
 
-    const [startButton] = screen.getAllByRole("button");
+    const startButton = screen.getByRole("button", { name: "시작하기" });
     fireEvent.click(startButton);
 
     expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.LOGIN);
