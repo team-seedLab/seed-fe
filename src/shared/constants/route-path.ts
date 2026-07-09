@@ -3,6 +3,8 @@ export const ROUTE_PATHS = {
   MAIN: "/",
   LOGIN: "/login",
   MENTOR_LOGIN: "/login/mentor",
+  MENTOR_DASHBOARD: "/mentor/dashboard",
+  MENTOR_MENTEE_PROJECTS: "/mentor/mentees/:menteeId/projects",
   MYPAGE: "/mypage",
   FILE_UPLOAD: "/upload",
 
@@ -19,6 +21,8 @@ export const ROUTE_PATHS = {
 export const DYNAMIC_ROUTE_PATHS = {
   PROJECT_DETAIL: (projectId: string) =>
     ROUTE_PATHS.PROJECT_DETAIL.replace(":projectId", projectId),
+  MENTOR_MENTEE_PROJECTS: (menteeId: string) =>
+    ROUTE_PATHS.MENTOR_MENTEE_PROJECTS.replace(":menteeId", menteeId),
   UPLOAD_STEP: (projectId: string, step: number | string) =>
     ROUTE_PATHS.UPLOAD_STEP.replace(":projectId", projectId).replace(
       ":step",
