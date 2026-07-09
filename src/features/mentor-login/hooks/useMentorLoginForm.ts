@@ -17,6 +17,7 @@ type Result = {
     setPassword: React.Dispatch<React.SetStateAction<string>>;
   };
   submit: {
+    canSubmit: boolean;
     isSubmitting: boolean;
     errorMessage: string | null;
     submitMentorLogin: () => Promise<void>;
@@ -28,6 +29,7 @@ export const useMentorLoginForm = ({ onSubmit }: Params = {}): Result => {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const canSubmit = email.trim().length > 0 && password.trim().length > 0;
 
   const submitMentorLogin = async () => {
     if (isSubmitting) {
@@ -57,6 +59,7 @@ export const useMentorLoginForm = ({ onSubmit }: Params = {}): Result => {
       setPassword,
     },
     submit: {
+      canSubmit,
       isSubmitting,
       errorMessage,
       submitMentorLogin,

@@ -5,6 +5,7 @@ import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
 type Props = {
   email: string;
   password: string;
+  canSubmit: boolean;
   isSubmitting?: boolean;
   errorMessage?: string | null;
   onEmailChange: (value: string) => void;
@@ -15,6 +16,7 @@ type Props = {
 export const MentorLoginFormSection = ({
   email,
   password,
+  canSubmit,
   isSubmitting = false,
   errorMessage,
   onEmailChange,
@@ -87,6 +89,7 @@ export const MentorLoginFormSection = ({
           borderRadius="lg"
           boxShadow="0px 1px 1px 0px rgba(0,0,0,0.05)"
           color="white"
+          disabled={!canSubmit || isSubmitting}
           fontSize="sm"
           fontWeight="semibold"
           h="46px"
@@ -94,6 +97,7 @@ export const MentorLoginFormSection = ({
           mt={5}
           type="submit"
           w="full"
+          _disabled={{ bg: "seed", cursor: "not-allowed", opacity: 0.5 }}
           _hover={{ bg: "seed.hover" }}
           _active={{ bg: "seed.active" }}
         >
