@@ -33,9 +33,9 @@ export const MentorLoginFormSection = ({
           autoComplete="email"
           bg="neutral.50"
           border="none"
-          borderRadius="8px"
-          color="#111827"
-          h="44px"
+          borderRadius="lg"
+          color="neutral.900"
+          h={11}
           name="email"
           placeholder="이메일 주소"
           px={4}
@@ -45,10 +45,9 @@ export const MentorLoginFormSection = ({
             boxShadow: "0 0 0 1px var(--sd-colors-seed)",
           }}
           _placeholder={{
-            color: "#6B7280",
+            color: "text.placeholder",
             fontSize: "sm",
             fontWeight: "medium",
-            letterSpacing: "-0.02em",
           }}
           onChange={(e) => onEmailChange(e.target.value)}
         />
@@ -57,9 +56,9 @@ export const MentorLoginFormSection = ({
           autoComplete="current-password"
           bg="neutral.50"
           border="none"
-          borderRadius="8px"
-          color="#111827"
-          h="44px"
+          borderRadius="lg"
+          color="neutral.900"
+          h={11}
           name="password"
           placeholder="비밀번호"
           px={4}
@@ -70,10 +69,9 @@ export const MentorLoginFormSection = ({
             boxShadow: "0 0 0 1px var(--sd-colors-seed)",
           }}
           _placeholder={{
-            color: "#6B7280",
+            color: "text.placeholder",
             fontSize: "sm",
             fontWeight: "medium",
-            letterSpacing: "-0.02em",
           }}
           onChange={(e) => onPasswordChange(e.target.value)}
         />
@@ -86,7 +84,7 @@ export const MentorLoginFormSection = ({
 
         <Button
           bg="seed"
-          borderRadius="8px"
+          borderRadius="lg"
           boxShadow="0px 1px 1px 0px rgba(0,0,0,0.05)"
           color="white"
           fontSize="sm"

@@ -6,19 +6,17 @@ export const MentorLoginTitleText = () => {
       <Heading
         as="h1"
         color="neutral.900"
-        fontSize={{ base: "3xl", md: "30px" }}
+        fontSize={{ base: "2xl", lg: "3xl" }}
         fontWeight="bold"
-        letterSpacing="-0.02em"
-        lineHeight="1.4"
       >
         반가워요, 멘토님
       </Heading>
       <Text
-        color="#43493A"
-        fontSize="md"
-        fontWeight="regular"
-        letterSpacing="-0.02em"
-        lineHeight="1.4"
+        color="neutral.600"
+        fontSize={{ base: "sm", lg: "md" }}
+        fontWeight="normal"
+        whiteSpace={{ base: "normal", md: "nowrap" }}
+        wordBreak="keep-all"
       >
         학습의 과정을 자산으로 만드는 여정을 시작하세요.
       </Text>
