@@ -8,6 +8,7 @@ import { ArrowRightIcon } from "@/shared/_assets/icons";
 
 import { UploadStepResultInput } from "../../components";
 import {
+  useUploadPromptEditor,
   useUploadStepData,
   useUploadStepProject,
   useUploadStepSubmission,
@@ -29,6 +30,14 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
     projectId,
     stepCode,
   });
+  const stepName = stepData?.stepName;
+  const providedPromptSnapshot = stepData?.providedPromptSnapshot;
+  const formatPrompt = stepData?.formatPrompt;
+  const { editedPrompt, changePrompt, commitPrompt, resetPrompt } =
+    useUploadPromptEditor({
+      editorKey: `${projectId}:${stepNum}`,
+      originalPrompt: providedPromptSnapshot ?? "",
+    });
   const { isSubmitting, submitStepResult } = useUploadStepSubmission({
     projectId,
     stepNum,
@@ -47,10 +56,6 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
       [resultTextKey]: value,
     }));
   };
-  const stepName = stepData?.stepName;
-  const providedPromptSnapshot = stepData?.providedPromptSnapshot;
-  const formatPrompt = stepData?.formatPrompt;
-
   return (
     <Box
       bg="white"
@@ -112,11 +117,20 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
           </Box>
         ) : providedPromptSnapshot ? (
           <PromptCard
-            content={providedPromptSnapshot}
+            content={editedPrompt}
             copied={copiedPrompt}
-            label="생성된 프롬프트"
+            label="수정 내용"
+            mode="editable"
+            originalContent={providedPromptSnapshot}
+            onCommit={(content) => {
+              void commitPrompt(content);
+            }}
+            onContentChange={changePrompt}
             onCopy={() => {
-              void copyPrompt(providedPromptSnapshot);
+              void copyPrompt(editedPrompt);
+            }}
+            onReset={() => {
+              void resetPrompt();
             }}
           />
         ) : null}

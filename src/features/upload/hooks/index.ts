@@ -1,4 +1,5 @@
 export * from "./useUploadLoadingProgress";
+export * from "./useUploadPromptEditor";
 export * from "./useUploadStepData";
 export * from "./useUploadFiles";
 export * from "./useUploadPageForm";
