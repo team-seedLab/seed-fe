@@ -12,14 +12,14 @@ const EDITED_PROMPT = "첫 번째 줄\n분량: A4 2장\n마지막 줄";
 const createProject = (
   userEditedPrompt?: string | null,
 ): ProjectDetailResponse => {
-  const step = {
+  const step: ProjectStepResponse = {
     formatPrompt: "",
     providedPromptSnapshot: ORIGINAL_PROMPT,
     stepCode: "RESEARCH",
     stepName: "자료 조사",
     userEditedPrompt,
     userSubmittedResult: "작업 결과",
-  } as ProjectStepResponse & { userEditedPrompt?: string | null };
+  };
 
   return {
     createdAt: "2026-07-10",

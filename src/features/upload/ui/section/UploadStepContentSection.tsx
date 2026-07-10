@@ -36,6 +36,7 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
   const { editedPrompt, changePrompt, commitPrompt, resetPrompt } =
     useUploadPromptEditor({
       editorKey: `${projectId}:${stepNum}`,
+      initialEditedPrompt: stepData?.userEditedPrompt,
       originalPrompt: providedPromptSnapshot ?? "",
     });
   const { isSubmitting, submitStepResult } = useUploadStepSubmission({

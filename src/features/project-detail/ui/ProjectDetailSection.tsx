@@ -35,8 +35,10 @@ export const ProjectDetailSection = ({ project }: Props) => {
       w="full"
     >
       {stepResponses.map((step, i) => {
-        const promptKey = `prompt-${step.stepCode}`;
+        const originalPromptKey = `prompt-original-${step.stepCode}`;
+        const editedPromptKey = `prompt-edited-${step.stepCode}`;
         const resultKey = `result-${step.stepCode}`;
+        const hasEditedPrompt = step.userEditedPrompt != null;
 
         return (
           <VStack
@@ -59,12 +61,37 @@ export const ProjectDetailSection = ({ project }: Props) => {
               </Text>
             </VStack>
 
-            <PromptCard
-              content={step.providedPromptSnapshot}
-              copied={copiedMap[promptKey]}
-              label="생성된 프롬프트"
-              onCopy={() => handleCopy(promptKey, step.providedPromptSnapshot)}
-            />
+            {hasEditedPrompt ? (
+              <>
+                <PromptCard
+                  content={step.providedPromptSnapshot}
+                  copied={copiedMap[originalPromptKey]}
+                  label="원본 프롬프트"
+                  onCopy={() =>
+                    handleCopy(originalPromptKey, step.providedPromptSnapshot)
+                  }
+                />
+                <PromptCard
+                  content={step.userEditedPrompt}
+                  copied={copiedMap[editedPromptKey]}
+                  label="최종 프롬프트"
+                  mode="comparison"
+                  originalContent={step.providedPromptSnapshot}
+                  onCopy={() =>
+                    handleCopy(editedPromptKey, step.userEditedPrompt ?? "")
+                  }
+                />
+              </>
+            ) : (
+              <PromptCard
+                content={step.providedPromptSnapshot}
+                copied={copiedMap[originalPromptKey]}
+                label="생성된 프롬프트"
+                onCopy={() =>
+                  handleCopy(originalPromptKey, step.providedPromptSnapshot)
+                }
+              />
+            )}
 
             {step.userSubmittedResult && (
               <PromptCard
