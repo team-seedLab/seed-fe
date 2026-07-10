@@ -1,13 +1,37 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { type FocusEvent, useMemo, useState } from "react";
 
-import { CopyIcon, DocumentTextIcon } from "@/shared";
+import { Box, Text, Textarea } from "@chakra-ui/react";
 
-type Props = {
+import { createPromptDiff } from "../../utils";
+
+import { PromptCardHeader } from "./PromptCardHeader";
+import { PromptDiffContent } from "./PromptDiffContent";
+
+type BaseProps = {
   label: string;
   content: string;
   onCopy: () => void;
   copied?: boolean;
 };
+
+type ReadOnlyProps = BaseProps & {
+  mode?: "readonly";
+};
+
+type EditableProps = BaseProps & {
+  mode: "editable";
+  originalContent: string;
+  onCommit: (content: string) => void;
+  onContentChange: (content: string) => void;
+  onReset: () => void;
+};
+
+type ComparisonProps = BaseProps & {
+  mode: "comparison";
+  originalContent: string;
+};
+
+type Props = ReadOnlyProps | EditableProps | ComparisonProps;
 
 const PromptLine = ({ line }: { line: string }) => {
   let color = "neutral.900";
@@ -31,16 +55,61 @@ const PromptLine = ({ line }: { line: string }) => {
   );
 };
 
-export const PromptCard = ({
-  label,
-  content,
-  onCopy,
-  copied = false,
-}: Props) => {
+const PromptContent = ({ content }: { content: string }) => {
   const lines = content.split("\n");
   const isPrompt = lines.some(
     (line) => line.startsWith("# ") || line === "#" || line.startsWith("//"),
   );
+
+  return (
+    <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
+      {isPrompt ? (
+        lines.map((line, i) => <PromptLine key={i} line={line} />)
+      ) : (
+        <Text
+          color="neutral.900"
+          fontSize={{ base: "xs", md: "sm" }}
+          fontWeight="medium"
+          lineHeight="1.5"
+          whiteSpace="pre-wrap"
+        >
+          {content}
+        </Text>
+      )}
+    </Box>
+  );
+};
+
+export const PromptCard = (props: Props) => {
+  const { label, content, onCopy, copied = false } = props;
+  const mode = props.mode ?? "readonly";
+  const originalContent = mode === "readonly" ? content : props.originalContent;
+  const [diffViewState, setDiffViewState] = useState({
+    isVisible: false,
+    originalContent,
+  });
+  const isDiffVisible =
+    diffViewState.originalContent === originalContent &&
+    diffViewState.isVisible;
+  const diff = useMemo(() => {
+    return createPromptDiff(originalContent, content);
+  }, [content, originalContent]);
+
+  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
+    if (mode !== "editable") {
+      return;
+    }
+
+    const nextFocusedElement = event.relatedTarget;
+    if (
+      nextFocusedElement instanceof Node &&
+      event.currentTarget.contains(nextFocusedElement)
+    ) {
+      return;
+    }
+
+    props.onCommit(content);
+  };
 
   return (
     <Box
@@ -50,72 +119,53 @@ export const PromptCard = ({
       borderRadius={{ base: "xl", md: "2xl" }}
       overflow="hidden"
       w="full"
+      onBlur={handleBlur}
     >
-      <Flex
-        align={{ base: "flex-start", md: "center" }}
-        borderBottom="1px solid"
-        borderBottomColor="neutral.50"
-        direction="row"
-        gap={{ base: 3, md: 0 }}
-        justify="space-between"
-        pb={{ base: 3, md: "17px" }}
-        pt={{ base: 3, md: "16px" }}
-        px={{ base: 4, md: 6 }}
-      >
-        <Flex align="center" gap={2}>
-          <DocumentTextIcon boxSize={3} color="neutral.600" />
-          <Text
-            color="neutral.600"
-            fontSize={{ base: "2xs", md: "xs" }}
-            fontWeight="medium"
-          >
-            {label}
-          </Text>
-        </Flex>
+      <PromptCardHeader
+        addedCount={diff.addedCount}
+        copied={copied}
+        hasChanges={diff.hasChanges}
+        isDiffVisible={isDiffVisible}
+        label={label}
+        removedCount={diff.removedCount}
+        showComparisonControls={mode !== "readonly"}
+        showReset={mode === "editable"}
+        onCopy={onCopy}
+        onReset={mode === "editable" ? props.onReset : undefined}
+        onToggleDiff={() =>
+          setDiffViewState((previousState) => ({
+            isVisible:
+              previousState.originalContent === originalContent
+                ? !previousState.isVisible
+                : true,
+            originalContent,
+          }))
+        }
+      />
 
-        <Box
-          as="button"
-          alignSelf={{ base: "flex-start", md: "auto" }}
-          bg="white"
-          border="1px solid"
-          borderColor="neutral.50"
-          borderRadius="lg"
-          boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
-          cursor="pointer"
-          onClick={onCopy}
-          px={{ base: 3, md: "13px" }}
-          py={{ base: 1.5, md: "7px" }}
-          _hover={{ boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)" }}
-        >
-          <Flex align="center" gap={{ base: 1.5, md: "6px" }}>
-            <CopyIcon boxSize={3} color={copied ? "seed" : "neutral.900"} />
-            <Text
-              color={copied ? "seed" : "neutral.900"}
-              fontSize={{ base: "2xs", md: "xs" }}
-              fontWeight="semibold"
-              lineHeight="1.4"
-            >
-              {copied ? "복사됨 ✓" : "복사하기"}
-            </Text>
-          </Flex>
-        </Box>
-      </Flex>
-
-      <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
-        {isPrompt ? (
-          lines.map((line, i) => <PromptLine key={i} line={line} />)
-        ) : (
-          <Text
+      {isDiffVisible && mode !== "readonly" ? (
+        <PromptDiffContent lines={diff.lines} />
+      ) : mode === "editable" ? (
+        <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
+          <Textarea
+            aria-label={label}
+            bg="neutral.50"
+            border="none"
             color="neutral.900"
             fontSize={{ base: "xs", md: "sm" }}
             fontWeight="medium"
             lineHeight="1.5"
-            whiteSpace="pre-wrap"
-          >
-            {content}
-          </Text>
-        )}
-      </Box>
+            minH={{ base: 60, md: 80 }}
+            onChange={(event) => props.onContentChange(event.target.value)}
+            p={0}
+            resize="vertical"
+            value={content}
+            _focusVisible={{ boxShadow: "none", outline: "none" }}
+          />
+        </Box>
+      ) : (
+        <PromptContent content={content} />
+      )}
     </Box>
   );
 };
