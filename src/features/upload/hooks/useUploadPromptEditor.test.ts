@@ -62,6 +62,26 @@ describe("useUploadPromptEditor", () => {
     expect(onSave).toHaveBeenCalledWith(null);
   });
 
+  it("저장에 실패해도 작성 중인 수정본을 유지한다", async () => {
+    const onSave = vi.fn().mockRejectedValue(new Error("저장 실패"));
+    const { result } = renderHook(() =>
+      useUploadPromptEditor({
+        editorKey: "project-1:step-1",
+        originalPrompt: "원본 프롬프트",
+        onSave,
+      }),
+    );
+
+    act(() => result.current.changePrompt("저장되지 않은 수정본"));
+    let isSaved = true;
+    await act(async () => {
+      isSaved = await result.current.commitPrompt("저장되지 않은 수정본");
+    });
+
+    expect(isSaved).toBe(false);
+    expect(result.current.editedPrompt).toBe("저장되지 않은 수정본");
+  });
+
   it("다른 단계로 전환하면 해당 단계의 프롬프트를 사용한다", () => {
     const { result, rerender } = renderHook(
       ({ editorKey, originalPrompt }) =>
