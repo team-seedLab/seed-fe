@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 
 import { CopyIcon, DocumentTextIcon } from "@/shared";
 
@@ -28,8 +28,7 @@ const HeaderButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Box
-      as="button"
+    <Button
       aria-pressed={pressed}
       bg={pressed ? "white" : "transparent"}
       border={pressed ? "1px solid" : "none"}
@@ -45,10 +44,11 @@ const HeaderButton = ({
       px={{ base: 2, md: 3 }}
       py={{ base: 1.5, md: 2 }}
       type="button"
+      variant="ghost"
       _hover={{ bg: disabled ? "transparent" : "white" }}
     >
       {children}
-    </Box>
+    </Button>
   );
 };
 
@@ -126,8 +126,7 @@ export const PromptCardHeader = ({
           <HeaderButton onClick={onReset}>초기화</HeaderButton>
         )}
 
-        <Box
-          as="button"
+        <Button
           bg="white"
           border="1px solid"
           borderColor="neutral.50"
@@ -138,6 +137,7 @@ export const PromptCardHeader = ({
           px={{ base: 3, md: "13px" }}
           py={{ base: 1.5, md: "7px" }}
           type="button"
+          variant="ghost"
           _hover={{ boxShadow: "0px 2px 4px 0px rgba(0,0,0,0.08)" }}
         >
           <Flex align="center" gap={{ base: 1.5, md: "6px" }}>
@@ -151,7 +151,7 @@ export const PromptCardHeader = ({
               {copied ? "복사됨 ✓" : "복사하기"}
             </Text>
           </Flex>
-        </Box>
+        </Button>
       </Flex>
     </Flex>
   );

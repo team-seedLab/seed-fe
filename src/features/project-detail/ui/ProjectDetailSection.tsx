@@ -38,7 +38,8 @@ export const ProjectDetailSection = ({ project }: Props) => {
         const originalPromptKey = `prompt-original-${step.stepCode}`;
         const editedPromptKey = `prompt-edited-${step.stepCode}`;
         const resultKey = `result-${step.stepCode}`;
-        const hasEditedPrompt = step.userEditedPrompt != null;
+        const editedPrompt = step.userEditedPrompt;
+        const hasEditedPrompt = editedPrompt != null;
 
         return (
           <VStack
@@ -72,14 +73,12 @@ export const ProjectDetailSection = ({ project }: Props) => {
                   }
                 />
                 <PromptCard
-                  content={step.userEditedPrompt}
+                  content={editedPrompt ?? ""}
                   copied={copiedMap[editedPromptKey]}
                   label="최종 프롬프트"
                   mode="comparison"
                   originalContent={step.providedPromptSnapshot}
-                  onCopy={() =>
-                    handleCopy(editedPromptKey, step.userEditedPrompt ?? "")
-                  }
+                  onCopy={() => handleCopy(editedPromptKey, editedPrompt ?? "")}
                 />
               </>
             ) : (

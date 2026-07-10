@@ -83,7 +83,10 @@ const PromptContent = ({ content }: { content: string }) => {
 export const PromptCard = (props: Props) => {
   const { label, content, onCopy, copied = false } = props;
   const mode = props.mode ?? "readonly";
-  const originalContent = mode === "readonly" ? content : props.originalContent;
+  const originalContent =
+    props.mode === "editable" || props.mode === "comparison"
+      ? props.originalContent
+      : content;
   const [diffViewState, setDiffViewState] = useState({
     isVisible: false,
     originalContent,
@@ -96,7 +99,7 @@ export const PromptCard = (props: Props) => {
   }, [content, originalContent]);
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (mode !== "editable") {
+    if (props.mode !== "editable") {
       return;
     }
 
@@ -131,7 +134,7 @@ export const PromptCard = (props: Props) => {
         showComparisonControls={mode !== "readonly"}
         showReset={mode === "editable"}
         onCopy={onCopy}
-        onReset={mode === "editable" ? props.onReset : undefined}
+        onReset={props.mode === "editable" ? props.onReset : undefined}
         onToggleDiff={() =>
           setDiffViewState((previousState) => ({
             isVisible:
@@ -145,7 +148,7 @@ export const PromptCard = (props: Props) => {
 
       {isDiffVisible && mode !== "readonly" ? (
         <PromptDiffContent lines={diff.lines} />
-      ) : mode === "editable" ? (
+      ) : props.mode === "editable" ? (
         <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
           <Textarea
             aria-label={label}
