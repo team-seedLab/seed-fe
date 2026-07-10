@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -7,6 +9,23 @@ import { PromptCard } from "./PromptCard";
 
 const ORIGINAL_PROMPT = "첫 번째 줄\n분량: 제한 없음\n마지막 줄";
 const EDITED_PROMPT = "첫 번째 줄\n분량: A4 2장\n마지막 줄";
+
+const ResettablePromptCard = () => {
+  const [content, setContent] = useState(EDITED_PROMPT);
+
+  return (
+    <PromptCard
+      content={content}
+      label="수정 내용"
+      mode="editable"
+      originalContent={ORIGINAL_PROMPT}
+      onCommit={vi.fn()}
+      onContentChange={setContent}
+      onCopy={vi.fn()}
+      onReset={() => setContent(ORIGINAL_PROMPT)}
+    />
+  );
+};
 
 describe("PromptCard", () => {
   it("기존 읽기 전용 카드의 내용과 복사 기능을 유지한다", () => {
@@ -143,5 +162,20 @@ describe("PromptCard", () => {
     fireEvent.click(screen.getByRole("button", { name: "차이보기" }));
     expect(screen.getByText("- 분량: 제한 없음")).toBeInTheDocument();
     expect(screen.getByText("+ 분량: A4 2장")).toBeInTheDocument();
+  });
+
+  it("diff 화면에서 초기화하면 편집 화면으로 돌아간다", () => {
+    renderWithProviders(<ResettablePromptCard />);
+
+    fireEvent.click(screen.getByRole("button", { name: "차이보기" }));
+    fireEvent.click(screen.getByRole("button", { name: "초기화" }));
+
+    expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveValue(
+      ORIGINAL_PROMPT,
+    );
+    expect(screen.getByRole("button", { name: "차이보기" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
   });
 });
