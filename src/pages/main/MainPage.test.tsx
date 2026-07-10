@@ -29,11 +29,11 @@ describe("MainPage", () => {
     navigateMock.mockReset();
   });
 
-  it("로그인 상태면 저장된 역할 기준 진입 경로로 이동한다", () => {
+  it("로그인 상태면 멘티 역할 기준 진입 경로로 이동한다", () => {
     useUserInfoStore.setState({
       userInfo: null,
       persistedProfile: {
-        nickname: "테스트 사용자",
+        nickname: "mentee",
         profileUrl: "",
         role: "MENTEE",
       },
@@ -50,6 +50,29 @@ describe("MainPage", () => {
     fireEvent.click(startButton);
 
     expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.MYPAGE);
+  });
+
+  it("로그인 상태면 멘토 역할 기준 진입 경로로 이동한다", () => {
+    useUserInfoStore.setState({
+      userInfo: null,
+      persistedProfile: {
+        nickname: "mentor",
+        profileUrl: "",
+        role: "MENTOR",
+      },
+    });
+
+    renderWithProviders(<MainPage />, {
+      authValue: {
+        isAuthenticated: true,
+        isLoading: false,
+      },
+    });
+
+    const startButton = screen.getByRole("button", { name: "시작하기" });
+    fireEvent.click(startButton);
+
+    expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.MENTOR_DASHBOARD);
   });
 
   it("비로그인 상태면 로그인 경로로 이동한다", () => {

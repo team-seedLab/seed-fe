@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 import { Box, Button, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
@@ -11,13 +11,19 @@ import {
 import { ProjectDetailSection } from "@/features";
 import { ArrowLeftIcon } from "@/shared";
 
+type ProjectDetailLocationState = {
+  backTo?: string;
+};
+
 export default function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
   const { data: project, isLoading } = useGetProjectDetail(projectId ?? "");
   const role = useUserInfoStore((state) => {
     return state.userInfo?.role ?? state.persistedProfile?.role;
   });
+  const backTo = (location.state as ProjectDetailLocationState | null)?.backTo;
 
   return (
     <Flex
@@ -42,7 +48,7 @@ export default function ProjectDetailPage() {
             fontSize={{ base: "xs", md: "sm" }}
             fontWeight="medium"
             gap={1}
-            onClick={() => navigate(getUserEntryRoutePath(role))}
+            onClick={() => navigate(backTo ?? getUserEntryRoutePath(role))}
             px={0}
             variant="ghost"
             _hover={{ color: "neutral.900" }}
