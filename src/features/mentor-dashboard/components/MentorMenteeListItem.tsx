@@ -52,7 +52,6 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
           color="text"
           fontSize={{ base: "md", md: "lg" }}
           fontWeight="semibold"
-          lineHeight="1.4"
           whiteSpace="nowrap"
         >
           {mentee.name}

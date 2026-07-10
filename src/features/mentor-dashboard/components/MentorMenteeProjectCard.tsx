@@ -35,7 +35,6 @@ export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
             color="text"
             fontSize={{ base: "md", md: "lg" }}
             fontWeight="bold"
-            lineHeight="1.4"
             overflow="hidden"
             textOverflow="ellipsis"
             whiteSpace="nowrap"

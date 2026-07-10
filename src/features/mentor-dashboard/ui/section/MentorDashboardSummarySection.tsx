@@ -45,7 +45,6 @@ export const MentorDashboardSummarySection = ({ mentees, nickname }: Props) => {
             color="text"
             fontSize={{ base: "3xl", md: "4xl" }}
             fontWeight="bold"
-            lineHeight="1.4"
             wordBreak="keep-all"
           >
             반가워요, {nickname}님
@@ -61,7 +60,6 @@ export const MentorDashboardSummarySection = ({ mentees, nickname }: Props) => {
           color="text.secondary"
           fontSize={{ base: "sm", md: "md" }}
           fontWeight="medium"
-          lineHeight="1.4"
           wordBreak="keep-all"
         >
           편리하게 학생들을 관리하세요!
@@ -95,20 +93,10 @@ export const MentorDashboardSummarySection = ({ mentees, nickname }: Props) => {
           return (
             <Flex key={item.label}>
               <VStack align="flex-start" gap={0.5} minW="104px" px={6} py={3}>
-                <Text
-                  color="text.secondary"
-                  fontSize="xs"
-                  fontWeight="medium"
-                  lineHeight="1.4"
-                >
+                <Text color="text.secondary" fontSize="xs" fontWeight="medium">
                   {item.label}
                 </Text>
-                <Text
-                  color="text"
-                  fontSize="3xl"
-                  fontWeight="semibold"
-                  lineHeight="1.4"
-                >
+                <Text color="text" fontSize="3xl" fontWeight="semibold">
                   {item.value}
                 </Text>
               </VStack>

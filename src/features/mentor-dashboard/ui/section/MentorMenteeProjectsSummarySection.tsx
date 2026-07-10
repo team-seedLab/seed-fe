@@ -53,7 +53,6 @@ export const MentorMenteeProjectsSummarySection = ({
             color="text"
             fontSize={{ base: "2xl", md: "3xl" }}
             fontWeight="bold"
-            lineHeight="1.4"
             wordBreak="keep-all"
           >
             {displayName}
