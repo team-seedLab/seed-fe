@@ -161,7 +161,12 @@ export const PromptCard = (props: Props) => {
       {isDiffVisible && mode !== "readonly" ? (
         <PromptDiffContent lines={diff.lines} />
       ) : props.mode === "editable" ? (
-        <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
+        <Box
+          bg="neutral.50"
+          display="flex"
+          minH={{ base: 60, md: 80 }}
+          p={{ base: 4, md: "28px" }}
+        >
           <Textarea
             aria-label={label}
             bg="neutral.50"
@@ -169,8 +174,9 @@ export const PromptCard = (props: Props) => {
             color="neutral.900"
             fontSize={{ base: "xs", md: "sm" }}
             fontWeight="medium"
+            flex={1}
             lineHeight="1.5"
-            minH={{ base: 60, md: 80 }}
+            minH={0}
             onChange={(event) => props.onContentChange(event.target.value)}
             p={0}
             resize="vertical"

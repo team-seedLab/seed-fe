@@ -27,6 +27,23 @@ const ResettablePromptCard = () => {
   );
 };
 
+const EditablePromptCard = () => {
+  const [content, setContent] = useState(ORIGINAL_PROMPT);
+
+  return (
+    <PromptCard
+      content={content}
+      label="수정 내용"
+      mode="editable"
+      originalContent={ORIGINAL_PROMPT}
+      onCommit={vi.fn()}
+      onContentChange={setContent}
+      onCopy={vi.fn()}
+      onReset={() => setContent(ORIGINAL_PROMPT)}
+    />
+  );
+};
+
 describe("PromptCard", () => {
   it("기존 읽기 전용 카드의 내용과 복사 기능을 유지한다", () => {
     const onCopy = vi.fn();
@@ -67,6 +84,23 @@ describe("PromptCard", () => {
 
     expect(onContentChange).toHaveBeenCalledWith("새로운 수정본");
     expect(onReset).toHaveBeenCalledOnce();
+  });
+
+  it("수정된 내용이 있을 때 차이보기와 초기화를 활성화한다", () => {
+    renderWithProviders(<EditablePromptCard />);
+
+    const diffButton = screen.getByRole("button", { name: "차이보기" });
+    const resetButton = screen.getByRole("button", { name: "초기화" });
+
+    expect(diffButton).toBeDisabled();
+    expect(resetButton).toBeDisabled();
+
+    fireEvent.change(screen.getByRole("textbox", { name: "수정 내용" }), {
+      target: { value: EDITED_PROMPT },
+    });
+
+    expect(diffButton).toBeEnabled();
+    expect(resetButton).toBeEnabled();
   });
 
   it("원본과 수정본의 추가 및 삭제 줄을 표시한다", () => {

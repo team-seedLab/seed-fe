@@ -26,7 +26,11 @@ const DIFF_LINE_STYLE = {
 
 export const PromptDiffContent = ({ lines }: Props) => {
   return (
-    <Box bg="neutral.50" p={{ base: 4, md: "28px" }}>
+    <Box
+      bg="neutral.50"
+      minH={{ base: 60, md: 80 }}
+      p={{ base: 4, md: "28px" }}
+    >
       {lines.map((line, index) => {
         const style = DIFF_LINE_STYLE[line.type];
 
