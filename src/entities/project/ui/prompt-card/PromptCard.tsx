@@ -114,6 +114,18 @@ export const PromptCard = (props: Props) => {
     props.onCommit(content);
   };
 
+  const handleReset = () => {
+    if (props.mode !== "editable") {
+      return;
+    }
+
+    setDiffViewState({
+      isVisible: false,
+      originalContent,
+    });
+    props.onReset();
+  };
+
   return (
     <Box
       bg="neutral.50"
@@ -134,7 +146,7 @@ export const PromptCard = (props: Props) => {
         showComparisonControls={mode !== "readonly"}
         showReset={mode === "editable"}
         onCopy={onCopy}
-        onReset={props.mode === "editable" ? props.onReset : undefined}
+        onReset={props.mode === "editable" ? handleReset : undefined}
         onToggleDiff={() =>
           setDiffViewState((previousState) => ({
             isVisible:
