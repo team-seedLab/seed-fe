@@ -32,11 +32,7 @@ export const MentorMenteeProjectListSection = ({
       return activeFilter ? project.status === activeFilter : true;
     });
   }, [activeFilter, projects]);
-
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProjects.length / PAGE_SIZE),
-  );
+  const totalPages = Math.ceil(filteredProjects.length / PAGE_SIZE);
   const currentPageProjects = filteredProjects.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
@@ -110,11 +106,13 @@ export const MentorMenteeProjectListSection = ({
         )}
       </VStack>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {totalPages > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </VStack>
   );
 };

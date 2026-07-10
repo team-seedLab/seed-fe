@@ -2,15 +2,18 @@ import { Box, Flex, Grid, Skeleton, Text, VStack } from "@chakra-ui/react";
 
 type Props = {
   menteeName?: string | null;
+  isLoadingName?: boolean;
   totalProjectCount: number;
   completedProjectCount: number;
 };
 
 export const MentorMenteeProjectsSummarySection = ({
   menteeName,
+  isLoadingName = false,
   totalProjectCount,
   completedProjectCount,
 }: Props) => {
+  const displayName = menteeName ?? "멘티 프로젝트";
   const summaryItems = [
     {
       label: "전체",
@@ -39,7 +42,13 @@ export const MentorMenteeProjectsSummarySection = ({
           flexShrink={0}
           justify="center"
         />
-        {menteeName ? (
+        {isLoadingName ? (
+          <Skeleton
+            h={{ base: 9, md: 11 }}
+            maxW="240px"
+            w={{ base: "140px", md: "180px" }}
+          />
+        ) : (
           <Text
             color="text"
             fontSize={{ base: "2xl", md: "3xl" }}
@@ -47,14 +56,8 @@ export const MentorMenteeProjectsSummarySection = ({
             lineHeight="1.4"
             wordBreak="keep-all"
           >
-            {menteeName}
+            {displayName}
           </Text>
-        ) : (
-          <Skeleton
-            h={{ base: 9, md: 11 }}
-            maxW="240px"
-            w={{ base: "140px", md: "180px" }}
-          />
         )}
       </Flex>
 

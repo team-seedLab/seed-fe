@@ -28,9 +28,12 @@ describe("MentorMenteeProjectsPage", () => {
       },
     );
 
+    expect(screen.getByText("멘티 프로젝트")).toBeInTheDocument();
     expect(screen.getByText("프로젝트 목록")).toBeInTheDocument();
     expect(
       screen.getByText("프로젝트 목록이 준비되면 여기에 표시됩니다."),
     ).toBeInTheDocument();
+    expect(screen.queryByLabelText("이전 페이지")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("다음 페이지")).not.toBeInTheDocument();
   });
 });
