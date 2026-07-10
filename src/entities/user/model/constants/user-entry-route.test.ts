@@ -5,19 +5,19 @@ import { ROUTE_PATHS } from "@/shared";
 import { getUserEntryRoutePath } from "./user-entry-route";
 
 describe("getUserEntryRoutePath", () => {
-  it("MENTEE ??븷?대㈃ 留덉씠?섏씠吏 寃쎈줈瑜?諛섑솚?쒕떎", () => {
+  it("MENTEE 역할이면 마이페이지 경로를 반환한다", () => {
     expect(getUserEntryRoutePath("MENTEE")).toBe(ROUTE_PATHS.MYPAGE);
   });
 
-  it("MENTOR ??븷?대㈃ 硫섑넗 ??ㅼ떆蹂대뱶 寃쎈줈瑜?諛섑솚?쒕떎", () => {
+  it("MENTOR 역할이면 멘토 대시보드 경로를 반환한다", () => {
     expect(getUserEntryRoutePath("MENTOR")).toBe(ROUTE_PATHS.MENTOR_DASHBOARD);
   });
 
-  it("role ??undefined ?대㈃ 留덉씠?섏씠吏 寃쎈줈瑜?諛섑솚?쒕떎", () => {
+  it("role 이 undefined 이면 마이페이지 경로를 반환한다", () => {
     expect(getUserEntryRoutePath(undefined)).toBe(ROUTE_PATHS.MYPAGE);
   });
 
-  it("role ??null ?대㈃ 留덉씠?섏씠吏 寃쎈줈瑜?諛섑솚?쒕떎", () => {
+  it("role 이 null 이면 마이페이지 경로를 반환한다", () => {
     expect(getUserEntryRoutePath(null)).toBe(ROUTE_PATHS.MYPAGE);
   });
 });

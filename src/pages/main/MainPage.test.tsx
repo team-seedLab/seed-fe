@@ -29,7 +29,7 @@ describe("MainPage", () => {
     navigateMock.mockReset();
   });
 
-  it("濡쒓렇???곹깭硫???λ맂 ??븷 湲곗? 吏꾩엯 寃쎈줈濡??대룞?쒕떎", () => {
+  it("로그인 상태면 멘티 역할 기준 진입 경로로 이동한다", () => {
     useUserInfoStore.setState({
       userInfo: null,
       persistedProfile: {
@@ -52,7 +52,7 @@ describe("MainPage", () => {
     expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.MYPAGE);
   });
 
-  it("濡쒓렇???곹깭硫?硫섑넗 ??븷 湲곗? 吏꾩엯 寃쎈줈濡??대룞?쒕떎", () => {
+  it("로그인 상태면 멘토 역할 기준 진입 경로로 이동한다", () => {
     useUserInfoStore.setState({
       userInfo: null,
       persistedProfile: {
@@ -75,7 +75,7 @@ describe("MainPage", () => {
     expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.MENTOR_DASHBOARD);
   });
 
-  it("鍮꾨줈洹몄씤 ?곹깭硫?濡쒓렇??寃쎈줈濡??대룞?쒕떎", () => {
+  it("비로그인 상태면 로그인 경로로 이동한다", () => {
     renderWithProviders(<MainPage />, {
       authValue: {
         isAuthenticated: false,
