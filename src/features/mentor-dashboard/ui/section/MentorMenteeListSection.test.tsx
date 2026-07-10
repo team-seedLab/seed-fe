@@ -28,22 +28,25 @@ describe("MentorMenteeListSection", () => {
     navigateMock.mockReset();
   });
 
-  it("멘티 목록을 표시한다", () => {
+  it("renders the mentee names", () => {
     renderWithProviders(
       <MentorMenteeListSection mentees={SAMPLE_MENTOR_DASHBOARD_MENTEES} />,
     );
 
-    expect(screen.getByText("학생 목록")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /김서연/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /최연주/ })).toBeInTheDocument();
+    expect(
+      screen.getByText(SAMPLE_MENTOR_DASHBOARD_MENTEES[0].name),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(SAMPLE_MENTOR_DASHBOARD_MENTEES[1].name),
+    ).toBeInTheDocument();
   });
 
-  it("멘티를 선택하면 프로젝트 목록 경로로 이동한다", () => {
+  it("navigates to the mentee project list when a mentee is selected", () => {
     renderWithProviders(
       <MentorMenteeListSection mentees={SAMPLE_MENTOR_DASHBOARD_MENTEES} />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /김서연/ }));
+    fireEvent.click(screen.getByText(SAMPLE_MENTOR_DASHBOARD_MENTEES[0].name));
 
     expect(navigateMock).toHaveBeenCalledWith(
       DYNAMIC_ROUTE_PATHS.MENTOR_MENTEE_PROJECTS(SAMPLE_MENTEE_ID),

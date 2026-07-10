@@ -17,7 +17,6 @@ type Props = {
 export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
   return (
     <Grid
-      as="button"
       alignItems={{ base: "stretch", md: "center" }}
       bg="container.bg"
       border="1px solid"

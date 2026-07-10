@@ -6,7 +6,7 @@ export type MentorDashboardMentee = {
   menteeId: string;
   name: string;
   projectCount: number;
-  latestSubmittedAt: string;
+  latestSubmittedAt: string | null;
   reviewStatus: MenteeReviewStatus;
 };
 

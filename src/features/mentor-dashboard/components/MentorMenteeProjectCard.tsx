@@ -13,7 +13,6 @@ type Props = {
 export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
   return (
     <Flex
-      as="button"
       bg="container.bg"
       border="1px solid"
       borderColor="neutral.50"

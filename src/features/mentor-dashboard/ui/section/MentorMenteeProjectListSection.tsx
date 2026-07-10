@@ -33,9 +33,10 @@ export const MentorMenteeProjectListSection = ({
     });
   }, [activeFilter, projects]);
   const totalPages = Math.ceil(filteredProjects.length / PAGE_SIZE);
+  const activePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
   const currentPageProjects = filteredProjects.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
+    (activePage - 1) * PAGE_SIZE,
+    activePage * PAGE_SIZE,
   );
   const emptyMessage =
     projects.length === 0
@@ -108,7 +109,7 @@ export const MentorMenteeProjectListSection = ({
 
       {totalPages > 0 && (
         <Pagination
-          currentPage={currentPage}
+          currentPage={activePage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
         />
