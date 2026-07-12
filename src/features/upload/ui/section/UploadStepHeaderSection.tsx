@@ -11,8 +11,12 @@ type Props = {
 };
 
 export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
-  const { project, steps } = useUploadStepProject({ projectId, stepNum });
-  const { goToPrevStep } = useUploadStepNavigation({ projectId, stepNum });
+  const { project, steps, completedStepCodes, selectableStepCodes } =
+    useUploadStepProject({ projectId, stepNum });
+  const { goToPrevStep, goToStep } = useUploadStepNavigation({
+    projectId,
+    stepNum,
+  });
 
   return (
     <>
@@ -50,8 +54,10 @@ export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
       {steps.length > 0 && (
         <ProjectStepIndicator
           activeStep={stepNum}
-          completedStepCodes={steps.slice(0, stepNum - 1)}
+          completedStepCodes={completedStepCodes}
+          selectableStepCodes={selectableStepCodes}
           stepCodes={steps}
+          onStepSelect={goToStep}
         />
       )}
     </>

@@ -14,6 +14,8 @@ type Result = {
   steps: string[];
   stepCode: string | undefined;
   isLastStep: boolean;
+  completedStepCodes: string[];
+  selectableStepCodes: string[];
 };
 
 export const useUploadStepProject = ({
@@ -25,11 +27,23 @@ export const useUploadStepProject = ({
   const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
   const stepCode = steps[stepNum - 1];
   const isLastStep = steps.length > 0 && stepNum >= steps.length;
+  const stepResponses = project?.stepResponses ?? [];
+  const completedStepCodes = steps.filter((code) =>
+    stepResponses.some(
+      (step) =>
+        step.stepCode === code && Boolean(step.userSubmittedResult?.trim()),
+    ),
+  );
+  const selectableStepCodes = stepCode
+    ? [...new Set([...completedStepCodes, stepCode])]
+    : completedStepCodes;
 
   return {
     project,
     steps,
     stepCode,
     isLastStep,
+    completedStepCodes,
+    selectableStepCodes,
   };
 };

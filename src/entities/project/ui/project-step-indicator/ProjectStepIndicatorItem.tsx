@@ -99,6 +99,7 @@ export const ProjectStepIndicatorItem = ({
       aria-label={stepName}
       bg="transparent"
       borderRadius="none"
+      cursor="pointer"
       h="auto"
       minW={0}
       onClick={onSelect}

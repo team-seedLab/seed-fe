@@ -60,4 +60,27 @@ describe("ProjectStepIndicator", () => {
 
     expect(onStepSelect).toHaveBeenCalledWith(2);
   });
+
+  it("선택 가능한 단계만 버튼으로 표시한다", () => {
+    const onStepSelect = vi.fn();
+
+    renderWithProviders(
+      <ProjectStepIndicator
+        activeStep={2}
+        selectableStepCodes={["constraint_analysis", "argument_structuring"]}
+        stepCodes={STEP_CODES}
+        onStepSelect={onStepSelect}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "제약사항 분석 및 주제 구체화" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "핵심 논거 검색 및 구조화" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "목차별 단락 초안 분할 생성" }),
+    ).not.toBeInTheDocument();
+  });
 });

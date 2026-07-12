@@ -10,6 +10,7 @@ type Params = {
 
 type Result = {
   goToPrevStep: () => void;
+  goToStep: (step: number) => void;
 };
 
 export const useUploadStepNavigation = ({
@@ -27,5 +28,16 @@ export const useUploadStepNavigation = ({
     navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum - 1));
   }, [navigate, projectId, stepNum]);
 
-  return { goToPrevStep };
+  const goToStep = useCallback(
+    (step: number) => {
+      if (!Number.isInteger(step) || step <= 0 || step === stepNum) {
+        return;
+      }
+
+      navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, step));
+    },
+    [navigate, projectId, stepNum],
+  );
+
+  return { goToPrevStep, goToStep };
 };

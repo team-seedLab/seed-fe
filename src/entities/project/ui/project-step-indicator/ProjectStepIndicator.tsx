@@ -8,6 +8,7 @@ type Props = {
   activeStep: number;
   stepCodes: readonly string[];
   completedStepCodes?: readonly string[];
+  selectableStepCodes?: readonly string[];
   onStepSelect?: (step: number) => void;
 };
 
@@ -15,6 +16,7 @@ export const ProjectStepIndicator = ({
   activeStep,
   stepCodes,
   completedStepCodes = [],
+  selectableStepCodes,
   onStepSelect,
 }: Props) => {
   return (
@@ -31,6 +33,8 @@ export const ProjectStepIndicator = ({
         {stepCodes.map((code, index) => {
           const step = index + 1;
           const isLast = index === stepCodes.length - 1;
+          const isSelectable =
+            !selectableStepCodes || selectableStepCodes.includes(code);
 
           return (
             <Flex align="flex-start" flexShrink={0} key={code} role="listitem">
@@ -39,7 +43,11 @@ export const ProjectStepIndicator = ({
                 isCompleted={completedStepCodes.includes(code)}
                 step={step}
                 stepName={ROADMAP_STEP_NAMES[code] ?? code}
-                onSelect={onStepSelect ? () => onStepSelect(step) : undefined}
+                onSelect={
+                  onStepSelect && isSelectable
+                    ? () => onStepSelect(step)
+                    : undefined
+                }
               />
 
               {!isLast && (
