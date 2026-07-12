@@ -34,8 +34,11 @@ export const useUploadStepProject = ({
         step.stepCode === code && Boolean(step.userSubmittedResult?.trim()),
     ),
   );
-  const selectableStepCodes = stepCode
-    ? [...new Set([...completedStepCodes, stepCode])]
+  const availableStepCode = steps.find(
+    (code) => !completedStepCodes.includes(code),
+  );
+  const selectableStepCodes = availableStepCode
+    ? [...completedStepCodes, availableStepCode]
     : completedStepCodes;
 
   return {
