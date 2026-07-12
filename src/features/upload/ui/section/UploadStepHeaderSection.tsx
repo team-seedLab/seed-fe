@@ -1,9 +1,8 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import { ROADMAP_TYPE_LABEL } from "@/entities";
+import { ProjectStepIndicator, ROADMAP_TYPE_LABEL } from "@/entities";
 import { BackButton } from "@/shared";
 
-import { UploadStepIndicator } from "../../components";
 import { useUploadStepNavigation, useUploadStepProject } from "../../hooks";
 
 type Props = {
@@ -49,7 +48,7 @@ export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
       </VStack>
 
       {steps.length > 0 && (
-        <UploadStepIndicator
+        <ProjectStepIndicator
           activeStep={stepNum}
           completedStepCodes={steps.slice(0, stepNum - 1)}
           stepCodes={steps}
