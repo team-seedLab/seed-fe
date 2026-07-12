@@ -87,7 +87,7 @@ describe("useUploadStepSubmission", () => {
     expect(navigateMock).toHaveBeenCalledWith("/upload/step/project-1/2");
   });
 
-  it("마지막 단계는 프로젝트 완료 후 상세 캐시를 갱신한다", async () => {
+  it("마지막 단계는 프로젝트 완료 후 프로젝트 캐시 전체를 갱신한다", async () => {
     const { result } = renderHook(() =>
       useUploadStepSubmission({
         isLastStep: true,
@@ -108,7 +108,7 @@ describe("useUploadStepSubmission", () => {
       invalidateQueriesMock.mock.invocationCallOrder[0],
     );
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
-      queryKey: ["project", "detail", "project-1"],
+      queryKey: ["project"],
     });
     expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
