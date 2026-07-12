@@ -4,6 +4,8 @@ import {
   useGetProjectDetail,
 } from "@/entities";
 
+import { getUploadStepProgress } from "../utils";
+
 type Params = {
   projectId: string;
   stepNum: number;
@@ -28,18 +30,10 @@ export const useUploadStepProject = ({
   const stepCode = steps[stepNum - 1];
   const isLastStep = steps.length > 0 && stepNum >= steps.length;
   const stepResponses = project?.stepResponses ?? [];
-  const completedStepCodes = steps.filter((code) =>
-    stepResponses.some(
-      (step) =>
-        step.stepCode === code && Boolean(step.userSubmittedResult?.trim()),
-    ),
-  );
-  const availableStepCode = steps.find(
-    (code) => !completedStepCodes.includes(code),
-  );
-  const selectableStepCodes = availableStepCode
-    ? [...completedStepCodes, availableStepCode]
-    : completedStepCodes;
+  const { completedStepCodes, selectableStepCodes } = getUploadStepProgress({
+    stepCodes: steps,
+    stepResponses,
+  });
 
   return {
     project,

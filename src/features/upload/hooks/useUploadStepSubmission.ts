@@ -52,7 +52,8 @@ export const useUploadStepSubmission = ({
           try {
             await completeProjectAPI(projectId);
             await queryClient.invalidateQueries({
-              queryKey: projectKeys.detail(projectId),
+              queryKey: projectKeys.all(),
+              refetchType: "all",
             });
             navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
           } catch (error) {

@@ -1,8 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 
-import { useGetProjectDetail } from "@/entities";
+import { ROADMAP_STEP_CODES, useGetProjectDetail } from "@/entities";
 import { DYNAMIC_ROUTE_PATHS } from "@/shared";
+
+import { getUploadStepProgress } from "../utils";
 
 type Params = {
   projectId: string;
@@ -30,17 +32,12 @@ export const useUploadStepResumeRedirect = ({
       return null;
     }
 
-    const stepResponses = project.stepResponses ?? [];
+    const { progressStep } = getUploadStepProgress({
+      stepCodes: ROADMAP_STEP_CODES[project.roadmapType],
+      stepResponses: project.stepResponses ?? [],
+    });
 
-    if (stepResponses.length === 0) {
-      return stepNum;
-    }
-
-    const nextStepIndex = stepResponses.findIndex(
-      (step) => !step.userSubmittedResult,
-    );
-
-    return nextStepIndex === -1 ? stepResponses.length : nextStepIndex + 1;
+    return progressStep ?? stepNum;
   }, [project, shouldResolveResume, stepNum]);
 
   useEffect(() => {

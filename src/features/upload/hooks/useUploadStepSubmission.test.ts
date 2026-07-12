@@ -109,6 +109,7 @@ describe("useUploadStepSubmission", () => {
     );
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
       queryKey: ["project"],
+      refetchType: "all",
     });
     expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
