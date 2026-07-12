@@ -78,6 +78,9 @@ describe("useUploadStepSubmission", () => {
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
       queryKey: ["project", "detail", "project-1"],
     });
+    expect(saveStepResultAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
+      invalidateQueriesMock.mock.invocationCallOrder[0],
+    );
     expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
     );
@@ -98,12 +101,18 @@ describe("useUploadStepSubmission", () => {
       await result.current.submitStepResult("마지막 단계 결과");
     });
 
+    expect(saveStepResultAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
+      completeProjectAPIMock.mock.invocationCallOrder[0],
+    );
     expect(completeProjectAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
       invalidateQueriesMock.mock.invocationCallOrder[0],
     );
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
       queryKey: ["project", "detail", "project-1"],
     });
+    expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
+      navigateMock.mock.invocationCallOrder[0],
+    );
     expect(navigateMock).toHaveBeenCalledWith("/upload/complete/project-1");
   });
 });
