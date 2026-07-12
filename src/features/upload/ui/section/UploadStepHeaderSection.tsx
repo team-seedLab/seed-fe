@@ -49,7 +49,11 @@ export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
       </VStack>
 
       {steps.length > 0 && (
-        <UploadStepIndicator current={stepNum} stepCodes={steps} />
+        <UploadStepIndicator
+          activeStep={stepNum}
+          completedStepCodes={steps.slice(0, stepNum - 1)}
+          stepCodes={steps}
+        />
       )}
     </>
   );

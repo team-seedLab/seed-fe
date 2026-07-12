@@ -1,21 +1,9 @@
-import type { ComponentType } from "react";
-
 import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
 
 import { UploadStepIndicator } from "./UploadStepIndicator";
-
-type UpdatedIndicatorProps = {
-  activeStep: number;
-  completedStepCodes?: readonly string[];
-  stepCodes: readonly string[];
-  onStepSelect?: (step: number) => void;
-};
-
-const UpdatedUploadStepIndicator =
-  UploadStepIndicator as unknown as ComponentType<UpdatedIndicatorProps>;
 
 const STEP_CODES = [
   "constraint_analysis",
@@ -26,7 +14,7 @@ const STEP_CODES = [
 describe("UploadStepIndicator", () => {
   it("전달된 단계 코드의 이름을 모두 표시한다", () => {
     renderWithProviders(
-      <UpdatedUploadStepIndicator activeStep={1} stepCodes={STEP_CODES} />,
+      <UploadStepIndicator activeStep={1} stepCodes={STEP_CODES} />,
     );
 
     expect(
@@ -38,7 +26,7 @@ describe("UploadStepIndicator", () => {
 
   it("현재 단계를 접근 가능한 상태로 표시한다", () => {
     const { container } = renderWithProviders(
-      <UpdatedUploadStepIndicator activeStep={2} stepCodes={STEP_CODES} />,
+      <UploadStepIndicator activeStep={2} stepCodes={STEP_CODES} />,
     );
 
     expect(container.querySelector('[aria-current="step"]')).toHaveTextContent(
@@ -48,7 +36,7 @@ describe("UploadStepIndicator", () => {
 
   it("선택 함수가 없으면 단계 선택 버튼을 만들지 않는다", () => {
     renderWithProviders(
-      <UpdatedUploadStepIndicator activeStep={1} stepCodes={STEP_CODES} />,
+      <UploadStepIndicator activeStep={1} stepCodes={STEP_CODES} />,
     );
 
     expect(screen.queryAllByRole("button")).toHaveLength(0);
@@ -58,7 +46,7 @@ describe("UploadStepIndicator", () => {
     const onStepSelect = vi.fn();
 
     renderWithProviders(
-      <UpdatedUploadStepIndicator
+      <UploadStepIndicator
         activeStep={1}
         completedStepCodes={["constraint_analysis"]}
         stepCodes={STEP_CODES}
