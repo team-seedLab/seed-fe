@@ -25,7 +25,7 @@ export default function UploadStepPage() {
     });
   const isStepOutOfRange = steps.length > 0 && stepNum > steps.length;
   const isStepUnavailable =
-    Boolean(stepCode) && !selectableStepCodes.includes(stepCode);
+    stepCode !== undefined && !selectableStepCodes.includes(stepCode);
   const shouldResume = searchParams.get("resume") === "true";
   const { isResolved } = useUploadStepResumeRedirect({
     projectId: projectId ?? "",
