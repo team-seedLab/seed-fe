@@ -11,11 +11,14 @@ import {
 
 describe("createProjectAPI", () => {
   it("변경된 사용자 의도와 PDF를 multipart form data로 전송한다", async () => {
-    let requestFormData: FormData | null = null;
+    let resolveRequestFormData!: (formData: FormData) => void;
+    const requestFormDataPromise = new Promise<FormData>((resolve) => {
+      resolveRequestFormData = resolve;
+    });
 
     server.use(
       http.post("*/api/projects", async ({ request }) => {
-        requestFormData = await request.formData();
+        resolveRequestFormData(await request.formData());
 
         return HttpResponse.json(
           createApiSuccessResponse({
@@ -42,16 +45,17 @@ describe("createProjectAPI", () => {
     };
 
     const response = await createProjectAPI(request);
+    const requestFormData = await requestFormDataPromise;
 
     expect(response.projectId).toBe("project-1");
-    expect(requestFormData?.get("title")).toBe(request.title);
-    expect(requestFormData?.get("roadmapType")).toBe(request.roadmapType);
-    expect(requestFormData?.get("desiredOutcome")).toBe(request.desiredOutcome);
-    expect(requestFormData?.get("keyFocus")).toBe(request.keyFocus);
-    expect(requestFormData?.get("requiredElements")).toBe(
+    expect(requestFormData.get("title")).toBe(request.title);
+    expect(requestFormData.get("roadmapType")).toBe(request.roadmapType);
+    expect(requestFormData.get("desiredOutcome")).toBe(request.desiredOutcome);
+    expect(requestFormData.get("keyFocus")).toBe(request.keyFocus);
+    expect(requestFormData.get("requiredElements")).toBe(
       request.requiredElements,
     );
-    expect(requestFormData?.getAll("files")).toHaveLength(1);
-    expect(requestFormData?.has("userIntent")).toBe(false);
+    expect(requestFormData.getAll("files")).toHaveLength(1);
+    expect(requestFormData.has("userIntent")).toBe(false);
   });
 });

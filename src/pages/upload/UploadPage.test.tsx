@@ -79,11 +79,14 @@ describe("UploadPage", () => {
   });
 
   it("입력한 사용자 의도를 프로젝트 생성 API에 전달한다", async () => {
-    let requestFormData: FormData | null = null;
+    let resolveRequestFormData!: (formData: FormData) => void;
+    const requestFormDataPromise = new Promise<FormData>((resolve) => {
+      resolveRequestFormData = resolve;
+    });
 
     server.use(
       http.post("*/api/projects", async ({ request }) => {
-        requestFormData = await request.formData();
+        resolveRequestFormData(await request.formData());
 
         return HttpResponse.json(
           createApiSuccessResponse({
@@ -115,12 +118,12 @@ describe("UploadPage", () => {
 
     await waitFor(() => {
       expect(navigateMock).toHaveBeenCalledWith(ROUTE_PATHS.UPLOAD_LOADING);
-      expect(requestFormData).not.toBeNull();
     });
+    const requestFormData = await requestFormDataPromise;
 
-    expect(requestFormData?.get("title")).toBe("AI 활용 분석");
-    expect(requestFormData?.get("desiredOutcome")).toBe("A4 3장 분량의 보고서");
-    expect(requestFormData?.get("keyFocus")).toBe("사용자 경험 중심");
-    expect(requestFormData?.get("requiredElements")).toBe("비교 표와 참고문헌");
+    expect(requestFormData.get("title")).toBe("AI 활용 분석");
+    expect(requestFormData.get("desiredOutcome")).toBe("A4 3장 분량의 보고서");
+    expect(requestFormData.get("keyFocus")).toBe("사용자 경험 중심");
+    expect(requestFormData.get("requiredElements")).toBe("비교 표와 참고문헌");
   });
 });
