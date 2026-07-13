@@ -19,12 +19,11 @@ export const UploadIntentField = ({
 }: Props) => {
   return (
     <VStack align="stretch" gap={2} w="full">
-      <label htmlFor={id}>
-        <Text as="span" color="neutral.900" fontSize="sm" fontWeight="semibold">
-          {label}
-        </Text>
-      </label>
+      <Text color="neutral.900" fontSize="sm" fontWeight="semibold">
+        {label}
+      </Text>
       <Textarea
+        aria-label={label}
         id={id}
         bg="neutral.50"
         border="none"
