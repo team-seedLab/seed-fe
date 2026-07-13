@@ -8,7 +8,7 @@ import {
   useUploadStepProject,
   useUploadStepResumeRedirect,
 } from "@/features";
-import { ROUTE_PATHS } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
 
 export default function UploadStepPage() {
   const [searchParams] = useSearchParams();
@@ -18,11 +18,14 @@ export default function UploadStepPage() {
   }>();
   const stepNum = Number(step);
   const isValidStepNum = Number.isInteger(stepNum) && stepNum > 0;
-  const { steps } = useUploadStepProject({
-    projectId: projectId ?? "",
-    stepNum,
-  });
+  const { progressStep, selectableStepCodes, stepCode, steps } =
+    useUploadStepProject({
+      projectId: projectId ?? "",
+      stepNum,
+    });
   const isStepOutOfRange = steps.length > 0 && stepNum > steps.length;
+  const isStepUnavailable =
+    Boolean(stepCode) && !selectableStepCodes.includes(stepCode);
   const shouldResume = searchParams.get("resume") === "true";
   const { isResolved } = useUploadStepResumeRedirect({
     projectId: projectId ?? "",
@@ -32,6 +35,15 @@ export default function UploadStepPage() {
 
   if (!projectId || !isValidStepNum || isStepOutOfRange) {
     return <Navigate replace to={ROUTE_PATHS.FILE_UPLOAD} />;
+  }
+
+  if (isStepUnavailable && progressStep !== null) {
+    return (
+      <Navigate
+        replace
+        to={DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, progressStep)}
+      />
+    );
   }
 
   if (shouldResume && !isResolved) {

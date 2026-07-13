@@ -17,6 +17,7 @@ type Result = {
   stepCode: string | undefined;
   isLastStep: boolean;
   completedStepCodes: string[];
+  progressStep: number | null;
   selectableStepCodes: string[];
 };
 
@@ -30,10 +31,11 @@ export const useUploadStepProject = ({
   const stepCode = steps[stepNum - 1];
   const isLastStep = steps.length > 0 && stepNum >= steps.length;
   const stepResponses = project?.stepResponses ?? [];
-  const { completedStepCodes, selectableStepCodes } = getUploadStepProgress({
-    stepCodes: steps,
-    stepResponses,
-  });
+  const { completedStepCodes, progressStep, selectableStepCodes } =
+    getUploadStepProgress({
+      stepCodes: steps,
+      stepResponses,
+    });
 
   return {
     project,
@@ -41,6 +43,7 @@ export const useUploadStepProject = ({
     stepCode,
     isLastStep,
     completedStepCodes,
+    progressStep,
     selectableStepCodes,
   };
 };

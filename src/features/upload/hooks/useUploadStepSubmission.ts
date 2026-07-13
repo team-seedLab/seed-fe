@@ -77,6 +77,9 @@ export const useUploadStepSubmission = ({
               navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
             }
           } catch (error) {
+            await queryClient.invalidateQueries({
+              queryKey: projectKeys.detail(projectId),
+            });
             toaster.create({
               type: "error",
               description: getApiErrorMessage(error),
