@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,6 +28,18 @@ export const useUploadStepSubmission = ({
   const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const activeStepKey = `${projectId}:${stepNum}`;
+  const activeStepKeyRef = useRef<string | null>(activeStepKey);
+
+  useEffect(() => {
+    activeStepKeyRef.current = activeStepKey;
+
+    return () => {
+      if (activeStepKeyRef.current === activeStepKey) {
+        activeStepKeyRef.current = null;
+      }
+    };
+  }, [activeStepKey]);
 
   const submitStepResult = useCallback(
     async (resultText: string) => {
@@ -51,11 +63,19 @@ export const useUploadStepSubmission = ({
 
           try {
             await completeProjectAPI(projectId);
-            await queryClient.invalidateQueries({
-              queryKey: projectKeys.all(),
-              refetchType: "all",
-            });
-            navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
+            await Promise.all([
+              queryClient.invalidateQueries({
+                queryKey: projectKeys.detail(projectId),
+              }),
+              queryClient.invalidateQueries({
+                queryKey: projectKeys.lists(),
+                refetchType: "all",
+              }),
+            ]);
+
+            if (activeStepKeyRef.current === activeStepKey) {
+              navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
+            }
           } catch (error) {
             toaster.create({
               type: "error",
@@ -71,7 +91,10 @@ export const useUploadStepSubmission = ({
         await queryClient.invalidateQueries({
           queryKey: projectKeys.detail(projectId),
         });
-        navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum + 1));
+
+        if (activeStepKeyRef.current === activeStepKey) {
+          navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum + 1));
+        }
       } catch (error) {
         toaster.create({
           type: "error",
@@ -85,6 +108,7 @@ export const useUploadStepSubmission = ({
       isCompleting,
       isLastStep,
       isSaving,
+      activeStepKey,
       navigate,
       projectId,
       queryClient,
