@@ -6,6 +6,15 @@ export interface Project {
   createdAt: string;
 }
 
+export interface ProjectListProject extends Project {
+  currentStepOrder: number | null;
+  totalStepCount: number;
+  completedStepCount: number;
+  progressPercent: number;
+  updatedAt: string;
+  completedAt: string | null;
+}
+
 export interface ProjectInitialContext {
   topic: string;
   concept: string;
