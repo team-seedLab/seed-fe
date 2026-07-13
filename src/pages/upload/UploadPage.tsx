@@ -3,6 +3,9 @@ import { useRef } from "react";
 import { Flex } from "@chakra-ui/react";
 
 import {
+  MAX_UPLOAD_FILE_COUNT,
+  MAX_UPLOAD_FILE_SIZE,
+  MAX_UPLOAD_INTENT_LENGTH,
   UploadAssignmentTypeSection,
   UploadContentAndFileSection,
   UploadSubmitSection,
@@ -10,13 +13,13 @@ import {
   useUploadPageForm,
 } from "@/features";
 
-const MAX_FILES = 3;
-const MAX_CONTENT_LENGTH = 1000;
-
 export default function UploadPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const addFileInputRef = useRef<HTMLInputElement>(null);
-  const { fields, files, submit } = useUploadPageForm({ maxFiles: MAX_FILES });
+  const { fields, files, submit } = useUploadPageForm({
+    maxFiles: MAX_UPLOAD_FILE_COUNT,
+    maxFileSize: MAX_UPLOAD_FILE_SIZE,
+  });
 
   return (
     <Flex align="center" bg="white" direction="column" minH="100vh">
@@ -47,13 +50,13 @@ export default function UploadPage() {
 
           <UploadContentAndFileSection
             addFileInputRef={addFileInputRef}
-            content={fields.content}
+            content={fields.desiredOutcome}
             fileInputRef={fileInputRef}
             isDragging={files.isDragging}
-            maxContentLength={MAX_CONTENT_LENGTH}
-            maxFiles={MAX_FILES}
+            maxContentLength={MAX_UPLOAD_INTENT_LENGTH}
+            maxFiles={MAX_UPLOAD_FILE_COUNT}
             uploadedFiles={files.uploadedFiles}
-            onContentChange={fields.setContent}
+            onContentChange={fields.setDesiredOutcome}
             onDragLeave={files.handleDragLeave}
             onDragOver={files.handleDragOver}
             onDrop={files.handleDrop}
