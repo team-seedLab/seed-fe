@@ -1,9 +1,8 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import { ROADMAP_TYPE_LABEL } from "@/entities";
+import { ProjectStepIndicator, ROADMAP_TYPE_LABEL } from "@/entities";
 import { BackButton } from "@/shared";
 
-import { UploadStepIndicator } from "../../components";
 import { useUploadStepNavigation, useUploadStepProject } from "../../hooks";
 
 type Props = {
@@ -12,8 +11,12 @@ type Props = {
 };
 
 export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
-  const { project, steps } = useUploadStepProject({ projectId, stepNum });
-  const { goToPrevStep } = useUploadStepNavigation({ projectId, stepNum });
+  const { project, steps, completedStepCodes, selectableStepCodes } =
+    useUploadStepProject({ projectId, stepNum });
+  const { goToPrevStep, goToStep } = useUploadStepNavigation({
+    projectId,
+    stepNum,
+  });
 
   return (
     <>
@@ -49,7 +52,13 @@ export const UploadStepHeaderSection = ({ projectId, stepNum }: Props) => {
       </VStack>
 
       {steps.length > 0 && (
-        <UploadStepIndicator current={stepNum} stepCodes={steps} />
+        <ProjectStepIndicator
+          activeStep={stepNum}
+          completedStepCodes={completedStepCodes}
+          selectableStepCodes={selectableStepCodes}
+          stepCodes={steps}
+          onStepSelect={goToStep}
+        />
       )}
     </>
   );

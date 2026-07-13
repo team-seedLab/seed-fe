@@ -1,7 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { completeProjectAPI, saveStepResultAPI } from "@/entities";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { completeProjectAPI, projectKeys, saveStepResultAPI } from "@/entities";
 import { DYNAMIC_ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
 type Params = {
@@ -23,8 +25,19 @@ export const useUploadStepSubmission = ({
   isLastStep,
 }: Params): Result => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const activeStepKey = `${projectId}:${stepNum}`;
+  const activeStepVisitRef = useRef(0);
+
+  useEffect(() => {
+    activeStepVisitRef.current += 1;
+
+    return () => {
+      activeStepVisitRef.current += 1;
+    };
+  }, [activeStepKey]);
 
   const submitStepResult = useCallback(
     async (resultText: string) => {
@@ -38,6 +51,8 @@ export const useUploadStepSubmission = ({
         return;
       }
 
+      const submissionStepVisit = activeStepVisitRef.current;
+
       setIsSaving(true);
 
       try {
@@ -48,8 +63,23 @@ export const useUploadStepSubmission = ({
 
           try {
             await completeProjectAPI(projectId);
-            navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
+            await Promise.all([
+              queryClient.invalidateQueries({
+                queryKey: projectKeys.detail(projectId),
+              }),
+              queryClient.invalidateQueries({
+                queryKey: projectKeys.lists(),
+                refetchType: "all",
+              }),
+            ]);
+
+            if (activeStepVisitRef.current === submissionStepVisit) {
+              navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
+            }
           } catch (error) {
+            await queryClient.invalidateQueries({
+              queryKey: projectKeys.detail(projectId),
+            });
             toaster.create({
               type: "error",
               description: getApiErrorMessage(error),
@@ -61,7 +91,13 @@ export const useUploadStepSubmission = ({
           return;
         }
 
-        navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum + 1));
+        await queryClient.invalidateQueries({
+          queryKey: projectKeys.detail(projectId),
+        });
+
+        if (activeStepVisitRef.current === submissionStepVisit) {
+          navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum + 1));
+        }
       } catch (error) {
         toaster.create({
           type: "error",
@@ -77,6 +113,7 @@ export const useUploadStepSubmission = ({
       isSaving,
       navigate,
       projectId,
+      queryClient,
       stepCode,
       stepNum,
     ],
