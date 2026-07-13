@@ -1,15 +1,14 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { Project, ProjectStatus } from "../types";
+import type { ProjectStatus } from "../types";
 
-export interface ProjectListResponse {
-  content: Project[];
-  currentPage: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  hasNext: boolean;
-}
+import {
+  type ProjectListApiResponse,
+  type ProjectListResponse,
+  mapProjectListResponse,
+} from "./project-list.mapper";
+
+export type { ProjectListResponse } from "./project-list.mapper";
 
 export interface ProjectListParameters {
   page?: number;
@@ -21,11 +20,11 @@ export interface ProjectListParameters {
 export const getProjectListAPI = async (
   params: ProjectListParameters,
 ): Promise<ProjectListResponse> => {
-  const response = await fetchInstance.get<ApiResponse<ProjectListResponse>>(
+  const response = await fetchInstance.get<ApiResponse<ProjectListApiResponse>>(
     "/api/projects",
     {
       params,
     },
   );
-  return processApiResponse(response.data);
+  return mapProjectListResponse(processApiResponse(response.data));
 };
