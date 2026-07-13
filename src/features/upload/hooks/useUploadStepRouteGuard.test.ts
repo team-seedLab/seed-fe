@@ -3,26 +3,20 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUploadStepRouteGuard } from "./useUploadStepRouteGuard";
 
-const { useUploadStepProjectMock, useUploadStepResumeRedirectMock } =
-  vi.hoisted(() => ({
-    useUploadStepProjectMock: vi.fn(),
-    useUploadStepResumeRedirectMock: vi.fn(),
-  }));
+const { useUploadStepProjectMock } = vi.hoisted(() => ({
+  useUploadStepProjectMock: vi.fn(),
+}));
 
 vi.mock("./useUploadStepProject", () => ({
   useUploadStepProject: useUploadStepProjectMock,
 }));
 
-vi.mock("./useUploadStepResumeRedirect", () => ({
-  useUploadStepResumeRedirect: useUploadStepResumeRedirectMock,
-}));
-
 describe("useUploadStepRouteGuard", () => {
   beforeEach(() => {
     useUploadStepProjectMock.mockReset();
-    useUploadStepResumeRedirectMock.mockReset();
 
     useUploadStepProjectMock.mockReturnValue({
+      isLoading: false,
       progressStep: 2,
       project: {
         projectId: "project-1",
@@ -37,7 +31,6 @@ describe("useUploadStepRouteGuard", () => {
         "report_revision",
       ],
     });
-    useUploadStepResumeRedirectMock.mockReturnValue({ isResolved: true });
   });
 
   it("프로젝트 ID나 단계 번호가 유효하지 않으면 업로드 페이지로 이동한다", () => {
@@ -53,11 +46,6 @@ describe("useUploadStepRouteGuard", () => {
       isReady: true,
       redirectTo: "/upload",
     });
-    expect(useUploadStepResumeRedirectMock).toHaveBeenCalledWith({
-      enabled: false,
-      projectId: "",
-      stepNum: 0,
-    });
   });
 
   it("프로젝트의 단계 수를 초과하면 업로드 페이지로 이동한다", () => {
@@ -72,8 +60,9 @@ describe("useUploadStepRouteGuard", () => {
     expect(result.current.redirectTo).toBe("/upload");
   });
 
-  it("완료된 프로젝트는 상세 페이지로 이동하고 이어하기를 실행하지 않는다", () => {
+  it("완료된 프로젝트의 이어하기 요청은 상세 페이지로 이동한다", () => {
     useUploadStepProjectMock.mockReturnValue({
+      isLoading: false,
       progressStep: 4,
       project: {
         projectId: "project-1",
@@ -103,15 +92,11 @@ describe("useUploadStepRouteGuard", () => {
     );
 
     expect(result.current.redirectTo).toBe("/project/project-1");
-    expect(useUploadStepResumeRedirectMock).toHaveBeenCalledWith({
-      enabled: false,
-      projectId: "project-1",
-      stepNum: 2,
-    });
   });
 
   it("아직 진행할 수 없는 단계는 현재 진행 단계로 이동한다", () => {
     useUploadStepProjectMock.mockReturnValue({
+      isLoading: false,
       progressStep: 2,
       project: {
         projectId: "project-1",
@@ -139,7 +124,14 @@ describe("useUploadStepRouteGuard", () => {
   });
 
   it("이어하기 경로를 계산하는 동안 화면 준비를 대기한다", () => {
-    useUploadStepResumeRedirectMock.mockReturnValue({ isResolved: false });
+    useUploadStepProjectMock.mockReturnValue({
+      isLoading: true,
+      progressStep: null,
+      project: undefined,
+      selectableStepCodes: [],
+      stepCode: undefined,
+      steps: [],
+    });
 
     const { result } = renderHook(() =>
       useUploadStepRouteGuard({
@@ -172,6 +164,7 @@ describe("useUploadStepRouteGuard", () => {
 
   it("여러 단계를 완료한 이어하기 요청도 첫 미완료 단계 경로를 반환한다", () => {
     useUploadStepProjectMock.mockReturnValue({
+      isLoading: false,
       progressStep: 4,
       project: {
         projectId: "project-1",

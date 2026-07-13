@@ -1,7 +1,6 @@
 import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
 
 import { useUploadStepProject } from "./useUploadStepProject";
-import { useUploadStepResumeRedirect } from "./useUploadStepResumeRedirect";
 
 type Params = {
   projectId?: string;
@@ -21,24 +20,27 @@ export const useUploadStepRouteGuard = ({
 }: Params): Result => {
   const normalizedProjectId = projectId ?? "";
   const isValidStepNum = Number.isInteger(stepNum) && stepNum > 0;
-  const { progressStep, project, selectableStepCodes, stepCode, steps } =
-    useUploadStepProject({
-      projectId: normalizedProjectId,
-      stepNum,
-    });
+  const {
+    isLoading,
+    progressStep,
+    project,
+    selectableStepCodes,
+    stepCode,
+    steps,
+  } = useUploadStepProject({
+    projectId: normalizedProjectId,
+    stepNum,
+  });
   const isStepOutOfRange = steps.length > 0 && stepNum > steps.length;
   const isStepUnavailable =
     stepCode !== undefined && !selectableStepCodes.includes(stepCode);
   const isCompletedProject = project?.status === "COMPLETED";
-  const { isResolved } = useUploadStepResumeRedirect({
-    projectId: normalizedProjectId,
-    stepNum,
-    enabled:
-      Boolean(projectId) &&
-      isValidStepNum &&
-      shouldResume &&
-      !isCompletedProject,
-  });
+  const shouldResolveResume =
+    Boolean(projectId) &&
+    isValidStepNum &&
+    shouldResume &&
+    stepNum === 1 &&
+    !isCompletedProject;
 
   if (!projectId || !isValidStepNum || isStepOutOfRange) {
     return {
@@ -61,8 +63,26 @@ export const useUploadStepRouteGuard = ({
     };
   }
 
+  if (shouldResolveResume && isLoading) {
+    return {
+      isReady: false,
+      redirectTo: null,
+    };
+  }
+
+  if (
+    shouldResolveResume &&
+    progressStep !== null &&
+    progressStep !== stepNum
+  ) {
+    return {
+      isReady: true,
+      redirectTo: DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, progressStep),
+    };
+  }
+
   return {
-    isReady: isResolved,
+    isReady: true,
     redirectTo: null,
   };
 };

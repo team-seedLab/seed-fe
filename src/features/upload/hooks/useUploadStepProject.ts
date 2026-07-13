@@ -13,6 +13,7 @@ type Params = {
 
 type Result = {
   project: ProjectDetailResponse | undefined;
+  isLoading: boolean;
   steps: string[];
   stepCode: string | undefined;
   isLastStep: boolean;
@@ -25,7 +26,7 @@ export const useUploadStepProject = ({
   projectId,
   stepNum,
 }: Params): Result => {
-  const { data: project } = useGetProjectDetail(projectId);
+  const { data: project, isLoading } = useGetProjectDetail(projectId);
   const roadmapType = project?.roadmapType;
   const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
   const stepCode = steps[stepNum - 1];
@@ -39,6 +40,7 @@ export const useUploadStepProject = ({
 
   return {
     project,
+    isLoading,
     steps,
     stepCode,
     isLastStep,
