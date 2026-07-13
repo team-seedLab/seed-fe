@@ -5,7 +5,9 @@ import type { Project, RoadmapType } from "../types";
 export interface CreateProjectRequest {
   title: string;
   roadmapType: RoadmapType;
-  userIntent: string;
+  desiredOutcome: string;
+  keyFocus: string;
+  requiredElements: string;
   files: File[];
 }
 
@@ -17,7 +19,9 @@ export const createProjectAPI = async (
   const formData = new FormData();
   formData.append("title", params.title);
   formData.append("roadmapType", params.roadmapType);
-  formData.append("userIntent", params.userIntent);
+  formData.append("desiredOutcome", params.desiredOutcome);
+  formData.append("keyFocus", params.keyFocus);
+  formData.append("requiredElements", params.requiredElements);
   params.files.forEach((file) => formData.append("files", file));
 
   const response = await fetchInstance.post<ApiResponse<CreateProjectResponse>>(

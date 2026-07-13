@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toaster } from "@/shared";
 
 import { UPLOAD_FILE_TYPE_LABEL } from "../constants";
-import { isSupportedUploadFile } from "../utils";
+import { isPdfUploadFile, isSupportedUploadFile } from "../utils";
 
 export type UploadedFile = {
   id: string;
@@ -12,6 +12,7 @@ export type UploadedFile = {
 
 type Params = {
   maxFiles: number;
+  maxFileSize: number;
 };
 
 type Result = {
@@ -25,18 +26,34 @@ type Result = {
   handleFileInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const useUploadFiles = ({ maxFiles }: Params): Result => {
+export const useUploadFiles = ({ maxFiles, maxFileSize }: Params): Result => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
   const addFiles = (newFiles: File[]) => {
-    const validFiles = newFiles.filter(isSupportedUploadFile);
-    const invalidFileCount = newFiles.length - validFiles.length;
+    const validFiles = newFiles.filter((file) =>
+      isSupportedUploadFile(file, maxFileSize),
+    );
+    const invalidTypeCount = newFiles.filter(
+      (file) => !isPdfUploadFile(file),
+    ).length;
+    const oversizedFileCount = newFiles.filter(
+      (file) => isPdfUploadFile(file) && file.size > maxFileSize,
+    ).length;
 
-    if (invalidFileCount > 0) {
+    if (invalidTypeCount > 0) {
       toaster.create({
         type: "error",
         description: `${UPLOAD_FILE_TYPE_LABEL} 파일만 업로드할 수 있습니다.`,
+      });
+    }
+
+    if (oversizedFileCount > 0) {
+      const maxFileSizeInMb = maxFileSize / (1024 * 1024);
+
+      toaster.create({
+        type: "error",
+        description: `PDF 파일은 개당 ${maxFileSizeInMb}MB를 초과할 수 없습니다.`,
       });
     }
 

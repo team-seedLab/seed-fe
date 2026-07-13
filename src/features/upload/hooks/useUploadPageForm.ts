@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 
 import {
   type AssignmentType,
-  ROADMAP_STEP_CODES,
   ROADMAP_TYPE_MAP,
   useCreateProject,
   useUploadFlowStore,
@@ -16,16 +15,21 @@ import { useUploadFiles } from "./useUploadFiles";
 
 type Params = {
   maxFiles: number;
+  maxFileSize: number;
 };
 
 type Result = {
   fields: {
     title: string;
     selectedType: AssignmentType;
-    content: string;
+    desiredOutcome: string;
+    keyFocus: string;
+    requiredElements: string;
     setTitle: React.Dispatch<React.SetStateAction<string>>;
     setSelectedType: React.Dispatch<React.SetStateAction<AssignmentType>>;
-    setContent: React.Dispatch<React.SetStateAction<string>>;
+    setDesiredOutcome: React.Dispatch<React.SetStateAction<string>>;
+    setKeyFocus: React.Dispatch<React.SetStateAction<string>>;
+    setRequiredElements: React.Dispatch<React.SetStateAction<string>>;
   };
   files: {
     uploadedFiles: ReturnType<typeof useUploadFiles>["uploadedFiles"];
@@ -39,17 +43,21 @@ type Result = {
   submit: {
     isPending: boolean;
     canSubmit: boolean;
-    stepCount: number;
     startAnalysis: () => void;
   };
 };
 
-export const useUploadPageForm = ({ maxFiles }: Params): Result => {
+export const useUploadPageForm = ({
+  maxFiles,
+  maxFileSize,
+}: Params): Result => {
   const [title, setTitle] = useState("");
   const [selectedType, setSelectedType] = useState<AssignmentType>(
     DEFAULT_UPLOAD_ASSIGNMENT_TYPE,
   );
-  const [content, setContent] = useState("");
+  const [desiredOutcome, setDesiredOutcome] = useState("");
+  const [keyFocus, setKeyFocus] = useState("");
+  const [requiredElements, setRequiredElements] = useState("");
 
   const navigate = useNavigate();
   const {
@@ -60,16 +68,17 @@ export const useUploadPageForm = ({ maxFiles }: Params): Result => {
     handleDragLeave,
     handleDrop,
     handleFileInput,
-  } = useUploadFiles({ maxFiles });
+  } = useUploadFiles({ maxFiles, maxFileSize });
 
   const { mutate: createProject, isPending } = useCreateProject();
   const reset = useUploadFlowStore((state) => state.reset);
 
   const canSubmit =
     title.trim().length > 0 &&
-    (uploadedFiles.length > 0 || content.trim().length > 0);
-
-  const stepCount = ROADMAP_STEP_CODES[ROADMAP_TYPE_MAP[selectedType]].length;
+    (uploadedFiles.length > 0 ||
+      [desiredOutcome, keyFocus, requiredElements].some(
+        (value) => value.trim().length > 0,
+      ));
 
   const startAnalysis = () => {
     if (!canSubmit || isPending) {
@@ -80,7 +89,9 @@ export const useUploadPageForm = ({ maxFiles }: Params): Result => {
     createProject({
       title,
       roadmapType: ROADMAP_TYPE_MAP[selectedType],
-      userIntent: content,
+      desiredOutcome,
+      keyFocus,
+      requiredElements,
       files: uploadedFiles.map((uploadedFile) => uploadedFile.file),
     });
     navigate(ROUTE_PATHS.UPLOAD_LOADING);
@@ -90,10 +101,14 @@ export const useUploadPageForm = ({ maxFiles }: Params): Result => {
     fields: {
       title,
       selectedType,
-      content,
+      desiredOutcome,
+      keyFocus,
+      requiredElements,
       setTitle,
       setSelectedType,
-      setContent,
+      setDesiredOutcome,
+      setKeyFocus,
+      setRequiredElements,
     },
     files: {
       uploadedFiles,
@@ -107,7 +122,6 @@ export const useUploadPageForm = ({ maxFiles }: Params): Result => {
     submit: {
       isPending,
       canSubmit,
-      stepCount,
       startAnalysis,
     },
   };
