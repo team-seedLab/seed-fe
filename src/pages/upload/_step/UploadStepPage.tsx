@@ -18,7 +18,7 @@ export default function UploadStepPage() {
   }>();
   const stepNum = Number(step);
   const isValidStepNum = Number.isInteger(stepNum) && stepNum > 0;
-  const { progressStep, selectableStepCodes, stepCode, steps } =
+  const { progressStep, project, selectableStepCodes, stepCode, steps } =
     useUploadStepProject({
       projectId: projectId ?? "",
       stepNum,
@@ -35,6 +35,12 @@ export default function UploadStepPage() {
 
   if (!projectId || !isValidStepNum || isStepOutOfRange) {
     return <Navigate replace to={ROUTE_PATHS.FILE_UPLOAD} />;
+  }
+
+  if (project?.status === "COMPLETED") {
+    return (
+      <Navigate replace to={DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(projectId)} />
+    );
   }
 
   if (isStepUnavailable && progressStep !== null) {
