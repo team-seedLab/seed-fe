@@ -42,7 +42,28 @@ export const useUploadStepRouteGuard = ({
     stepNum === 1 &&
     !isCompletedProject;
 
-  if (!projectId || !isValidStepNum || isStepOutOfRange) {
+  if (!projectId || !isValidStepNum) {
+    return {
+      isReady: true,
+      redirectTo: ROUTE_PATHS.FILE_UPLOAD,
+    };
+  }
+
+  if (isLoading) {
+    return {
+      isReady: false,
+      redirectTo: null,
+    };
+  }
+
+  if (!project) {
+    return {
+      isReady: true,
+      redirectTo: ROUTE_PATHS.FILE_UPLOAD,
+    };
+  }
+
+  if (isStepOutOfRange) {
     return {
       isReady: true,
       redirectTo: ROUTE_PATHS.FILE_UPLOAD,
@@ -60,13 +81,6 @@ export const useUploadStepRouteGuard = ({
     return {
       isReady: true,
       redirectTo: DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, progressStep),
-    };
-  }
-
-  if (shouldResolveResume && isLoading) {
-    return {
-      isReady: false,
-      redirectTo: null,
     };
   }
 

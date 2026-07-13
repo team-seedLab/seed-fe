@@ -74,11 +74,16 @@ describe("UploadStepPage", () => {
           path="/upload/step/:projectId/:step"
         />
       </Routes>,
-      { initialEntries: ["/upload/step/project-1/1?resume=true"] },
+      { initialEntries: ["/upload/step/project-1/2"] },
     );
 
     expect(screen.queryByText("단계 헤더")).not.toBeInTheDocument();
     expect(screen.queryByText("단계 콘텐츠")).not.toBeInTheDocument();
+    expect(useUploadStepRouteGuardMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      shouldResume: false,
+      stepNum: 2,
+    });
   });
 
   it("가드가 준비되면 현재 단계 화면을 표시한다", () => {
