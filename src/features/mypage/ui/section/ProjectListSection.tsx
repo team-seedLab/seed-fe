@@ -94,9 +94,10 @@ export const ProjectListSection = () => {
 
               navigate(DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(project.projectId));
             }}
-            updatedAt={project.createdAt}
-            status={project.status}
-            roadmapType={project.roadmapType}
+            currentStepOrder={project.currentStepOrder}
+            progressPercent={project.progressPercent}
+            totalStepCount={project.totalStepCount}
+            updatedAt={project.updatedAt}
             onDelete={() =>
               setDeleteTarget({
                 id: project.projectId,

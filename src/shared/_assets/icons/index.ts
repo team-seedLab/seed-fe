@@ -24,6 +24,7 @@ import _FilePenIcon from "@/shared/_assets/icons/file-pen.svg?react";
 import _FolderIcon from "@/shared/_assets/icons/folder.svg?react";
 import _MagnifyingGlassIcon from "@/shared/_assets/icons/magnifying-glass.svg?react";
 import _MicroscopeIcon from "@/shared/_assets/icons/microscope.svg?react";
+import _MoreHorizontalIcon from "@/shared/_assets/icons/more-horizontal.svg?react";
 import _OrgChartIcon from "@/shared/_assets/icons/org-chart.svg?react";
 import _PersonIcon from "@/shared/_assets/icons/person.svg?react";
 import _PictureIcon from "@/shared/_assets/icons/picture.svg?react";
@@ -79,6 +80,10 @@ export const MagnifyingGlassIcon = createIcon(
   "MagnifyingGlassIcon",
 );
 export const MicroscopeIcon = createIcon(_MicroscopeIcon, "MicroscopeIcon");
+export const MoreHorizontalIcon = createIcon(
+  _MoreHorizontalIcon,
+  "MoreHorizontalIcon",
+);
 export const OrgChartIcon = createIcon(_OrgChartIcon, "OrgChartIcon");
 export const PersonIcon = createIcon(_PersonIcon, "PersonIcon");
 export const PictureIcon = createIcon(_PictureIcon, "PictureIcon");
