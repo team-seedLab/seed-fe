@@ -121,6 +121,33 @@ describe("useUploadStepSubmission", () => {
     expect(navigateMock).toHaveBeenCalledWith("/upload/complete/project-1");
   });
 
+  it("마지막 단계 결과 저장 후 프로젝트 완료에 실패해도 상세 캐시를 갱신한다", async () => {
+    completeProjectAPIMock.mockRejectedValueOnce(new Error("완료 실패"));
+
+    const { result } = renderHook(() =>
+      useUploadStepSubmission({
+        isLastStep: true,
+        projectId: "project-1",
+        stepCode: "report_revision",
+        stepNum: 4,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.submitStepResult("마지막 단계 결과");
+    });
+
+    expect(saveStepResultAPIMock).toHaveBeenCalled();
+    expect(invalidateQueriesMock).toHaveBeenCalledWith({
+      queryKey: ["project", "detail", "project-1"],
+    });
+    expect(invalidateQueriesMock).not.toHaveBeenCalledWith({
+      queryKey: ["project", "list"],
+      refetchType: "all",
+    });
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
   it("저장 중 다른 단계로 이동하면 기존 요청이 화면 이동을 덮어쓰지 않는다", async () => {
     let resolveSave!: () => void;
     saveStepResultAPIMock.mockImplementation(

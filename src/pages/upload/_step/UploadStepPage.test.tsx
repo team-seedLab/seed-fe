@@ -17,9 +17,14 @@ vi.mock("@/features", async () => {
 
   return {
     ...actual,
-    UploadStepContentSection: () => <div>단계 콘텐츠</div>,
+    UploadStepContentSection: ({ stepNum }: { stepNum: number }) => (
+      <div>
+        <span>단계 콘텐츠</span>
+        <span>{`현재 단계 ${stepNum}`}</span>
+      </div>
+    ),
     UploadStepHeaderSection: () => <div>단계 헤더</div>,
-    useUploadStepProject: () => useUploadStepProjectMock(),
+    useUploadStepProject: useUploadStepProjectMock,
     useUploadStepResumeRedirect: () => ({ isResolved: true }),
   };
 });
@@ -27,14 +32,23 @@ vi.mock("@/features", async () => {
 describe("UploadStepPage", () => {
   beforeEach(() => {
     useUploadStepProjectMock.mockReset();
-    useUploadStepProjectMock.mockReturnValue({
-      steps: [
-        "constraint_analysis",
-        "argument_structuring",
-        "draft_generation",
-        "report_revision",
-      ],
-    });
+    useUploadStepProjectMock.mockImplementation(
+      ({ stepNum }: { stepNum: number }) => {
+        const steps = [
+          "constraint_analysis",
+          "argument_structuring",
+          "draft_generation",
+          "report_revision",
+        ];
+
+        return {
+          progressStep: 2,
+          selectableStepCodes: ["constraint_analysis", "argument_structuring"],
+          stepCode: steps[stepNum - 1],
+          steps,
+        };
+      },
+    );
   });
 
   it("프로젝트의 실제 단계 수를 초과한 URL은 업로드 페이지로 이동한다", () => {
@@ -51,5 +65,20 @@ describe("UploadStepPage", () => {
 
     expect(screen.getByText("업로드 페이지")).toBeInTheDocument();
     expect(screen.queryByText("단계 콘텐츠")).not.toBeInTheDocument();
+  });
+
+  it("아직 진행할 수 없는 미래 단계 URL은 현재 진행 단계로 이동한다", () => {
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={<UploadStepPage />}
+          path="/upload/step/:projectId/:step"
+        />
+      </Routes>,
+      { initialEntries: ["/upload/step/project-1/4"] },
+    );
+
+    expect(screen.getByText("현재 단계 2")).toBeInTheDocument();
+    expect(screen.queryByText("현재 단계 4")).not.toBeInTheDocument();
   });
 });
