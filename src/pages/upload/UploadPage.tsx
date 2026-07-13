@@ -44,21 +44,23 @@ export default function UploadPage() {
 
           <VStack align="stretch" gap={5} w="full">
             <UploadSectionHeading>프로젝트 설정</UploadSectionHeading>
-            <UploadAssignmentTypeSection
-              selectedType={fields.selectedType}
-              onSelectType={fields.setSelectedType}
-            />
-            <UploadReferenceFileSection
-              fileInputRef={fileInputRef}
-              isDragging={files.isDragging}
-              maxFiles={MAX_UPLOAD_FILE_COUNT}
-              uploadedFiles={files.uploadedFiles}
-              onDragLeave={files.handleDragLeave}
-              onDragOver={files.handleDragOver}
-              onDrop={files.handleDrop}
-              onFileInput={files.handleFileInput}
-              onRemoveFile={files.removeFile}
-            />
+            <VStack align="stretch" gap={5} pl={3}>
+              <UploadAssignmentTypeSection
+                selectedType={fields.selectedType}
+                onSelectType={fields.setSelectedType}
+              />
+              <UploadReferenceFileSection
+                fileInputRef={fileInputRef}
+                isDragging={files.isDragging}
+                maxFiles={MAX_UPLOAD_FILE_COUNT}
+                uploadedFiles={files.uploadedFiles}
+                onDragLeave={files.handleDragLeave}
+                onDragOver={files.handleDragOver}
+                onDrop={files.handleDrop}
+                onFileInput={files.handleFileInput}
+                onRemoveFile={files.removeFile}
+              />
+            </VStack>
           </VStack>
 
           <UploadIntentSection

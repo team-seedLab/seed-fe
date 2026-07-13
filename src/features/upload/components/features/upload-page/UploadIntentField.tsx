@@ -39,6 +39,7 @@ export const UploadIntentField = ({
         value={value}
         _focusVisible={{
           boxShadow: "0 0 0 1px var(--sd-colors-seed)",
+          outline: "none",
         }}
         _placeholder={{ color: "text.placeholder" }}
         onChange={(e) => onChange(e.target.value)}
