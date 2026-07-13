@@ -147,6 +147,30 @@ describe("useUploadStepRouteGuard", () => {
     });
   });
 
+  it("일반 단계 접근도 프로젝트를 불러오는 동안 화면 준비를 대기한다", () => {
+    useUploadStepProjectMock.mockReturnValue({
+      isLoading: true,
+      progressStep: null,
+      project: undefined,
+      selectableStepCodes: [],
+      stepCode: undefined,
+      steps: [],
+    });
+
+    const { result } = renderHook(() =>
+      useUploadStepRouteGuard({
+        projectId: "project-1",
+        shouldResume: false,
+        stepNum: 2,
+      }),
+    );
+
+    expect(result.current).toEqual({
+      isReady: false,
+      redirectTo: null,
+    });
+  });
+
   it("이어하기 요청은 첫 미완료 단계 경로를 반환한다", () => {
     const { result } = renderHook(() =>
       useUploadStepRouteGuard({
