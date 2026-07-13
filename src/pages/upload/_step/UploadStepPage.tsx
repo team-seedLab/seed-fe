@@ -26,18 +26,23 @@ export default function UploadStepPage() {
   const isStepOutOfRange = steps.length > 0 && stepNum > steps.length;
   const isStepUnavailable =
     stepCode !== undefined && !selectableStepCodes.includes(stepCode);
+  const isCompletedProject = project?.status === "COMPLETED";
   const shouldResume = searchParams.get("resume") === "true";
   const { isResolved } = useUploadStepResumeRedirect({
     projectId: projectId ?? "",
     stepNum,
-    enabled: Boolean(projectId) && isValidStepNum && shouldResume,
+    enabled:
+      Boolean(projectId) &&
+      isValidStepNum &&
+      shouldResume &&
+      !isCompletedProject,
   });
 
   if (!projectId || !isValidStepNum || isStepOutOfRange) {
     return <Navigate replace to={ROUTE_PATHS.FILE_UPLOAD} />;
   }
 
-  if (project?.status === "COMPLETED") {
+  if (isCompletedProject) {
     return (
       <Navigate replace to={DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(projectId)} />
     );
