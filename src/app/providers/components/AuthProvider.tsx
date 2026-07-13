@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: Props) => {
   const userInfo = useUserInfoStore((state) => state.userInfo);
   const persistedProfile = useUserInfoStore((state) => state.persistedProfile);
   const clearUserInfo = useUserInfoStore((state) => state.clearUserInfo);
-  const { isFetching, isPending, refetch } = useGetUserInfo({
+  const { isFetching, isPending, refetch, syncUserInfo } = useGetUserInfo({
     showErrorToast: false,
   });
 
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   const checkAuth = syncAuthState;
 
-  const login = syncAuthState;
+  const login = syncUserInfo;
 
   const logout = useCallback(() => {
     logoutMutate();

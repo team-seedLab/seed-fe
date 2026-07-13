@@ -1,4 +1,4 @@
-import { waitFor } from "@testing-library/react";
+import { act, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
 
@@ -46,6 +46,44 @@ describe("useGetUserInfo", () => {
       profileUrl: mentorUserInfo.profileUrl,
       role: mentorUserInfo.role,
     });
+  });
+
+  it("사용자 정보 동기화가 완료되면 store 저장도 완료된다", async () => {
+    server.use(
+      http.get("*/api/user/me", () => {
+        return HttpResponse.json(createApiSuccessResponse(MENTEE_USER_INFO));
+      }),
+    );
+
+    const { result } = renderHookWithProviders(() =>
+      useGetUserInfo({ enabled: false }),
+    );
+
+    await act(async () => {
+      await result.current.syncUserInfo();
+    });
+
+    expect(useUserInfoStore.getState().userInfo).toEqual(MENTEE_USER_INFO);
+  });
+
+  it("사용자 정보 동기화가 실패하면 기존 store 값을 즉시 초기화한다", async () => {
+    useUserInfoStore.getState().setUserInfo(MENTEE_USER_INFO);
+
+    server.use(
+      http.get("*/api/user/me", () => {
+        return HttpResponse.json(createApiErrorResponse());
+      }),
+    );
+
+    const { result } = renderHookWithProviders(() =>
+      useGetUserInfo({ enabled: false }),
+    );
+
+    const syncUserInfoPromise = result.current.syncUserInfo();
+
+    await expect(syncUserInfoPromise).rejects.toBeDefined();
+    expect(useUserInfoStore.getState().userInfo).toBeNull();
+    expect(useUserInfoStore.getState().persistedProfile).toBeNull();
   });
 
   it("에러 응답이면 기존 store 값을 초기화한다", async () => {

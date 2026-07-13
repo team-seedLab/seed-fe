@@ -3,12 +3,14 @@ import { Box, Flex, VStack } from "@chakra-ui/react";
 import {
   MentorLoginFormSection,
   MentorLoginTitleText,
+  useMentorLogin,
   useMentorLoginForm,
 } from "@/features";
 import { MENTOR_LOGIN_PAGE_SEO, Seo } from "@/shared";
 
 export default function MentorLoginPage() {
-  const { fields, submit } = useMentorLoginForm();
+  const { mutateAsync: loginMentor } = useMentorLogin();
+  const { fields, submit } = useMentorLoginForm({ onSubmit: loginMentor });
 
   return (
     <Box bg="neutral.0" w="full">

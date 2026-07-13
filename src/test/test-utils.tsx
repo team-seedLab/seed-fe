@@ -29,7 +29,7 @@ type ProviderOptions = {
 const defaultAuthValue: AuthContextType = {
   isAuthenticated: false,
   isLoading: false,
-  login: () => undefined,
+  login: () => Promise.resolve(),
   logout: () => undefined,
   checkAuth: () => undefined,
 };

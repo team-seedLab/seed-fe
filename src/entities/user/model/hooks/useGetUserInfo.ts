@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -32,22 +32,40 @@ export const useGetUserInfo = ({
       errorMessage: "사용자 정보를 불러오지 못했습니다.",
     },
   });
+  const { data, isError, refetch } = query;
 
   useEffect(() => {
-    if (!query.data) {
+    if (!data) {
       return;
     }
 
-    setUserInfo(query.data);
-  }, [query.data, setUserInfo]);
+    setUserInfo(data);
+  }, [data, setUserInfo]);
 
   useEffect(() => {
-    if (!query.isError) {
+    if (!isError) {
       return;
     }
 
     clearUserInfo();
-  }, [query.isError, clearUserInfo]);
+  }, [isError, clearUserInfo]);
 
-  return query;
+  const syncUserInfo = useCallback(async () => {
+    try {
+      const { data: refreshedUserInfo } = await refetch({
+        throwOnError: true,
+      });
+
+      if (!refreshedUserInfo) {
+        throw new Error("사용자 정보를 불러오지 못했습니다.");
+      }
+
+      setUserInfo(refreshedUserInfo);
+    } catch (error) {
+      clearUserInfo();
+      throw error;
+    }
+  }, [clearUserInfo, refetch, setUserInfo]);
+
+  return { ...query, syncUserInfo };
 };

@@ -23,6 +23,7 @@ type RetryAxiosRequestConfig = AxiosRequestConfig & {
 };
 
 const REISSUE_ENDPOINT = "/api/auth/reissue";
+const REISSUE_EXCLUDED_ENDPOINTS = [REISSUE_ENDPOINT, "/api/auth/mentor/login"];
 
 const shouldReissueToken = (
   error: AxiosError,
@@ -40,7 +41,9 @@ const shouldReissueToken = (
     return false;
   }
 
-  return !requestConfig.url?.includes(REISSUE_ENDPOINT);
+  return !REISSUE_EXCLUDED_ENDPOINTS.some((endpoint) =>
+    requestConfig.url?.includes(endpoint),
+  );
 };
 
 export const attachTokenReissueInterceptor = (instance: AxiosInstance) => {
