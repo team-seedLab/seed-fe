@@ -5,10 +5,8 @@ import { Flex } from "@chakra-ui/react";
 import {
   UploadStepContentSection,
   UploadStepHeaderSection,
-  useUploadStepProject,
-  useUploadStepResumeRedirect,
+  useUploadStepRouteGuard,
 } from "@/features";
-import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
 
 export default function UploadStepPage() {
   const [searchParams] = useSearchParams();
@@ -17,47 +15,18 @@ export default function UploadStepPage() {
     step: string;
   }>();
   const stepNum = Number(step);
-  const isValidStepNum = Number.isInteger(stepNum) && stepNum > 0;
-  const { progressStep, project, selectableStepCodes, stepCode, steps } =
-    useUploadStepProject({
-      projectId: projectId ?? "",
-      stepNum,
-    });
-  const isStepOutOfRange = steps.length > 0 && stepNum > steps.length;
-  const isStepUnavailable =
-    stepCode !== undefined && !selectableStepCodes.includes(stepCode);
-  const isCompletedProject = project?.status === "COMPLETED";
   const shouldResume = searchParams.get("resume") === "true";
-  const { isResolved } = useUploadStepResumeRedirect({
-    projectId: projectId ?? "",
+  const { isReady, redirectTo } = useUploadStepRouteGuard({
+    projectId,
+    shouldResume,
     stepNum,
-    enabled:
-      Boolean(projectId) &&
-      isValidStepNum &&
-      shouldResume &&
-      !isCompletedProject,
   });
 
-  if (!projectId || !isValidStepNum || isStepOutOfRange) {
-    return <Navigate replace to={ROUTE_PATHS.FILE_UPLOAD} />;
+  if (redirectTo) {
+    return <Navigate replace to={redirectTo} />;
   }
 
-  if (isCompletedProject) {
-    return (
-      <Navigate replace to={DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(projectId)} />
-    );
-  }
-
-  if (isStepUnavailable && progressStep !== null) {
-    return (
-      <Navigate
-        replace
-        to={DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, progressStep)}
-      />
-    );
-  }
-
-  if (shouldResume && !isResolved) {
+  if (!projectId || !isReady) {
     return null;
   }
 

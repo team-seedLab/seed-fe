@@ -7,11 +7,9 @@ import { renderWithProviders } from "@/test/test-utils";
 
 import UploadStepPage from "./UploadStepPage";
 
-const { useUploadStepProjectMock, useUploadStepResumeRedirectMock } =
-  vi.hoisted(() => ({
-    useUploadStepProjectMock: vi.fn(),
-    useUploadStepResumeRedirectMock: vi.fn(() => ({ isResolved: true })),
-  }));
+const { useUploadStepRouteGuardMock } = vi.hoisted(() => ({
+  useUploadStepRouteGuardMock: vi.fn(),
+}));
 
 vi.mock("@/features", async () => {
   const actual =
@@ -26,97 +24,23 @@ vi.mock("@/features", async () => {
       </div>
     ),
     UploadStepHeaderSection: () => <div>단계 헤더</div>,
-    useUploadStepProject: useUploadStepProjectMock,
-    useUploadStepResumeRedirect: useUploadStepResumeRedirectMock,
+    useUploadStepRouteGuard: useUploadStepRouteGuardMock,
   };
 });
 
 describe("UploadStepPage", () => {
   beforeEach(() => {
-    useUploadStepProjectMock.mockReset();
-    useUploadStepResumeRedirectMock.mockClear();
-    useUploadStepProjectMock.mockImplementation(
-      ({ stepNum }: { stepNum: number }) => {
-        const steps = [
-          "constraint_analysis",
-          "argument_structuring",
-          "draft_generation",
-          "report_revision",
-        ];
-
-        return {
-          project: {
-            createdAt: "2026-07-12T00:00:00",
-            projectId: "project-1",
-            roadmapType: "REPORT",
-            status: "IN_PROGRESS",
-            stepResponses: [],
-            title: "테스트 프로젝트",
-          },
-          progressStep: 2,
-          selectableStepCodes: ["constraint_analysis", "argument_structuring"],
-          stepCode: steps[stepNum - 1],
-          steps,
-        };
-      },
-    );
+    useUploadStepRouteGuardMock.mockReset();
+    useUploadStepRouteGuardMock.mockReturnValue({
+      isReady: true,
+      redirectTo: null,
+    });
   });
 
-  it("프로젝트의 실제 단계 수를 초과한 URL은 업로드 페이지로 이동한다", () => {
-    renderWithProviders(
-      <Routes>
-        <Route
-          element={<UploadStepPage />}
-          path="/upload/step/:projectId/:step"
-        />
-        <Route element={<div>업로드 페이지</div>} path="/upload" />
-      </Routes>,
-      { initialEntries: ["/upload/step/project-1/5"] },
-    );
-
-    expect(screen.getByText("업로드 페이지")).toBeInTheDocument();
-    expect(screen.queryByText("단계 콘텐츠")).not.toBeInTheDocument();
-  });
-
-  it("아직 진행할 수 없는 미래 단계 URL은 현재 진행 단계로 이동한다", () => {
-    renderWithProviders(
-      <Routes>
-        <Route
-          element={<UploadStepPage />}
-          path="/upload/step/:projectId/:step"
-        />
-      </Routes>,
-      { initialEntries: ["/upload/step/project-1/4"] },
-    );
-
-    expect(screen.getByText("현재 단계 2")).toBeInTheDocument();
-    expect(screen.queryByText("현재 단계 4")).not.toBeInTheDocument();
-  });
-
-  it("완료된 프로젝트의 업로드 단계 URL은 프로젝트 상세 페이지로 이동한다", () => {
-    useUploadStepProjectMock.mockReturnValue({
-      project: {
-        createdAt: "2026-07-12T00:00:00",
-        projectId: "project-1",
-        roadmapType: "REPORT",
-        status: "COMPLETED",
-        stepResponses: [],
-        title: "완료 프로젝트",
-      },
-      progressStep: 4,
-      selectableStepCodes: [
-        "constraint_analysis",
-        "argument_structuring",
-        "draft_generation",
-        "report_revision",
-      ],
-      stepCode: "argument_structuring",
-      steps: [
-        "constraint_analysis",
-        "argument_structuring",
-        "draft_generation",
-        "report_revision",
-      ],
+  it("가드가 반환한 경로로 이동한다", () => {
+    useUploadStepRouteGuardMock.mockReturnValue({
+      isReady: true,
+      redirectTo: "/project/project-1",
     });
 
     renderWithProviders(
@@ -135,9 +59,44 @@ describe("UploadStepPage", () => {
 
     expect(screen.getByText("프로젝트 상세 페이지")).toBeInTheDocument();
     expect(screen.queryByText("단계 콘텐츠")).not.toBeInTheDocument();
-    expect(useUploadStepResumeRedirectMock).toHaveBeenCalledWith({
-      enabled: false,
+  });
+
+  it("가드가 준비되지 않았으면 단계 화면을 표시하지 않는다", () => {
+    useUploadStepRouteGuardMock.mockReturnValue({
+      isReady: false,
+      redirectTo: null,
+    });
+
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={<UploadStepPage />}
+          path="/upload/step/:projectId/:step"
+        />
+      </Routes>,
+      { initialEntries: ["/upload/step/project-1/1?resume=true"] },
+    );
+
+    expect(screen.queryByText("단계 헤더")).not.toBeInTheDocument();
+    expect(screen.queryByText("단계 콘텐츠")).not.toBeInTheDocument();
+  });
+
+  it("가드가 준비되면 현재 단계 화면을 표시한다", () => {
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={<UploadStepPage />}
+          path="/upload/step/:projectId/:step"
+        />
+      </Routes>,
+      { initialEntries: ["/upload/step/project-1/2"] },
+    );
+
+    expect(screen.getByText("단계 헤더")).toBeInTheDocument();
+    expect(screen.getByText("현재 단계 2")).toBeInTheDocument();
+    expect(useUploadStepRouteGuardMock).toHaveBeenCalledWith({
       projectId: "project-1",
+      shouldResume: false,
       stepNum: 2,
     });
   });
