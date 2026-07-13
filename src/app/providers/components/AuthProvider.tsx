@@ -18,6 +18,7 @@ type Props = {
 export const AuthProvider = ({ children }: Props) => {
   const userInfo = useUserInfoStore((state) => state.userInfo);
   const persistedProfile = useUserInfoStore((state) => state.persistedProfile);
+  const setUserInfo = useUserInfoStore((state) => state.setUserInfo);
   const clearUserInfo = useUserInfoStore((state) => state.clearUserInfo);
   const { isFetching, isPending, refetch } = useGetUserInfo({
     showErrorToast: false,
@@ -56,7 +57,15 @@ export const AuthProvider = ({ children }: Props) => {
 
   const checkAuth = syncAuthState;
 
-  const login = syncAuthState;
+  const login = useCallback(async () => {
+    const { data } = await refetch({ throwOnError: true });
+
+    if (!data) {
+      throw new Error("로그인 사용자 정보를 불러오지 못했습니다.");
+    }
+
+    setUserInfo(data);
+  }, [refetch, setUserInfo]);
 
   const logout = useCallback(() => {
     logoutMutate();

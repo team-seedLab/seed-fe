@@ -1,12 +1,9 @@
 import { useState } from "react";
 
-type SubmitValues = {
-  email: string;
-  password: string;
-};
+import type { MentorLoginRequest } from "@/entities";
 
 type Params = {
-  onSubmit?: (values: SubmitValues) => Promise<void> | void;
+  onSubmit: (values: MentorLoginRequest) => Promise<unknown> | void;
 };
 
 type Result = {
@@ -24,7 +21,7 @@ type Result = {
   };
 };
 
-export const useMentorLoginForm = ({ onSubmit }: Params = {}): Result => {
+export const useMentorLoginForm = ({ onSubmit }: Params): Result => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,7 +42,7 @@ export const useMentorLoginForm = ({ onSubmit }: Params = {}): Result => {
     setErrorMessage(null);
 
     try {
-      await onSubmit?.({
+      await onSubmit({
         email,
         password,
       });
