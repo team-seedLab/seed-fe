@@ -29,15 +29,13 @@ export const useUploadStepSubmission = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const activeStepKey = `${projectId}:${stepNum}`;
-  const activeStepKeyRef = useRef<string | null>(activeStepKey);
+  const activeStepVisitRef = useRef(0);
 
   useEffect(() => {
-    activeStepKeyRef.current = activeStepKey;
+    activeStepVisitRef.current += 1;
 
     return () => {
-      if (activeStepKeyRef.current === activeStepKey) {
-        activeStepKeyRef.current = null;
-      }
+      activeStepVisitRef.current += 1;
     };
   }, [activeStepKey]);
 
@@ -52,6 +50,8 @@ export const useUploadStepSubmission = ({
       ) {
         return;
       }
+
+      const submissionStepVisit = activeStepVisitRef.current;
 
       setIsSaving(true);
 
@@ -73,7 +73,7 @@ export const useUploadStepSubmission = ({
               }),
             ]);
 
-            if (activeStepKeyRef.current === activeStepKey) {
+            if (activeStepVisitRef.current === submissionStepVisit) {
               navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
             }
           } catch (error) {
@@ -92,7 +92,7 @@ export const useUploadStepSubmission = ({
           queryKey: projectKeys.detail(projectId),
         });
 
-        if (activeStepKeyRef.current === activeStepKey) {
+        if (activeStepVisitRef.current === submissionStepVisit) {
           navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum + 1));
         }
       } catch (error) {
@@ -108,7 +108,6 @@ export const useUploadStepSubmission = ({
       isCompleting,
       isLastStep,
       isSaving,
-      activeStepKey,
       navigate,
       projectId,
       queryClient,
