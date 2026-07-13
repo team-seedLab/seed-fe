@@ -155,6 +155,57 @@ describe("useUploadStepRouteGuard", () => {
     });
   });
 
+  it("이어하기 요청은 첫 미완료 단계 경로를 반환한다", () => {
+    const { result } = renderHook(() =>
+      useUploadStepRouteGuard({
+        projectId: "project-1",
+        shouldResume: true,
+        stepNum: 1,
+      }),
+    );
+
+    expect(result.current).toEqual({
+      isReady: true,
+      redirectTo: "/upload/step/project-1/2",
+    });
+  });
+
+  it("여러 단계를 완료한 이어하기 요청도 첫 미완료 단계 경로를 반환한다", () => {
+    useUploadStepProjectMock.mockReturnValue({
+      progressStep: 4,
+      project: {
+        projectId: "project-1",
+        status: "IN_PROGRESS",
+      },
+      selectableStepCodes: [
+        "constraint_analysis",
+        "argument_structuring",
+        "draft_generation",
+        "report_revision",
+      ],
+      stepCode: "constraint_analysis",
+      steps: [
+        "constraint_analysis",
+        "argument_structuring",
+        "draft_generation",
+        "report_revision",
+      ],
+    });
+
+    const { result } = renderHook(() =>
+      useUploadStepRouteGuard({
+        projectId: "project-1",
+        shouldResume: true,
+        stepNum: 1,
+      }),
+    );
+
+    expect(result.current).toEqual({
+      isReady: true,
+      redirectTo: "/upload/step/project-1/4",
+    });
+  });
+
   it("접근 가능한 단계는 화면을 표시할 수 있는 상태를 반환한다", () => {
     const { result } = renderHook(() =>
       useUploadStepRouteGuard({
