@@ -155,4 +155,40 @@ describe("useUploadStepSubmission", () => {
 
     expect(navigateMock).not.toHaveBeenCalled();
   });
+
+  it("저장 중 다른 단계에 갔다가 돌아와도 이전 요청이 자동 이동하지 않는다", async () => {
+    let resolveSave!: () => void;
+    saveStepResultAPIMock.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSave = resolve;
+        }),
+    );
+
+    const { result, rerender } = renderHook(
+      ({ stepNum }) =>
+        useUploadStepSubmission({
+          isLastStep: false,
+          projectId: "project-1",
+          stepCode:
+            stepNum === 1 ? "constraint_analysis" : "argument_structuring",
+          stepNum,
+        }),
+      { initialProps: { stepNum: 1 } },
+    );
+    let submissionPromise!: Promise<void>;
+
+    act(() => {
+      submissionPromise = result.current.submitStepResult("1단계 결과");
+    });
+    rerender({ stepNum: 2 });
+    rerender({ stepNum: 1 });
+
+    await act(async () => {
+      resolveSave();
+      await submissionPromise;
+    });
+
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
 });
