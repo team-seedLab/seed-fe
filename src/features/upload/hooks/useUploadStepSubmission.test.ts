@@ -108,12 +108,51 @@ describe("useUploadStepSubmission", () => {
       invalidateQueriesMock.mock.invocationCallOrder[0],
     );
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
-      queryKey: ["project"],
+      queryKey: ["project", "detail", "project-1"],
+    });
+    expect(invalidateQueriesMock).toHaveBeenCalledWith({
+      queryKey: ["project", "list"],
       refetchType: "all",
     });
-    expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
+    expect(invalidateQueriesMock).toHaveBeenCalledTimes(2);
+    expect(invalidateQueriesMock.mock.invocationCallOrder[1]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
     );
     expect(navigateMock).toHaveBeenCalledWith("/upload/complete/project-1");
+  });
+
+  it("저장 중 다른 단계로 이동하면 기존 요청이 화면 이동을 덮어쓰지 않는다", async () => {
+    let resolveSave!: () => void;
+    saveStepResultAPIMock.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSave = resolve;
+        }),
+    );
+
+    const { result, rerender } = renderHook(
+      ({ stepNum }) =>
+        useUploadStepSubmission({
+          isLastStep: false,
+          projectId: "project-1",
+          stepCode:
+            stepNum === 1 ? "constraint_analysis" : "argument_structuring",
+          stepNum,
+        }),
+      { initialProps: { stepNum: 1 } },
+    );
+    let submissionPromise!: Promise<void>;
+
+    act(() => {
+      submissionPromise = result.current.submitStepResult("1단계 결과");
+    });
+    rerender({ stepNum: 2 });
+
+    await act(async () => {
+      resolveSave();
+      await submissionPromise;
+    });
+
+    expect(navigateMock).not.toHaveBeenCalled();
   });
 });
