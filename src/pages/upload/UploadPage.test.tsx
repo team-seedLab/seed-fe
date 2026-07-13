@@ -57,6 +57,27 @@ describe("UploadPage", () => {
     expect(submitButton).toBeEnabled();
   });
 
+  it("제목과 PDF가 입력되면 사용자 의도 없이 생성할 수 있다", () => {
+    renderWithProviders(<UploadPage />);
+
+    fireEvent.change(screen.getByLabelText("프로젝트 제목"), {
+      target: { value: "AI 활용 분석" },
+    });
+    fireEvent.change(screen.getByLabelText("참고자료 파일 선택"), {
+      target: {
+        files: [
+          new File(["pdf content"], "assignment.pdf", {
+            type: "application/pdf",
+          }),
+        ],
+      },
+    });
+
+    expect(
+      screen.getByRole("button", { name: "로드맵 생성하기" }),
+    ).toBeEnabled();
+  });
+
   it("입력한 사용자 의도를 프로젝트 생성 API에 전달한다", async () => {
     let requestFormData: FormData | null = null;
 
