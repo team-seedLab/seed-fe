@@ -51,14 +51,21 @@ export const useGetUserInfo = ({
   }, [isError, clearUserInfo]);
 
   const syncUserInfo = useCallback(async () => {
-    const { data: refreshedUserInfo } = await refetch({ throwOnError: true });
+    try {
+      const { data: refreshedUserInfo } = await refetch({
+        throwOnError: true,
+      });
 
-    if (!refreshedUserInfo) {
-      throw new Error("사용자 정보를 불러오지 못했습니다.");
+      if (!refreshedUserInfo) {
+        throw new Error("사용자 정보를 불러오지 못했습니다.");
+      }
+
+      setUserInfo(refreshedUserInfo);
+    } catch (error) {
+      clearUserInfo();
+      throw error;
     }
-
-    setUserInfo(refreshedUserInfo);
-  }, [refetch, setUserInfo]);
+  }, [clearUserInfo, refetch, setUserInfo]);
 
   return { ...query, syncUserInfo };
 };

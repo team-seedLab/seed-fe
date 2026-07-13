@@ -66,6 +66,26 @@ describe("useGetUserInfo", () => {
     expect(useUserInfoStore.getState().userInfo).toEqual(MENTEE_USER_INFO);
   });
 
+  it("사용자 정보 동기화가 실패하면 기존 store 값을 즉시 초기화한다", async () => {
+    useUserInfoStore.getState().setUserInfo(MENTEE_USER_INFO);
+
+    server.use(
+      http.get("*/api/user/me", () => {
+        return HttpResponse.json(createApiErrorResponse());
+      }),
+    );
+
+    const { result } = renderHookWithProviders(() =>
+      useGetUserInfo({ enabled: false }),
+    );
+
+    const syncUserInfoPromise = result.current.syncUserInfo();
+
+    await expect(syncUserInfoPromise).rejects.toBeDefined();
+    expect(useUserInfoStore.getState().userInfo).toBeNull();
+    expect(useUserInfoStore.getState().persistedProfile).toBeNull();
+  });
+
   it("에러 응답이면 기존 store 값을 초기화한다", async () => {
     useUserInfoStore.getState().setUserInfo(MENTEE_USER_INFO);
 
