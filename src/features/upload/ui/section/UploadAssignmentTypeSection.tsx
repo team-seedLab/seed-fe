@@ -14,46 +14,33 @@ export const UploadAssignmentTypeSection = ({
   onSelectType,
 }: Props) => {
   return (
-    <VStack align="flex-start" gap={4} w="full">
-      <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
+    <VStack align="stretch" gap={3} w="full">
+      <Text color="neutral.900" fontSize="sm" fontWeight="semibold">
         과제 유형
       </Text>
-      <Flex gap={{ base: 2, md: 3 }} wrap="wrap" w="full">
-        {UPLOAD_ASSIGNMENT_TYPES.map(({ label, Icon }) => {
-          const isActive = selectedType === label;
+      <Flex gap={2} wrap="wrap">
+        {UPLOAD_ASSIGNMENT_TYPES.map((type) => {
+          const isActive = selectedType === type;
 
           return (
             <Button
               aria-pressed={isActive}
-              key={label}
+              key={type}
               bg={isActive ? "seed.subtle" : "neutral.50"}
-              border="2px solid"
-              borderColor={isActive ? "seed" : "neutral.50"}
-              borderRadius="3xl"
-              cursor="pointer"
-              gap={2}
-              h={{ base: 12, md: 14 }}
-              minW={{ base: "calc(50% - 4px)", md: "120px" }}
-              px={{ base: 3, md: 5 }}
-              transition="all 0.15s"
+              border="1px solid"
+              borderColor={isActive ? "seed" : "neutral.100"}
+              borderRadius="full"
+              color={isActive ? "seed" : "neutral.600"}
+              fontSize="xs"
+              fontWeight="semibold"
+              h={8}
+              px={4}
               type="button"
               variant="plain"
-              _focusVisible={{
-                outline: "2px solid",
-                outlineColor: "seed",
-                outlineOffset: "2px",
-              }}
-              onClick={() => onSelectType(label)}
+              _hover={{ borderColor: "seed", color: "seed" }}
+              onClick={() => onSelectType(type)}
             >
-              <Icon boxSize="15px" color={isActive ? "seed" : "neutral.900"} />
-              <Text
-                color={isActive ? "seed.900" : "neutral.900"}
-                fontSize="sm"
-                fontWeight="semibold"
-                whiteSpace="nowrap"
-              >
-                {label}
-              </Text>
+              {type}
             </Button>
           );
         })}

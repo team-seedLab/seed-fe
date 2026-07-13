@@ -49,9 +49,11 @@ export const useUploadFiles = ({ maxFiles, maxFileSize }: Params): Result => {
     }
 
     if (oversizedFileCount > 0) {
+      const maxFileSizeInMb = maxFileSize / (1024 * 1024);
+
       toaster.create({
         type: "error",
-        description: "PDF 파일은 개당 20MB를 초과할 수 없습니다.",
+        description: `PDF 파일은 개당 ${maxFileSizeInMb}MB를 초과할 수 없습니다.`,
       });
     }
 

@@ -1,18 +1,21 @@
-import type { ChangeEvent, RefObject } from "react";
+import type { ChangeEvent, DragEvent, RefObject } from "react";
 
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
-
-import { PlusCircleIcon } from "@/shared";
+import { Grid } from "@chakra-ui/react";
 
 import { UPLOAD_FILE_ACCEPT } from "../../../constants";
 import type { UploadedFile } from "../../../hooks";
 
+import { UploadFileAddButton } from "./UploadFileAddButton";
 import { UploadFileItem } from "./UploadFileItem";
 
 type Props = {
   maxFiles: number;
   uploadedFiles: UploadedFile[];
-  addFileInputRef: RefObject<HTMLInputElement | null>;
+  isDragging: boolean;
+  fileInputRef: RefObject<HTMLInputElement | null>;
+  onDragOver: (e: DragEvent) => void;
+  onDragLeave: () => void;
+  onDrop: (e: DragEvent) => void;
   onFileInput: (e: ChangeEvent<HTMLInputElement>) => void;
   onRemoveFile: (id: string) => void;
 };
@@ -20,13 +23,26 @@ type Props = {
 export const UploadFileList = ({
   maxFiles,
   uploadedFiles,
-  addFileInputRef,
+  isDragging,
+  fileInputRef,
+  onDragOver,
+  onDragLeave,
+  onDrop,
   onFileInput,
   onRemoveFile,
 }: Props) => {
   return (
-    <VStack align="stretch" flex={1} gap={3} justify="space-between" w="full">
-      <VStack align="stretch" gap={2}>
+    <>
+      <input
+        ref={fileInputRef}
+        accept={UPLOAD_FILE_ACCEPT}
+        aria-label="참고자료 파일 선택"
+        multiple
+        style={{ display: "none" }}
+        type="file"
+        onChange={onFileInput}
+      />
+      <Grid gap={3} templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}>
         {uploadedFiles.map(({ id, file }) => (
           <UploadFileItem
             key={id}
@@ -35,55 +51,16 @@ export const UploadFileList = ({
           />
         ))}
 
-        {uploadedFiles.length < maxFiles && (
-          <>
-            <input
-              ref={addFileInputRef}
-              accept={UPLOAD_FILE_ACCEPT}
-              multiple
-              style={{ display: "none" }}
-              type="file"
-              onChange={onFileInput}
-            />
-            <Flex
-              align="center"
-              color="neutral.600"
-              cursor="pointer"
-              gap={2}
-              justify="center"
-              py={{ base: 3, md: 2 }}
-              transition="color 0.15s"
-              _hover={{ color: "seed" }}
-              onClick={() => addFileInputRef.current?.click()}
-            >
-              <PlusCircleIcon boxSize={4} />
-              <Text fontSize="xs" fontWeight="medium">
-                파일 추가하기
-              </Text>
-            </Flex>
-          </>
-        )}
-      </VStack>
-
-      <VStack align="stretch" gap={1}>
-        <Box bg="neutral.300" borderRadius="full" h={1.5} overflow="hidden">
-          <Box
-            bg="seed"
-            borderRadius="full"
-            h="full"
-            transition="width 0.3s"
-            w={`${(uploadedFiles.length / maxFiles) * 100}%`}
+        {uploadedFiles.length < maxFiles ? (
+          <UploadFileAddButton
+            isDragging={isDragging}
+            onClick={() => fileInputRef.current?.click()}
+            onDragLeave={onDragLeave}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
           />
-        </Box>
-        <Text
-          color="neutral.600"
-          fontSize="xs"
-          fontWeight="medium"
-          textAlign="right"
-        >
-          {uploadedFiles.length} / {maxFiles}개 업로드됨
-        </Text>
-      </VStack>
-    </VStack>
+        ) : null}
+      </Grid>
+    </>
   );
 };

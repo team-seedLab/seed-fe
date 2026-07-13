@@ -1,4 +1,6 @@
-import { Box, Input } from "@chakra-ui/react";
+import { Input, VStack } from "@chakra-ui/react";
+
+import { UploadSectionHeading } from "../../components";
 
 type Props = {
   title: string;
@@ -7,20 +9,29 @@ type Props = {
 
 export const UploadTitleSection = ({ title, onChange }: Props) => {
   return (
-    <Box maxW={{ base: "full", md: "768px" }} w="full">
+    <VStack align="stretch" gap={4} w="full">
+      <UploadSectionHeading>프로젝트 제목</UploadSectionHeading>
       <Input
+        aria-label="프로젝트 제목"
         border="none"
-        color={title ? "neutral.900" : "neutral.300"}
-        fontSize={{ base: "2xl", md: "4xl" }}
-        fontWeight="bold"
-        minH={{ base: "56px", md: "auto" }}
-        placeholder="프로젝트 제목을 입력하세요"
-        py={{ base: 2, md: 0 }}
-        textAlign="center"
+        borderBottom="1px solid"
+        borderBottomColor="neutral.300"
+        borderRadius={0}
+        color="neutral.900"
+        fontSize="md"
+        h={11}
+        name="title"
+        px={0}
+        placeholder="제목을 입력하세요"
         value={title}
-        _focusVisible={{ outline: "none", boxShadow: "none" }}
+        _focusVisible={{
+          borderBottomColor: "seed",
+          boxShadow: "none",
+          outline: "none",
+        }}
+        _placeholder={{ color: "text.placeholder" }}
         onChange={(e) => onChange(e.target.value)}
       />
-    </Box>
+    </VStack>
   );
 };

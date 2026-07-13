@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 
 import {
   type AssignmentType,
-  ROADMAP_STEP_CODES,
   ROADMAP_TYPE_MAP,
   useCreateProject,
   useUploadFlowStore,
@@ -44,7 +43,6 @@ type Result = {
   submit: {
     isPending: boolean;
     canSubmit: boolean;
-    stepCount: number;
     startAnalysis: () => void;
   };
 };
@@ -81,8 +79,6 @@ export const useUploadPageForm = ({
       [desiredOutcome, keyFocus, requiredElements].some(
         (value) => value.trim().length > 0,
       ));
-
-  const stepCount = ROADMAP_STEP_CODES[ROADMAP_TYPE_MAP[selectedType]].length;
 
   const startAnalysis = () => {
     if (!canSubmit || isPending) {
@@ -126,7 +122,6 @@ export const useUploadPageForm = ({
     submit: {
       isPending,
       canSubmit,
-      stepCount,
       startAnalysis,
     },
   };
