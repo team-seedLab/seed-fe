@@ -56,6 +56,13 @@ export const useUploadStepRouteGuard = ({
     };
   }
 
+  if (!project) {
+    return {
+      isReady: true,
+      redirectTo: ROUTE_PATHS.FILE_UPLOAD,
+    };
+  }
+
   if (isStepOutOfRange) {
     return {
       isReady: true,
