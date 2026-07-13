@@ -7,9 +7,11 @@ import { renderWithProviders } from "@/test/test-utils";
 
 import UploadStepPage from "./UploadStepPage";
 
-const { useUploadStepProjectMock } = vi.hoisted(() => ({
-  useUploadStepProjectMock: vi.fn(),
-}));
+const { useUploadStepProjectMock, useUploadStepResumeRedirectMock } =
+  vi.hoisted(() => ({
+    useUploadStepProjectMock: vi.fn(),
+    useUploadStepResumeRedirectMock: vi.fn(() => ({ isResolved: true })),
+  }));
 
 vi.mock("@/features", async () => {
   const actual =
@@ -25,13 +27,14 @@ vi.mock("@/features", async () => {
     ),
     UploadStepHeaderSection: () => <div>단계 헤더</div>,
     useUploadStepProject: useUploadStepProjectMock,
-    useUploadStepResumeRedirect: () => ({ isResolved: true }),
+    useUploadStepResumeRedirect: useUploadStepResumeRedirectMock,
   };
 });
 
 describe("UploadStepPage", () => {
   beforeEach(() => {
     useUploadStepProjectMock.mockReset();
+    useUploadStepResumeRedirectMock.mockClear();
     useUploadStepProjectMock.mockImplementation(
       ({ stepNum }: { stepNum: number }) => {
         const steps = [
@@ -127,10 +130,15 @@ describe("UploadStepPage", () => {
           path="/project/:projectId"
         />
       </Routes>,
-      { initialEntries: ["/upload/step/project-1/2"] },
+      { initialEntries: ["/upload/step/project-1/2?resume=true"] },
     );
 
     expect(screen.getByText("프로젝트 상세 페이지")).toBeInTheDocument();
     expect(screen.queryByText("단계 콘텐츠")).not.toBeInTheDocument();
+    expect(useUploadStepResumeRedirectMock).toHaveBeenCalledWith({
+      enabled: false,
+      projectId: "project-1",
+      stepNum: 2,
+    });
   });
 });
