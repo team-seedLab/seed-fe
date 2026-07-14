@@ -1,4 +1,4 @@
-import { type RefObject, useState } from "react";
+import { useState } from "react";
 
 import { Box, Text, VStack } from "@chakra-ui/react";
 
@@ -16,7 +16,7 @@ import {
 import type { UploadPromptEditorState } from "../../hooks";
 
 type Props = {
-  editorRef: RefObject<HTMLTextAreaElement | null>;
+  editorFocusRequestId: number | null;
   isLastStep: boolean;
   isStepLoading: boolean;
   promptData: ProjectStepPrompt | undefined;
@@ -28,7 +28,7 @@ type Props = {
 };
 
 export const UploadStepContentSection = ({
-  editorRef,
+  editorFocusRequestId,
   isLastStep,
   isStepLoading,
   promptData,
@@ -120,7 +120,7 @@ export const UploadStepContentSection = ({
           <PromptCard
             content={editedPrompt}
             copied={copiedPrompt}
-            editorRef={editorRef}
+            editorFocusRequestId={editorFocusRequestId}
             label="수정 내용"
             mode="editable"
             originalContent={providedPromptSnapshot}

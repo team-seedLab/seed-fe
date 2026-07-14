@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -39,12 +39,11 @@ vi.mock("../../hooks", async () => {
 const originalPrompt = "원본 프롬프트\n분량: 제한 없음";
 
 const UploadStepContentSectionTestHarness = () => {
-  const editorRef = useRef<HTMLTextAreaElement>(null);
   const [editedPrompt, setEditedPrompt] = useState(originalPrompt);
 
   return (
     <UploadStepContentSection
-      editorRef={editorRef}
+      editorFocusRequestId={null}
       isLastStep={false}
       isStepLoading={false}
       promptData={{

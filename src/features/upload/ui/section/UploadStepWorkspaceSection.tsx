@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { Flex } from "@chakra-ui/react";
 
@@ -25,8 +25,10 @@ type Props = {
 };
 
 export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
-  const promptEditorRef = useRef<HTMLTextAreaElement>(null);
   const workspaceLayoutRef = useRef<HTMLDivElement>(null);
+  const [promptEditorFocusRequestId, setPromptEditorFocusRequestId] = useState<
+    number | null
+  >(null);
   const { isLastStep, stepCode } = useUploadStepProject({
     projectId,
     stepNum,
@@ -61,25 +63,14 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
     stepCode,
   });
 
-  const focusPromptEditor = () => {
-    const editor = promptEditorRef.current;
-
-    if (!editor) {
-      return;
-    }
-
-    editor.scrollIntoView({ behavior: "smooth", block: "center" });
-    editor.focus({ preventScroll: true });
-  };
-
   const handleEditPrompt = () => {
-    if (isSplitScreen) {
-      focusPromptEditor();
-      return;
+    if (!isSplitScreen) {
+      closePanel();
     }
 
-    closePanel();
-    window.setTimeout(focusPromptEditor, 250);
+    setPromptEditorFocusRequestId((currentRequestId) =>
+      currentRequestId === null ? 1 : currentRequestId + 1,
+    );
   };
 
   return (
@@ -117,7 +108,7 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
             <UploadStepHeaderSection projectId={projectId} stepNum={stepNum} />
 
             <UploadStepContentSection
-              editorRef={promptEditorRef}
+              editorFocusRequestId={promptEditorFocusRequestId}
               isLastStep={isLastStep}
               isStepLoading={isStepLoading}
               promptData={promptData}

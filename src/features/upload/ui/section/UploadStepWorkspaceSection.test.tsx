@@ -1,7 +1,7 @@
-import type { ReactNode, RefObject } from "react";
+import type { ReactNode } from "react";
 
 import { fireEvent, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
 
@@ -120,13 +120,28 @@ vi.mock("../../hooks", async () => {
   };
 });
 
-vi.mock("./UploadStepContentSection", () => ({
-  UploadStepContentSection: ({
-    editorRef,
-  }: {
-    editorRef: RefObject<HTMLTextAreaElement | null>;
-  }) => <textarea aria-label="수정 내용" ref={editorRef} />,
-}));
+vi.mock("./UploadStepContentSection", async () => {
+  const { useEffect, useRef } =
+    await vi.importActual<typeof import("react")>("react");
+
+  return {
+    UploadStepContentSection: ({
+      editorFocusRequestId,
+    }: {
+      editorFocusRequestId: number | null;
+    }) => {
+      const editorRef = useRef<HTMLTextAreaElement>(null);
+
+      useEffect(() => {
+        if (editorFocusRequestId !== null) {
+          editorRef.current?.focus();
+        }
+      }, [editorFocusRequestId]);
+
+      return <textarea aria-label="수정 내용" ref={editorRef} />;
+    },
+  };
+});
 
 vi.mock("./UploadStepHeaderSection", () => ({
   UploadStepHeaderSection: () => <div>단계 헤더</div>,
@@ -140,12 +155,7 @@ describe("UploadStepWorkspaceSection", () => {
     });
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it("작은 화면에서 프롬프트 수정 요청 시 패널을 닫고 편집기로 이동한다", () => {
-    vi.useFakeTimers();
     renderWithProviders(
       <UploadStepWorkspaceSection projectId="project-1" stepNum={1} />,
     );
@@ -153,9 +163,6 @@ describe("UploadStepWorkspaceSection", () => {
     fireEvent.click(screen.getByRole("button", { name: "프롬프트 수정하기" }));
 
     expect(closePanelMock).toHaveBeenCalledOnce();
-
-    vi.advanceTimersByTime(250);
-
     expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveFocus();
   });
 });
