@@ -49,7 +49,9 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
   });
   const resultTextKey = `${projectId}:${stepNum}`;
   const savedResultText =
-    resultData?.stepCode === stepCode ? resultData.contentMarkdown : "";
+    resultData && resultData.stepCode === stepCode
+      ? resultData.contentMarkdown
+      : "";
   const resultText = resultTextByStep[resultTextKey] ?? savedResultText;
   const handleResultTextChange = (value: string) => {
     setResultTextByStep((prev) => ({
