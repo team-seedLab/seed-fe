@@ -7,12 +7,14 @@ const {
   completeProjectAPIMock,
   invalidateQueriesMock,
   navigateMock,
-  saveStepResultAPIMock,
+  saveProjectStepResultAPIMock,
+  setQueryDataMock,
 } = vi.hoisted(() => ({
   completeProjectAPIMock: vi.fn(),
   invalidateQueriesMock: vi.fn(),
   navigateMock: vi.fn(),
-  saveStepResultAPIMock: vi.fn(),
+  saveProjectStepResultAPIMock: vi.fn(),
+  setQueryDataMock: vi.fn(),
 }));
 
 vi.mock("@/entities", async () => {
@@ -22,7 +24,7 @@ vi.mock("@/entities", async () => {
   return {
     ...actual,
     completeProjectAPI: completeProjectAPIMock,
-    saveStepResultAPI: saveStepResultAPIMock,
+    saveProjectStepResultAPI: saveProjectStepResultAPIMock,
   };
 });
 
@@ -35,6 +37,7 @@ vi.mock("@tanstack/react-query", async () => {
     ...actual,
     useQueryClient: () => ({
       invalidateQueries: invalidateQueriesMock,
+      setQueryData: setQueryDataMock,
     }),
   };
 });
@@ -54,11 +57,15 @@ describe("useUploadStepSubmission", () => {
     completeProjectAPIMock.mockReset();
     invalidateQueriesMock.mockReset();
     navigateMock.mockReset();
-    saveStepResultAPIMock.mockReset();
+    saveProjectStepResultAPIMock.mockReset();
+    setQueryDataMock.mockReset();
 
     completeProjectAPIMock.mockResolvedValue(undefined);
     invalidateQueriesMock.mockResolvedValue(undefined);
-    saveStepResultAPIMock.mockResolvedValue(undefined);
+    saveProjectStepResultAPIMock.mockResolvedValue({
+      contentMarkdown: "단계 결과",
+      stepCode: "constraint_analysis",
+    });
   });
 
   it("단계 결과 저장 후 상세 캐시를 갱신하고 다음 단계로 이동한다", async () => {
@@ -76,11 +83,28 @@ describe("useUploadStepSubmission", () => {
     });
 
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
+      exact: true,
       queryKey: ["project", "detail", "project-1"],
     });
-    expect(saveStepResultAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
-      invalidateQueriesMock.mock.invocationCallOrder[0],
+    expect(saveProjectStepResultAPIMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      contentMarkdown: "단계 결과",
+    });
+    expect(setQueryDataMock).toHaveBeenCalledWith(
+      [
+        "project",
+        "detail",
+        "project-1",
+        "step",
+        "constraint_analysis",
+        "result",
+      ],
+      expect.objectContaining({ contentMarkdown: "단계 결과" }),
     );
+    expect(
+      saveProjectStepResultAPIMock.mock.invocationCallOrder[0],
+    ).toBeLessThan(invalidateQueriesMock.mock.invocationCallOrder[0]);
     expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
     );
@@ -101,13 +125,14 @@ describe("useUploadStepSubmission", () => {
       await result.current.submitStepResult("마지막 단계 결과");
     });
 
-    expect(saveStepResultAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
-      completeProjectAPIMock.mock.invocationCallOrder[0],
-    );
+    expect(
+      saveProjectStepResultAPIMock.mock.invocationCallOrder[0],
+    ).toBeLessThan(completeProjectAPIMock.mock.invocationCallOrder[0]);
     expect(completeProjectAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
       invalidateQueriesMock.mock.invocationCallOrder[0],
     );
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
+      exact: true,
       queryKey: ["project", "detail", "project-1"],
     });
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
@@ -137,8 +162,9 @@ describe("useUploadStepSubmission", () => {
       await result.current.submitStepResult("마지막 단계 결과");
     });
 
-    expect(saveStepResultAPIMock).toHaveBeenCalled();
+    expect(saveProjectStepResultAPIMock).toHaveBeenCalled();
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
+      exact: true,
       queryKey: ["project", "detail", "project-1"],
     });
     expect(invalidateQueriesMock).not.toHaveBeenCalledWith({
@@ -150,7 +176,7 @@ describe("useUploadStepSubmission", () => {
 
   it("저장 중 다른 단계로 이동하면 기존 요청이 화면 이동을 덮어쓰지 않는다", async () => {
     let resolveSave!: () => void;
-    saveStepResultAPIMock.mockImplementation(
+    saveProjectStepResultAPIMock.mockImplementation(
       () =>
         new Promise<void>((resolve) => {
           resolveSave = resolve;
@@ -185,7 +211,7 @@ describe("useUploadStepSubmission", () => {
 
   it("저장 중 다른 단계에 갔다가 돌아와도 이전 요청이 자동 이동하지 않는다", async () => {
     let resolveSave!: () => void;
-    saveStepResultAPIMock.mockImplementation(
+    saveProjectStepResultAPIMock.mockImplementation(
       () =>
         new Promise<void>((resolve) => {
           resolveSave = resolve;

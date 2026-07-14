@@ -6,6 +6,14 @@ export const projectKeys = {
   all: () => [PROJECT_QUERY_KEY] as const,
   lists: () => [...projectKeys.all(), "list"] as const,
   details: () => [...projectKeys.all(), "detail"] as const,
+  steps: (projectId: string) =>
+    [...projectKeys.detail(projectId), "step"] as const,
+  step: (projectId: string, stepCode: string) =>
+    [...projectKeys.steps(projectId), stepCode] as const,
+  stepPrompt: (projectId: string, stepCode: string) =>
+    [...projectKeys.step(projectId, stepCode), "prompt"] as const,
+  stepResult: (projectId: string, stepCode: string) =>
+    [...projectKeys.step(projectId, stepCode), "result"] as const,
   list: (params: ReturnType<typeof normalizeProjectListQueryParams>) =>
     [
       ...projectKeys.lists(),

@@ -32,12 +32,44 @@ export type RoadmapType =
 
 export type ProjectStatus = "IN_PROGRESS" | "COMPLETED";
 
+export type ProjectStepStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED";
+
+export interface ProjectStepSummary {
+  stepId: string;
+  stepCode: string;
+  stepOrder: number;
+  status: ProjectStepStatus;
+  completedAt: string | null;
+}
+
+export interface ProjectStepPrompt {
+  stepId: string;
+  stepCode: string;
+  stepName: string;
+  providedPromptSnapshot: string;
+  editedPrompt: string | null;
+  finalPrompt: string;
+  addedCount: number;
+  removedCount: number;
+  diffJson: Record<string, unknown> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectStepResult {
+  stepId: string;
+  stepCode: string;
+  stepName: string;
+  contentMarkdown: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ProjectStepResponse {
   stepCode: string;
   stepName: string;
   providedPromptSnapshot: string;
   userEditedPrompt?: string | null;
-  formatPrompt: string;
   userSubmittedResult: string | null;
   createdAt?: string;
   updatedAt?: string;

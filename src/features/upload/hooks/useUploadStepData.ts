@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
-
-import { type ProjectStepResponse, startStepAPI } from "@/entities";
-import { getApiErrorMessage, toaster } from "@/shared";
+import {
+  type ProjectStepPrompt,
+  type ProjectStepResult,
+  updateProjectStepPromptOnPageExitAPI,
+  useGetOrCreateProjectStepPrompt,
+  useGetProjectStepResult,
+  useUpdateProjectStepPrompt,
+} from "@/entities";
 
 type Params = {
   projectId: string;
@@ -9,55 +13,52 @@ type Params = {
 };
 
 type Result = {
-  stepData: ProjectStepResponse | null;
+  promptData: ProjectStepPrompt | undefined;
+  resultData: ProjectStepResult | null | undefined;
   isStepLoading: boolean;
+  savePrompt: (editedPrompt: string, signal?: AbortSignal) => Promise<void>;
+  savePromptOnPageExit: (editedPrompt: string) => void;
 };
 
 export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
-  const [stepData, setStepData] = useState<ProjectStepResponse | null>(null);
-  const [isStepLoading, setIsStepLoading] = useState(false);
+  const normalizedStepCode = stepCode ?? "";
+  const promptQuery = useGetOrCreateProjectStepPrompt(
+    projectId,
+    normalizedStepCode,
+  );
+  const resultQuery = useGetProjectStepResult(projectId, normalizedStepCode);
+  const updatePromptMutation = useUpdateProjectStepPrompt();
 
-  useEffect(() => {
+  const savePrompt = async (editedPrompt: string, signal?: AbortSignal) => {
     if (!projectId || !stepCode) {
-      setStepData(null);
       return;
     }
 
-    let cancelled = false;
+    await updatePromptMutation.mutateAsync({
+      projectId,
+      stepCode,
+      editedPrompt,
+      ...(signal && { signal }),
+    });
+  };
 
-    const fetchStep = async () => {
-      setIsStepLoading(true);
-      setStepData(null);
+  const savePromptOnPageExit = (editedPrompt: string) => {
+    if (!projectId || !stepCode) {
+      return;
+    }
 
-      try {
-        const data = await startStepAPI({ projectId, stepCode });
-
-        if (!cancelled) {
-          setStepData(data);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          toaster.create({
-            type: "error",
-            description: getApiErrorMessage(error),
-          });
-        }
-      } finally {
-        if (!cancelled) {
-          setIsStepLoading(false);
-        }
-      }
-    };
-
-    void fetchStep();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [projectId, stepCode]);
+    void updateProjectStepPromptOnPageExitAPI({
+      projectId,
+      stepCode,
+      editedPrompt,
+    });
+  };
 
   return {
-    stepData,
-    isStepLoading,
+    promptData: promptQuery.data,
+    resultData: resultQuery.data,
+    isStepLoading: promptQuery.isLoading || resultQuery.isLoading,
+    savePrompt,
+    savePromptOnPageExit,
   };
 };

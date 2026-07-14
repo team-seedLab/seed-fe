@@ -24,18 +24,18 @@ describe("useUploadStepProject", () => {
         projectId: "project-1",
         roadmapType: "REPORT",
         status: "IN_PROGRESS",
-        stepResponses: [
+        steps: [
           {
             stepCode: "constraint_analysis",
-            userSubmittedResult: "완료된 결과",
+            status: "COMPLETED",
           },
           {
             stepCode: "argument_structuring",
-            userSubmittedResult: null,
+            status: "IN_PROGRESS",
           },
           {
             stepCode: "draft_generation",
-            userSubmittedResult: null,
+            status: "PENDING",
           },
         ],
         title: "테스트 프로젝트",
@@ -62,22 +62,22 @@ describe("useUploadStepProject", () => {
         projectId: "project-1",
         roadmapType: "REPORT",
         status: "IN_PROGRESS",
-        stepResponses: [
+        steps: [
           {
             stepCode: "constraint_analysis",
-            userSubmittedResult: "1단계 결과",
+            status: "COMPLETED",
           },
           {
             stepCode: "argument_structuring",
-            userSubmittedResult: "2단계 결과",
+            status: "COMPLETED",
           },
           {
             stepCode: "draft_generation",
-            userSubmittedResult: "3단계 결과",
+            status: "COMPLETED",
           },
           {
             stepCode: "report_revision",
-            userSubmittedResult: null,
+            status: "IN_PROGRESS",
           },
         ],
         title: "테스트 프로젝트",

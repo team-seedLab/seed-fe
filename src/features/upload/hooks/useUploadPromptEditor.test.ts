@@ -27,25 +27,7 @@ describe("useUploadPromptEditor", () => {
     expect(result.current.editedPrompt).toBe("저장된 수정본");
   });
 
-  it("변경된 수정본만 저장 요청한다", async () => {
-    const onSave = vi.fn().mockResolvedValue(undefined);
-    const { result } = renderHook(() =>
-      useUploadPromptEditor({
-        editorKey: "project-1:step-1",
-        originalPrompt: "원본 프롬프트",
-        onSave,
-      }),
-    );
-
-    act(() => result.current.changePrompt("변경된 프롬프트"));
-    await act(async () => result.current.commitPrompt("변경된 프롬프트"));
-    await act(async () => result.current.commitPrompt("변경된 프롬프트"));
-
-    expect(onSave).toHaveBeenCalledOnce();
-    expect(onSave).toHaveBeenCalledWith("변경된 프롬프트");
-  });
-
-  it("초기화하면 원본으로 돌아가고 수정본 제거를 요청한다", async () => {
+  it("초기화하면 원본으로 돌아가고 원본 저장을 요청한다", async () => {
     const onSave = vi.fn().mockResolvedValue(undefined);
     const { result } = renderHook(() =>
       useUploadPromptEditor({
@@ -59,7 +41,10 @@ describe("useUploadPromptEditor", () => {
     await act(async () => result.current.resetPrompt());
 
     expect(result.current.editedPrompt).toBe("원본 프롬프트");
-    expect(onSave).toHaveBeenCalledWith(null);
+    expect(onSave).toHaveBeenCalledWith(
+      "원본 프롬프트",
+      expect.any(AbortSignal),
+    );
   });
 
   it("저장에 실패해도 작성 중인 수정본을 유지한다", async () => {
@@ -73,12 +58,10 @@ describe("useUploadPromptEditor", () => {
     );
 
     act(() => result.current.changePrompt("저장되지 않은 수정본"));
-    let isSaved = true;
     await act(async () => {
-      isSaved = await result.current.commitPrompt("저장되지 않은 수정본");
+      await result.current.commitPrompt("저장되지 않은 수정본");
     });
 
-    expect(isSaved).toBe(false);
     expect(result.current.editedPrompt).toBe("저장되지 않은 수정본");
   });
 

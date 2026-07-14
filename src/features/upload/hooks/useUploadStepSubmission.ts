@@ -3,7 +3,11 @@ import { useNavigate } from "react-router";
 
 import { useQueryClient } from "@tanstack/react-query";
 
-import { completeProjectAPI, projectKeys, saveStepResultAPI } from "@/entities";
+import {
+  completeProjectAPI,
+  projectKeys,
+  saveProjectStepResultAPI,
+} from "@/entities";
 import { DYNAMIC_ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
 type Params = {
@@ -56,7 +60,15 @@ export const useUploadStepSubmission = ({
       setIsSaving(true);
 
       try {
-        await saveStepResultAPI({ projectId, stepCode, resultText });
+        const savedResult = await saveProjectStepResultAPI({
+          projectId,
+          stepCode,
+          contentMarkdown: resultText,
+        });
+        queryClient.setQueryData(
+          projectKeys.stepResult(projectId, stepCode),
+          savedResult,
+        );
 
         if (isLastStep) {
           setIsCompleting(true);
@@ -66,6 +78,7 @@ export const useUploadStepSubmission = ({
             await Promise.all([
               queryClient.invalidateQueries({
                 queryKey: projectKeys.detail(projectId),
+                exact: true,
               }),
               queryClient.invalidateQueries({
                 queryKey: projectKeys.lists(),
@@ -79,6 +92,7 @@ export const useUploadStepSubmission = ({
           } catch (error) {
             await queryClient.invalidateQueries({
               queryKey: projectKeys.detail(projectId),
+              exact: true,
             });
             toaster.create({
               type: "error",
@@ -93,6 +107,7 @@ export const useUploadStepSubmission = ({
 
         await queryClient.invalidateQueries({
           queryKey: projectKeys.detail(projectId),
+          exact: true,
         });
 
         if (activeStepVisitRef.current === submissionStepVisit) {

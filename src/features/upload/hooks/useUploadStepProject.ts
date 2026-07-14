@@ -31,11 +31,11 @@ export const useUploadStepProject = ({
   const steps = roadmapType ? ROADMAP_STEP_CODES[roadmapType] : [];
   const stepCode = steps[stepNum - 1];
   const isLastStep = steps.length > 0 && stepNum >= steps.length;
-  const stepResponses = project?.stepResponses ?? [];
+  const stepSummaries = project?.steps ?? [];
   const { completedStepCodes, progressStep, selectableStepCodes } =
     getUploadStepProgress({
       stepCodes: steps,
-      stepResponses,
+      stepSummaries,
     });
 
   return {
