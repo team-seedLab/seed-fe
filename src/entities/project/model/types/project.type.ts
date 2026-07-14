@@ -42,6 +42,30 @@ export interface ProjectStepSummary {
   completedAt: string | null;
 }
 
+export interface ProjectStepPrompt {
+  stepId: string;
+  stepCode: string;
+  stepName: string;
+  providedPromptSnapshot: string;
+  editedPrompt: string | null;
+  finalPrompt: string;
+  formatPrompt: string;
+  addedCount: number;
+  removedCount: number;
+  diffJson: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectStepResult {
+  stepId: string;
+  stepCode: string;
+  stepName: string;
+  contentMarkdown: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ProjectStepResponse {
   stepCode: string;
   stepName: string;
