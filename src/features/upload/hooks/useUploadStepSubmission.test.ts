@@ -8,12 +8,14 @@ const {
   invalidateQueriesMock,
   navigateMock,
   saveProjectStepResultAPIMock,
+  saveProjectStepSelfCheckAPIMock,
   setQueryDataMock,
 } = vi.hoisted(() => ({
   completeProjectAPIMock: vi.fn(),
   invalidateQueriesMock: vi.fn(),
   navigateMock: vi.fn(),
   saveProjectStepResultAPIMock: vi.fn(),
+  saveProjectStepSelfCheckAPIMock: vi.fn(),
   setQueryDataMock: vi.fn(),
 }));
 
@@ -25,8 +27,24 @@ vi.mock("@/entities", async () => {
     ...actual,
     completeProjectAPI: completeProjectAPIMock,
     saveProjectStepResultAPI: saveProjectStepResultAPIMock,
+    saveProjectStepSelfCheckAPI: saveProjectStepSelfCheckAPIMock,
   };
 });
+
+const SELF_CHECK_ANSWERS = [
+  {
+    key: "core_understanding",
+    answer: "핵심 내용을 충분히 작성한 답변입니다.",
+  },
+  {
+    key: "result_application",
+    answer: "적용 내용을 충분히 작성한 답변입니다.",
+  },
+  {
+    key: "uncertainty_review",
+    answer: "확인 내용을 충분히 작성한 답변입니다.",
+  },
+];
 
 vi.mock("@tanstack/react-query", async () => {
   const actual = await vi.importActual<typeof import("@tanstack/react-query")>(
@@ -58,6 +76,7 @@ describe("useUploadStepSubmission", () => {
     invalidateQueriesMock.mockReset();
     navigateMock.mockReset();
     saveProjectStepResultAPIMock.mockReset();
+    saveProjectStepSelfCheckAPIMock.mockReset();
     setQueryDataMock.mockReset();
 
     completeProjectAPIMock.mockResolvedValue(undefined);
@@ -66,9 +85,14 @@ describe("useUploadStepSubmission", () => {
       contentMarkdown: "단계 결과",
       stepCode: "constraint_analysis",
     });
+    saveProjectStepSelfCheckAPIMock.mockResolvedValue({
+      checkItems: SELF_CHECK_ANSWERS,
+      selfCheckId: "self-check-1",
+      stepCode: "constraint_analysis",
+    });
   });
 
-  it("단계 결과 저장 후 상세 캐시를 갱신하고 다음 단계로 이동한다", async () => {
+  it("단계 결과와 Self-Check 저장 후 다음 단계로 이동한다", async () => {
     const { result } = renderHook(() =>
       useUploadStepSubmission({
         isLastStep: false,
@@ -79,7 +103,10 @@ describe("useUploadStepSubmission", () => {
     );
 
     await act(async () => {
-      await result.current.submitStepResult("단계 결과");
+      await result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "단계 결과",
+      });
     });
 
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
@@ -102,8 +129,16 @@ describe("useUploadStepSubmission", () => {
       ],
       expect.objectContaining({ contentMarkdown: "단계 결과" }),
     );
+    expect(saveProjectStepSelfCheckAPIMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      checkItems: SELF_CHECK_ANSWERS,
+    });
     expect(
       saveProjectStepResultAPIMock.mock.invocationCallOrder[0],
+    ).toBeLessThan(saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0]);
+    expect(
+      saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0],
     ).toBeLessThan(invalidateQueriesMock.mock.invocationCallOrder[0]);
     expect(invalidateQueriesMock.mock.invocationCallOrder[0]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
@@ -122,11 +157,17 @@ describe("useUploadStepSubmission", () => {
     );
 
     await act(async () => {
-      await result.current.submitStepResult("마지막 단계 결과");
+      await result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "마지막 단계 결과",
+      });
     });
 
     expect(
       saveProjectStepResultAPIMock.mock.invocationCallOrder[0],
+    ).toBeLessThan(saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0]);
+    expect(
+      saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0],
     ).toBeLessThan(completeProjectAPIMock.mock.invocationCallOrder[0]);
     expect(completeProjectAPIMock.mock.invocationCallOrder[0]).toBeLessThan(
       invalidateQueriesMock.mock.invocationCallOrder[0],
@@ -159,7 +200,10 @@ describe("useUploadStepSubmission", () => {
     );
 
     await act(async () => {
-      await result.current.submitStepResult("마지막 단계 결과");
+      await result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "마지막 단계 결과",
+      });
     });
 
     expect(saveProjectStepResultAPIMock).toHaveBeenCalled();
@@ -171,6 +215,32 @@ describe("useUploadStepSubmission", () => {
       queryKey: ["project", "list"],
       refetchType: "all",
     });
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
+  it("Self-Check 저장에 실패하면 단계 이동과 프로젝트 완료를 하지 않는다", async () => {
+    saveProjectStepSelfCheckAPIMock.mockRejectedValueOnce(
+      new Error("Self-Check 저장 실패"),
+    );
+    const { result } = renderHook(() =>
+      useUploadStepSubmission({
+        isLastStep: false,
+        projectId: "project-1",
+        stepCode: "constraint_analysis",
+        stepNum: 1,
+      }),
+    );
+
+    await act(async () => {
+      await result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "단계 결과",
+      });
+    });
+
+    expect(saveProjectStepResultAPIMock).toHaveBeenCalled();
+    expect(saveProjectStepSelfCheckAPIMock).toHaveBeenCalled();
+    expect(completeProjectAPIMock).not.toHaveBeenCalled();
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
@@ -197,7 +267,10 @@ describe("useUploadStepSubmission", () => {
     let submissionPromise!: Promise<void>;
 
     act(() => {
-      submissionPromise = result.current.submitStepResult("1단계 결과");
+      submissionPromise = result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "1단계 결과",
+      });
     });
     rerender({ stepNum: 2 });
 
@@ -232,7 +305,10 @@ describe("useUploadStepSubmission", () => {
     let submissionPromise!: Promise<void>;
 
     act(() => {
-      submissionPromise = result.current.submitStepResult("1단계 결과");
+      submissionPromise = result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "1단계 결과",
+      });
     });
     rerender({ stepNum: 2 });
     rerender({ stepNum: 1 });
