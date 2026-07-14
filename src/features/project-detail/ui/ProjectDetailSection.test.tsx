@@ -22,12 +22,23 @@ const createProject = (
   };
 
   return {
+    completedAt: "2026-07-10",
+    completedStepCount: 4,
     createdAt: "2026-07-10",
+    currentStepCode: "report_revision",
+    currentStepOrder: 4,
+    desiredOutcome: "보고서 완성",
+    keyFocus: "핵심 주장",
     projectId: "project-1",
+    progressPercent: 100,
+    requiredElements: "참고 문헌",
     roadmapType: "REPORT",
     status: "COMPLETED",
+    steps: [],
     stepResponses: [step],
     title: "테스트 프로젝트",
+    totalStepCount: 4,
+    updatedAt: "2026-07-10",
   };
 };
 
