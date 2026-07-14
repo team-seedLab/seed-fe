@@ -1,0 +1,14 @@
+export const AI_MENTOR_QUESTION_MAX_LENGTH = 2000;
+
+export const AI_MENTOR_PANEL_LAYOUT = {
+  DEFAULT_WIDTH: 794,
+  KEYBOARD_RESIZE_STEP: 24,
+  MAX_WIDTH: 794,
+  MIN_MAIN_WIDTH: 560,
+  MIN_WIDTH: 360,
+  RESIZE_HANDLE_WIDTH: 12,
+  SPACING: 36,
+} as const;
+
+export const AI_MENTOR_REASK_MESSAGE =
+  "수정한 프롬프트를 기준으로 다시 검토해 주세요.";
