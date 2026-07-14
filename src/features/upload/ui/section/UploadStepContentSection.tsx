@@ -1,17 +1,18 @@
 import { useState } from "react";
 
-import { Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 
 import { PromptCard } from "@/entities";
 import { useClipboardCopy } from "@/shared";
-import { ArrowRightIcon } from "@/shared/_assets/icons";
 
-import { UploadStepResultInput } from "../../components";
+import {
+  UploadStepResultInput,
+  UploadStepSubmissionControl,
+} from "../../components";
 import {
   useUploadPromptEditor,
   useUploadStepData,
   useUploadStepProject,
-  useUploadStepSubmission,
 } from "../../hooks";
 
 type Props = {
@@ -45,12 +46,6 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
       onSave: savePrompt,
       onSaveBeforePageExit: savePromptOnPageExit,
     });
-  const { isSubmitting, submitStepResult } = useUploadStepSubmission({
-    projectId,
-    stepNum,
-    stepCode,
-    isLastStep,
-  });
   const resultTextKey = `${projectId}:${stepNum}`;
   const savedResultText =
     resultData && resultData.stepCode === stepCode
@@ -147,35 +142,15 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
           onChange={handleResultTextChange}
         />
 
-        <Flex
-          justify={{ base: "stretch", md: "flex-end" }}
-          pt={{ base: 2, md: 8 }}
-          w="full"
-        >
-          <Button
-            bg="seed"
-            borderRadius="xl"
-            color="white"
-            disabled={!resultText.trim() || isSubmitting}
-            fontSize={{ base: "sm", md: "md" }}
-            fontWeight="bold"
-            gap={1}
-            h={{ base: 12, md: "auto" }}
-            onClick={() => {
-              void submitStepResult(resultText);
-            }}
-            px={{ base: 6, md: 10 }}
-            py={{ base: 3, md: 4 }}
-            w={{ base: "full", md: "auto" }}
-            _disabled={{ opacity: 0.5 }}
-            _hover={{
-              opacity: resultText.trim() && !isSubmitting ? 0.85 : 0.5,
-            }}
-          >
-            {isLastStep ? "로드맵 완성" : "다음 단계로 진행"}
-            <ArrowRightIcon boxSize={3} />
-          </Button>
-        </Flex>
+        <UploadStepSubmissionControl
+          isLastStep={isLastStep}
+          isStepLoading={isStepLoading}
+          key={`${projectId}:${stepCode ?? stepNum}`}
+          projectId={projectId}
+          resultText={resultText}
+          stepCode={stepCode}
+          stepNum={stepNum}
+        />
       </VStack>
     </Box>
   );

@@ -4,9 +4,11 @@ import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import {
+  type ProjectStepSelfCheckAnswer,
   completeProjectAPI,
   projectKeys,
   saveProjectStepResultAPI,
+  saveProjectStepSelfCheckAPI,
 } from "@/entities";
 import { DYNAMIC_ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
@@ -19,7 +21,12 @@ type Params = {
 
 type Result = {
   isSubmitting: boolean;
-  submitStepResult: (resultText: string) => Promise<void>;
+  submitStep: (params: SubmitStepParams) => Promise<void>;
+};
+
+type SubmitStepParams = {
+  checkItems: ProjectStepSelfCheckAnswer[];
+  resultText: string;
 };
 
 export const useUploadStepSubmission = ({
@@ -43,12 +50,13 @@ export const useUploadStepSubmission = ({
     };
   }, [activeStepKey]);
 
-  const submitStepResult = useCallback(
-    async (resultText: string) => {
+  const submitStep = useCallback(
+    async ({ checkItems, resultText }: SubmitStepParams) => {
       if (
         !projectId ||
         !stepCode ||
         !resultText.trim() ||
+        checkItems.length === 0 ||
         isSaving ||
         isCompleting
       ) {
@@ -68,6 +76,15 @@ export const useUploadStepSubmission = ({
         queryClient.setQueryData(
           projectKeys.stepResult(projectId, stepCode),
           savedResult,
+        );
+        const savedSelfCheck = await saveProjectStepSelfCheckAPI({
+          projectId,
+          stepCode,
+          checkItems,
+        });
+        queryClient.setQueryData(
+          projectKeys.stepSelfCheck(projectId, stepCode),
+          savedSelfCheck,
         );
 
         if (isLastStep) {
@@ -136,6 +153,6 @@ export const useUploadStepSubmission = ({
 
   return {
     isSubmitting: isSaving || isCompleting,
-    submitStepResult,
+    submitStep,
   };
 };

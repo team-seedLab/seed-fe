@@ -19,6 +19,7 @@ export const UploadStepResultInput = ({ value, onChange }: Props) => {
 
       <Box position="relative" w="full">
         <Textarea
+          aria-label="작업 결과"
           _focusVisible={{
             outline: "none",
             boxShadow: "none",

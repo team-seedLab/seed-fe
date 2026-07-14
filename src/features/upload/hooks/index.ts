@@ -7,3 +7,4 @@ export * from "./useUploadStepNavigation";
 export * from "./useUploadStepProject";
 export * from "./useUploadStepRouteGuard";
 export * from "./useUploadStepSubmission";
+export * from "./useUploadStepSelfCheck";
