@@ -16,6 +16,8 @@ export const projectKeys = {
     [...projectKeys.step(projectId, stepCode), "result"] as const,
   stepSelfCheck: (projectId: string, stepCode: string) =>
     [...projectKeys.step(projectId, stepCode), "self-check"] as const,
+  stepAiMessages: (projectId: string, stepCode: string) =>
+    [...projectKeys.step(projectId, stepCode), "ai-messages"] as const,
   list: (params: ReturnType<typeof normalizeProjectListQueryParams>) =>
     [
       ...projectKeys.lists(),

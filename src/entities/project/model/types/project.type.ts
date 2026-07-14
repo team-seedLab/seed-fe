@@ -82,6 +82,22 @@ export interface ProjectStepSelfCheck {
   updatedAt: string | null;
 }
 
+export type ProjectStepAiMessageSender = "USER" | "ASSISTANT";
+
+export type ProjectStepAiMessageType = "CHAT" | "REASK_WITH_EDITED_PROMPT";
+
+export interface ProjectStepAiMessage {
+  aiMessageId: string;
+  turnId: string;
+  sender: ProjectStepAiMessageSender;
+  messageType: ProjectStepAiMessageType;
+  content: string;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  totalTokens: number | null;
+  createdAt: string;
+}
+
 export interface ProjectStepResponse {
   stepCode: string;
   stepName: string;

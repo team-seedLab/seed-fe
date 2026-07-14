@@ -3,8 +3,7 @@ import { Navigate, useParams, useSearchParams } from "react-router";
 import { Flex } from "@chakra-ui/react";
 
 import {
-  UploadStepContentSection,
-  UploadStepHeaderSection,
+  UploadStepWorkspaceSection,
   useUploadStepRouteGuard,
 } from "@/features";
 
@@ -31,25 +30,8 @@ export default function UploadStepPage() {
   }
 
   return (
-    <Flex
-      bg="white"
-      direction="column"
-      minH="100vh"
-      pb={{ base: "72px", md: "127px" }}
-      pt={{ base: "40px", md: "80px" }}
-    >
-      <Flex
-        direction="column"
-        gap={{ base: 6, md: 10 }}
-        maxW="896px"
-        mx="auto"
-        px={{ base: 4, md: 6 }}
-        w="full"
-      >
-        <UploadStepHeaderSection projectId={projectId} stepNum={stepNum} />
-
-        <UploadStepContentSection projectId={projectId} stepNum={stepNum} />
-      </Flex>
+    <Flex bg="white" direction="column" minH="calc(100dvh - 60px)">
+      <UploadStepWorkspaceSection projectId={projectId} stepNum={stepNum} />
     </Flex>
   );
 }

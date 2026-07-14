@@ -109,6 +109,31 @@ export const useUploadPromptSaveQueue = ({
     return commitPromptForKey(editorKey, content);
   };
 
+  const ensurePromptSaved = async (content: string) => {
+    setCurrentPrompt(content);
+
+    if (pendingPromptByKeyRef.current[editorKey] === content) {
+      try {
+        await saveQueueByKeyRef.current[editorKey];
+      } catch {
+        return false;
+      }
+
+      return lastCommittedPromptByKeyRef.current[editorKey] === content;
+    }
+
+    const lastCommittedPrompt =
+      lastCommittedPromptByKeyRef.current[editorKey] ??
+      initialPromptByKeyRef.current[editorKey] ??
+      "";
+
+    if (lastCommittedPrompt === content) {
+      return true;
+    }
+
+    return commitPromptForKey(editorKey, content);
+  };
+
   const getUnsavedPrompt = (targetKey: string) => {
     const currentPrompt =
       currentPromptByKeyRef.current[targetKey] ??
@@ -150,6 +175,7 @@ export const useUploadPromptSaveQueue = ({
   return {
     cancelPendingSaves,
     commitPrompt,
+    ensurePromptSaved,
     flushPrompt,
     getUnsavedPrompt,
     setCurrentPrompt,

@@ -44,6 +44,59 @@ describe("useUploadPromptSaveQueue", () => {
     expect(isSaved).toBe(false);
   });
 
+  it("이미 저장된 수정본은 추가 요청 없이 저장 완료로 판단한다", async () => {
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    const { result } = renderHook(() =>
+      useUploadPromptSaveQueue({
+        editorKey: EDITOR_KEY,
+        initialPrompt: "저장된 수정본",
+        onSave,
+      }),
+    );
+
+    let isSaved = false;
+    await act(async () => {
+      isSaved = await result.current.ensurePromptSaved("저장된 수정본");
+    });
+
+    expect(isSaved).toBe(true);
+    expect(onSave).not.toHaveBeenCalled();
+  });
+
+  it("같은 수정본의 저장이 진행 중이면 완료될 때까지 기다린다", async () => {
+    let resolveSave!: () => void;
+    const onSave = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSave = resolve;
+        }),
+    );
+    const { result } = renderHook(() =>
+      useUploadPromptSaveQueue({
+        editorKey: EDITOR_KEY,
+        initialPrompt: "원본 프롬프트",
+        onSave,
+      }),
+    );
+    let activeCommit!: Promise<boolean>;
+    let ensuredSave!: Promise<boolean>;
+
+    act(() => {
+      activeCommit = result.current.commitPrompt("수정된 프롬프트");
+      ensuredSave = result.current.ensurePromptSaved("수정된 프롬프트");
+    });
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    act(() => resolveSave());
+
+    await act(async () => {
+      await activeCommit;
+    });
+
+    expect(await ensuredSave).toBe(true);
+    expect(onSave).toHaveBeenCalledOnce();
+  });
+
   it("화면 이탈 시 현재 수정본을 저장 큐에 추가한다", async () => {
     const onSave = vi.fn().mockResolvedValue(undefined);
     const { result } = renderHook(() =>

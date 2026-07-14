@@ -2,50 +2,50 @@ import { useState } from "react";
 
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import { PromptCard } from "@/entities";
+import {
+  type ProjectStepPrompt,
+  type ProjectStepResult,
+  PromptCard,
+} from "@/entities";
 import { useClipboardCopy } from "@/shared";
 
 import {
   UploadStepResultInput,
   UploadStepSubmissionControl,
 } from "../../components";
-import {
-  useUploadPromptEditor,
-  useUploadStepData,
-  useUploadStepProject,
-} from "../../hooks";
+import type { UploadPromptEditorState } from "../../hooks";
 
 type Props = {
+  editorFocusRequestId: number | null;
+  isLastStep: boolean;
+  isStepLoading: boolean;
+  promptData: ProjectStepPrompt | undefined;
+  promptEditor: UploadPromptEditorState;
   projectId: string;
+  resultData: ProjectStepResult | null | undefined;
+  stepCode: string | undefined;
   stepNum: number;
 };
 
-export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
+export const UploadStepContentSection = ({
+  editorFocusRequestId,
+  isLastStep,
+  isStepLoading,
+  promptData,
+  promptEditor,
+  projectId,
+  resultData,
+  stepCode,
+  stepNum,
+}: Props) => {
   const [resultTextByStep, setResultTextByStep] = useState<
     Record<string, string>
   >({});
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
-  const { stepCode, isLastStep } = useUploadStepProject({ projectId, stepNum });
-  const {
-    promptData,
-    resultData,
-    isStepLoading,
-    savePrompt,
-    savePromptOnPageExit,
-  } = useUploadStepData({
-    projectId,
-    stepCode,
-  });
   const stepName = promptData?.stepName;
   const providedPromptSnapshot = promptData?.providedPromptSnapshot;
   const { editedPrompt, changePrompt, commitPrompt, resetPrompt } =
-    useUploadPromptEditor({
-      editorKey: `${projectId}:${stepNum}`,
-      initialEditedPrompt: promptData?.editedPrompt,
-      originalPrompt: providedPromptSnapshot ?? "",
-      onSave: savePrompt,
-      onSaveBeforePageExit: savePromptOnPageExit,
-    });
+    promptEditor;
   const resultTextKey = `${projectId}:${stepNum}`;
   const savedResultText =
     resultData && resultData.stepCode === stepCode
@@ -63,7 +63,6 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
       bg="white"
       border="1px solid white"
       borderRadius={{ base: "3xl", md: "4xl" }}
-      boxShadow="0px 20px 60px -10px rgba(0,0,0,0.08)"
       overflow="hidden"
     >
       <VStack
@@ -121,6 +120,7 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
           <PromptCard
             content={editedPrompt}
             copied={copiedPrompt}
+            editorFocusRequestId={editorFocusRequestId}
             label="수정 내용"
             mode="editable"
             originalContent={providedPromptSnapshot}

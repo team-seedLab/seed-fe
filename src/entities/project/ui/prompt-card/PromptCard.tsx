@@ -6,7 +6,7 @@ import { PromptCardContent } from "./PromptCardContent";
 import { PromptCardEditor } from "./PromptCardEditor";
 import { PromptCardHeader } from "./PromptCardHeader";
 import { PromptDiffContent } from "./PromptDiffContent";
-import { usePromptCardDiff } from "./hooks";
+import { usePromptCardDiff, usePromptCardEditorFocus } from "./hooks";
 
 type BaseProps = {
   label: string;
@@ -21,6 +21,7 @@ type ReadOnlyProps = BaseProps & {
 
 type EditableProps = BaseProps & {
   mode: "editable";
+  editorFocusRequestId?: number | null;
   originalContent: string;
   onCommit: (content: string) => void;
   onContentChange: (content: string) => void;
@@ -44,6 +45,12 @@ export const PromptCard = (props: Props) => {
   const { closeDiff, diff, isDiffVisible, toggleDiff } = usePromptCardDiff({
     content,
     originalContent,
+  });
+  const editorRef = usePromptCardEditorFocus({
+    closeDiff,
+    focusRequestId:
+      props.mode === "editable" ? (props.editorFocusRequestId ?? null) : null,
+    isDiffVisible,
   });
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
@@ -100,6 +107,7 @@ export const PromptCard = (props: Props) => {
       ) : props.mode === "editable" ? (
         <PromptCardEditor
           content={content}
+          editorRef={editorRef}
           label={label}
           onContentChange={props.onContentChange}
         />

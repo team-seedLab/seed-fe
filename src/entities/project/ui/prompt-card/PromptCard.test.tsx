@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { fireEvent, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
 
@@ -44,7 +44,46 @@ const EditablePromptCard = () => {
   );
 };
 
+const FocusablePromptCard = () => {
+  const [editorFocusRequestId, setEditorFocusRequestId] = useState<
+    number | null
+  >(null);
+
+  return (
+    <>
+      <PromptCard
+        content={EDITED_PROMPT}
+        editorFocusRequestId={editorFocusRequestId}
+        label="수정 내용"
+        mode="editable"
+        originalContent={ORIGINAL_PROMPT}
+        onCommit={vi.fn()}
+        onContentChange={vi.fn()}
+        onCopy={vi.fn()}
+        onReset={vi.fn()}
+      />
+      <button
+        type="button"
+        onClick={() =>
+          setEditorFocusRequestId((currentRequestId) =>
+            currentRequestId === null ? 1 : currentRequestId + 1,
+          )
+        }
+      >
+        프롬프트 편집 요청
+      </button>
+    </>
+  );
+};
+
 describe("PromptCard", () => {
+  beforeEach(() => {
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      value: vi.fn(),
+    });
+  });
+
   it("기존 읽기 전용 카드의 내용과 복사 기능을 유지한다", () => {
     const onCopy = vi.fn();
 
@@ -206,6 +245,25 @@ describe("PromptCard", () => {
 
     expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveValue(
       ORIGINAL_PROMPT,
+    );
+    expect(screen.getByRole("button", { name: "차이보기" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+  });
+
+  it("diff 화면에서 편집 요청을 받으면 편집 화면으로 돌아가 포커스한다", async () => {
+    renderWithProviders(<FocusablePromptCard />);
+
+    fireEvent.click(screen.getByRole("button", { name: "차이보기" }));
+    expect(
+      screen.queryByRole("textbox", { name: "수정 내용" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "프롬프트 편집 요청" }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveFocus(),
     );
     expect(screen.getByRole("button", { name: "차이보기" })).toHaveAttribute(
       "aria-pressed",

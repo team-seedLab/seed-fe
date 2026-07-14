@@ -17,13 +17,13 @@ vi.mock("@/features", async () => {
 
   return {
     ...actual,
-    UploadStepContentSection: ({ stepNum }: { stepNum: number }) => (
+    UploadStepWorkspaceSection: ({ stepNum }: { stepNum: number }) => (
       <div>
+        <span>단계 헤더</span>
         <span>단계 콘텐츠</span>
         <span>{`현재 단계 ${stepNum}`}</span>
       </div>
     ),
-    UploadStepHeaderSection: () => <div>단계 헤더</div>,
     useUploadStepRouteGuard: useUploadStepRouteGuardMock,
   };
 });

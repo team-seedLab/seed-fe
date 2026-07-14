@@ -6,3 +6,4 @@ export * from "./UploadReferenceFileSection";
 export * from "./UploadLoadingSection";
 export * from "./UploadStepContentSection";
 export * from "./UploadStepHeaderSection";
+export * from "./UploadStepWorkspaceSection";
