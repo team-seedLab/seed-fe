@@ -1,0 +1,2 @@
+export const SELF_CHECK_ANSWER_MIN_LENGTH = 10;
+export const SELF_CHECK_ANSWER_MAX_LENGTH = 5_000;
