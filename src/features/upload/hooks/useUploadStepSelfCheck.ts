@@ -61,20 +61,13 @@ export const useUploadStepSelfCheck = ({ projectId, stepCode }: Params) => {
   };
 
   const changeAnswer = (key: string, answer: string) => {
-    setAnswerDrafts((previousDrafts) => {
-      const initialAnswers = Object.fromEntries(
-        savedCheckItems.map((item) => [item.key, item.answer ?? ""]),
-      );
-
-      return {
-        ...previousDrafts,
-        [editorKey]: {
-          ...initialAnswers,
-          ...previousDrafts[editorKey],
-          [key]: answer,
-        },
-      };
-    });
+    setAnswerDrafts((previousDrafts) => ({
+      ...previousDrafts,
+      [editorKey]: {
+        ...previousDrafts[editorKey],
+        [key]: answer,
+      },
+    }));
   };
 
   return {

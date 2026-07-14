@@ -94,6 +94,43 @@ describe("useUploadStepSelfCheck", () => {
     expect(result.current.isValid).toBe(true);
   });
 
+  it("수정하지 않은 답변은 새로 조회된 서버 값을 반영한다", () => {
+    const { rerender, result } = renderHook(() =>
+      useUploadStepSelfCheck({
+        projectId: "project-1",
+        stepCode: "constraint_analysis",
+      }),
+    );
+
+    act(() => {
+      result.current.changeAnswer(
+        "core_understanding",
+        "사용자가 직접 수정한 핵심 내용입니다.",
+      );
+    });
+
+    const updatedAnswer = "서버에서 새로 조회한 두 번째 답변입니다.";
+    useGetProjectStepSelfCheckMock.mockReturnValue({
+      data: {
+        checkItems: CHECK_ITEMS.map((item) =>
+          item.key === "result_application"
+            ? { ...item, answer: updatedAnswer }
+            : item,
+        ),
+      },
+      isError: false,
+      isLoading: false,
+      refetch: refetchMock,
+    });
+
+    rerender();
+
+    expect(result.current.answers[0]?.answer).toBe(
+      "사용자가 직접 수정한 핵심 내용입니다.",
+    );
+    expect(result.current.answers[1]?.answer).toBe(updatedAnswer);
+  });
+
   it("답변이 공백 제외 열 글자보다 짧으면 유효하지 않다", () => {
     const { result } = renderHook(() =>
       useUploadStepSelfCheck({

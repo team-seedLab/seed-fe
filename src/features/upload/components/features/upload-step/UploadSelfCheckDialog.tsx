@@ -49,6 +49,8 @@ export const UploadSelfCheckDialog = ({
   onRetry,
   onSubmit,
 }: Props) => {
+  const isSubmitDisabled = !isValid || isLoading || isError || isSubmitting;
+
   return (
     <DialogRoot
       closeOnEscape={!isSubmitting}
@@ -116,7 +118,7 @@ export const UploadSelfCheckDialog = ({
               bg="seed"
               borderRadius="xl"
               color="white"
-              disabled={!isValid || isLoading || isError || isSubmitting}
+              disabled={isSubmitDisabled}
               fontSize="md"
               fontWeight="bold"
               gap={1}
@@ -124,7 +126,7 @@ export const UploadSelfCheckDialog = ({
               px={10}
               py={4}
               _disabled={{ opacity: 0.5 }}
-              _hover={{ opacity: isValid && !isSubmitting ? 0.85 : 0.5 }}
+              _hover={{ opacity: isSubmitDisabled ? 0.5 : 0.85 }}
             >
               {isSubmitting ? "저장 중" : "검증완료"}
               <ArrowRightIcon boxSize={3} />

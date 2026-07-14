@@ -79,4 +79,40 @@ describe("UploadSelfCheckDialog", () => {
     );
     expect(onSubmit).toHaveBeenCalledOnce();
   });
+
+  it("로딩 또는 오류 상태에서는 검증 완료 버튼을 비활성화한다", () => {
+    const { rerender } = renderWithProviders(
+      <UploadSelfCheckDialog
+        checkItems={CHECK_ITEMS}
+        isError={false}
+        isLoading
+        isOpen
+        isSubmitting={false}
+        isValid
+        onAnswerChange={vi.fn()}
+        onOpenChange={vi.fn()}
+        onRetry={vi.fn()}
+        onSubmit={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "검증완료" })).toBeDisabled();
+
+    rerender(
+      <UploadSelfCheckDialog
+        checkItems={CHECK_ITEMS}
+        isError
+        isLoading={false}
+        isOpen
+        isSubmitting={false}
+        isValid
+        onAnswerChange={vi.fn()}
+        onOpenChange={vi.fn()}
+        onRetry={vi.fn()}
+        onSubmit={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "검증완료" })).toBeDisabled();
+  });
 });
