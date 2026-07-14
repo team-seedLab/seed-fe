@@ -26,18 +26,20 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
   const { stepCode, isLastStep } = useUploadStepProject({ projectId, stepNum });
-  const { stepData, isStepLoading } = useUploadStepData({
-    projectId,
-    stepCode,
-  });
-  const stepName = stepData?.stepName;
-  const providedPromptSnapshot = stepData?.providedPromptSnapshot;
-  const formatPrompt = stepData?.formatPrompt;
+  const { promptData, resultData, isStepLoading, savePrompt } =
+    useUploadStepData({
+      projectId,
+      stepCode,
+    });
+  const stepName = promptData?.stepName;
+  const providedPromptSnapshot = promptData?.providedPromptSnapshot;
+  const formatPrompt = promptData?.formatPrompt;
   const { editedPrompt, changePrompt, commitPrompt, resetPrompt } =
     useUploadPromptEditor({
       editorKey: `${projectId}:${stepNum}`,
-      initialEditedPrompt: stepData?.userEditedPrompt,
+      initialEditedPrompt: promptData?.editedPrompt,
       originalPrompt: providedPromptSnapshot ?? "",
+      onSave: savePrompt,
     });
   const { isSubmitting, submitStepResult } = useUploadStepSubmission({
     projectId,
@@ -47,9 +49,7 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
   });
   const resultTextKey = `${projectId}:${stepNum}`;
   const savedResultText =
-    stepData?.stepCode === stepCode
-      ? (stepData?.userSubmittedResult ?? "")
-      : "";
+    resultData?.stepCode === stepCode ? resultData.contentMarkdown : "";
   const resultText = resultTextByStep[resultTextKey] ?? savedResultText;
   const handleResultTextChange = (value: string) => {
     setResultTextByStep((prev) => ({

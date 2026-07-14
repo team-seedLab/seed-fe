@@ -4,7 +4,7 @@ type Params = {
   editorKey: string;
   originalPrompt: string;
   initialEditedPrompt?: string | null;
-  onSave?: (editedPrompt: string | null) => Promise<void> | void;
+  onSave?: (editedPrompt: string) => Promise<void> | void;
 };
 
 type Result = {
@@ -49,7 +49,7 @@ export const useUploadPromptEditor = ({
     pendingPromptByKeyRef.current[editorKey] = content;
 
     try {
-      await onSave?.(content === originalPrompt ? null : content);
+      await onSave?.(content);
       lastCommittedPromptByKeyRef.current[editorKey] = content;
       return true;
     } catch {

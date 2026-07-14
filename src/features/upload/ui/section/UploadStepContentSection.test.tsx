@@ -13,13 +13,15 @@ vi.mock("../../hooks", async () => {
     ...actual,
     useUploadStepData: () => ({
       isStepLoading: false,
-      stepData: {
+      promptData: {
+        editedPrompt: null,
         formatPrompt: "# 결과 추출 프롬프트",
         providedPromptSnapshot: "원본 프롬프트\n분량: 제한 없음",
         stepCode: "RESEARCH",
         stepName: "자료 조사",
-        userSubmittedResult: null,
       },
+      resultData: null,
+      savePrompt: vi.fn(),
     }),
     useUploadStepProject: () => ({
       isLastStep: false,
