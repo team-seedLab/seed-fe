@@ -24,15 +24,23 @@ type Props = {
   stepNum: number;
 };
 
+type PromptEditorFocusRequest = {
+  editorKey: string;
+  requestId: number | null;
+};
+
 export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
   const workspaceLayoutRef = useRef<HTMLDivElement>(null);
-  const [promptEditorFocusRequestId, setPromptEditorFocusRequestId] = useState<
-    number | null
-  >(null);
   const { isLastStep, stepCode } = useUploadStepProject({
     projectId,
     stepNum,
   });
+  const editorKey = `${projectId}:${stepCode ?? stepNum}`;
+  const [promptEditorFocusRequest, setPromptEditorFocusRequest] =
+    useState<PromptEditorFocusRequest>({
+      editorKey,
+      requestId: null,
+    });
   const {
     isStepLoading,
     promptData,
@@ -42,7 +50,7 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
   } = useUploadStepData({ projectId, stepCode });
   const originalPrompt = promptData?.providedPromptSnapshot ?? "";
   const promptEditor = useUploadPromptEditor({
-    editorKey: `${projectId}:${stepCode ?? stepNum}`,
+    editorKey,
     initialEditedPrompt: promptData?.editedPrompt,
     onSave: savePrompt,
     onSaveBeforePageExit: savePromptOnPageExit,
@@ -63,14 +71,23 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
     stepCode,
   });
 
+  if (promptEditorFocusRequest.editorKey !== editorKey) {
+    setPromptEditorFocusRequest({ editorKey, requestId: null });
+  }
+
   const handleEditPrompt = () => {
     if (!isSplitScreen) {
       closePanel();
     }
 
-    setPromptEditorFocusRequestId((currentRequestId) =>
-      currentRequestId === null ? 1 : currentRequestId + 1,
-    );
+    setPromptEditorFocusRequest((currentRequest) => ({
+      editorKey,
+      requestId:
+        currentRequest.editorKey === editorKey &&
+        currentRequest.requestId !== null
+          ? currentRequest.requestId + 1
+          : 1,
+    }));
   };
 
   return (
@@ -108,7 +125,11 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
             <UploadStepHeaderSection projectId={projectId} stepNum={stepNum} />
 
             <UploadStepContentSection
-              editorFocusRequestId={promptEditorFocusRequestId}
+              editorFocusRequestId={
+                promptEditorFocusRequest.editorKey === editorKey
+                  ? promptEditorFocusRequest.requestId
+                  : null
+              }
               isLastStep={isLastStep}
               isStepLoading={isStepLoading}
               promptData={promptData}

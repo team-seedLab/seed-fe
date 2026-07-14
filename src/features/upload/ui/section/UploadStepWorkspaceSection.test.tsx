@@ -113,9 +113,9 @@ vi.mock("../../hooks", async () => {
       savePrompt: vi.fn(),
       savePromptOnPageExit: vi.fn(),
     }),
-    useUploadStepProject: () => ({
+    useUploadStepProject: ({ stepNum }: { stepNum: number }) => ({
       isLastStep: false,
-      stepCode: "RESEARCH",
+      stepCode: `STEP_${stepNum}`,
     }),
   };
 });
@@ -138,7 +138,13 @@ vi.mock("./UploadStepContentSection", async () => {
         }
       }, [editorFocusRequestId]);
 
-      return <textarea aria-label="수정 내용" ref={editorRef} />;
+      return (
+        <textarea
+          aria-label="수정 내용"
+          data-focus-request-id={editorFocusRequestId ?? ""}
+          ref={editorRef}
+        />
+      );
     },
   };
 });
@@ -164,5 +170,28 @@ describe("UploadStepWorkspaceSection", () => {
 
     expect(closePanelMock).toHaveBeenCalledOnce();
     expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveFocus();
+  });
+
+  it("단계 전환 시 이전 단계의 편집기 포커스 요청을 전달하지 않는다", () => {
+    const { rerender } = renderWithProviders(
+      <UploadStepWorkspaceSection projectId="project-1" stepNum={1} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "프롬프트 수정하기" }));
+    expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveFocus();
+
+    rerender(<UploadStepWorkspaceSection projectId="project-1" stepNum={2} />);
+
+    expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveAttribute(
+      "data-focus-request-id",
+      "",
+    );
+
+    rerender(<UploadStepWorkspaceSection projectId="project-1" stepNum={1} />);
+
+    expect(screen.getByRole("textbox", { name: "수정 내용" })).toHaveAttribute(
+      "data-focus-request-id",
+      "",
+    );
   });
 });
