@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+
 import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -15,22 +17,6 @@ vi.mock("../../hooks", async () => {
 
   return {
     ...actual,
-    useUploadStepData: () => ({
-      isStepLoading: false,
-      promptData: {
-        editedPrompt: null,
-        providedPromptSnapshot: "원본 프롬프트\n분량: 제한 없음",
-        stepCode: "RESEARCH",
-        stepName: "자료 조사",
-      },
-      resultData: null,
-      savePrompt: vi.fn(),
-      savePromptOnPageExit: vi.fn(),
-    }),
-    useUploadStepProject: () => ({
-      isLastStep: false,
-      stepCode: "RESEARCH",
-    }),
     useUploadStepSubmission: () => ({
       isSubmitting: false,
       submitStep: vi.fn(),
@@ -50,11 +36,51 @@ vi.mock("../../hooks", async () => {
   };
 });
 
+const originalPrompt = "원본 프롬프트\n분량: 제한 없음";
+
+const UploadStepContentSectionTestHarness = () => {
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const [editedPrompt, setEditedPrompt] = useState(originalPrompt);
+
+  return (
+    <UploadStepContentSection
+      editorRef={editorRef}
+      isLastStep={false}
+      isStepLoading={false}
+      promptData={{
+        addedCount: 0,
+        createdAt: "2026-07-15T00:00:00",
+        diffJson: null,
+        editedPrompt: null,
+        finalPrompt: originalPrompt,
+        providedPromptSnapshot: originalPrompt,
+        removedCount: 0,
+        stepCode: "RESEARCH",
+        stepId: "step-1",
+        stepName: "자료 조사",
+        updatedAt: "2026-07-15T00:00:00",
+      }}
+      promptEditor={{
+        changePrompt: setEditedPrompt,
+        commitPrompt: async () => true,
+        editedPrompt,
+        ensurePromptSaved: async () => true,
+        resetPrompt: async () => {
+          setEditedPrompt(originalPrompt);
+          return true;
+        },
+      }}
+      projectId="project-1"
+      resultData={null}
+      stepCode="RESEARCH"
+      stepNum={1}
+    />
+  );
+};
+
 describe("UploadStepContentSection", () => {
   it("생성 프롬프트를 수정하고 작업 결과를 입력할 수 있다", () => {
-    renderWithProviders(
-      <UploadStepContentSection projectId="project-1" stepNum={1} />,
-    );
+    renderWithProviders(<UploadStepContentSectionTestHarness />);
 
     const promptEditor = screen.getByRole("textbox", { name: "수정 내용" });
     fireEvent.change(promptEditor, {
@@ -69,9 +95,7 @@ describe("UploadStepContentSection", () => {
 
   it("작업 결과 입력 후 다음 단계 버튼을 누르면 Self-Check를 연다", () => {
     openSelfCheckMock.mockClear();
-    renderWithProviders(
-      <UploadStepContentSection projectId="project-1" stepNum={1} />,
-    );
+    renderWithProviders(<UploadStepContentSectionTestHarness />);
 
     fireEvent.change(screen.getByRole("textbox", { name: "작업 결과" }), {
       target: { value: "단계 작업 결과" },

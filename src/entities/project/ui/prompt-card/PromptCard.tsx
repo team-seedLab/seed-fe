@@ -1,4 +1,4 @@
-import type { FocusEvent } from "react";
+import type { FocusEvent, Ref } from "react";
 
 import { Box } from "@chakra-ui/react";
 
@@ -21,6 +21,7 @@ type ReadOnlyProps = BaseProps & {
 
 type EditableProps = BaseProps & {
   mode: "editable";
+  editorRef?: Ref<HTMLTextAreaElement>;
   originalContent: string;
   onCommit: (content: string) => void;
   onContentChange: (content: string) => void;
@@ -100,6 +101,7 @@ export const PromptCard = (props: Props) => {
       ) : props.mode === "editable" ? (
         <PromptCardEditor
           content={content}
+          editorRef={props.editorRef}
           label={label}
           onContentChange={props.onContentChange}
         />

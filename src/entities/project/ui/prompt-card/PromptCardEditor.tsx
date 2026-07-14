@@ -1,13 +1,17 @@
+import type { Ref } from "react";
+
 import { Box, Textarea } from "@chakra-ui/react";
 
 type Props = {
   content: string;
+  editorRef?: Ref<HTMLTextAreaElement>;
   label: string;
   onContentChange: (content: string) => void;
 };
 
 export const PromptCardEditor = ({
   content,
+  editorRef,
   label,
   onContentChange,
 }: Props) => {
@@ -31,6 +35,7 @@ export const PromptCardEditor = ({
         onChange={(event) => onContentChange(event.target.value)}
         p={0}
         resize="vertical"
+        ref={editorRef}
         value={content}
         _focusVisible={{ boxShadow: "none", outline: "none" }}
       />

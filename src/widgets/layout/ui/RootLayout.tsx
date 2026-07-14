@@ -10,6 +10,9 @@ import { Footer, Header } from "../components";
 export const RootLayout = () => {
   const location = useLocation();
   const isMainRoute = location.pathname === ROUTE_PATHS.MAIN;
+  const isUploadStepRoute = location.pathname.startsWith(
+    `${ROUTE_PATHS.UPLOAD_STEP_BASE}/`,
+  );
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
 
   useEffect(() => {
@@ -60,12 +63,14 @@ export const RootLayout = () => {
     <Flex direction="column" minH="100dvh">
       <Flex
         direction="column"
-        maxW={{ base: "100vw", lg: "1280px" }}
+        flex={1}
+        maxW={isUploadStepRoute ? "100vw" : { base: "100vw", lg: "1280px" }}
+        minH={0}
         w="100vw"
         mx="auto"
-        flex={1}
       >
         <Box
+          flexShrink={0}
           h={isMainRoute && isHeaderCollapsed ? "0px" : "60px"}
           overflow="hidden"
           transition="height 260ms cubic-bezier(0.22, 1, 0.36, 1)"
@@ -81,6 +86,8 @@ export const RootLayout = () => {
               "opacity 220ms cubic-bezier(0.22, 1, 0.36, 1)",
               "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)",
             ].join(", ")}
+            maxW={isUploadStepRoute ? { base: "100vw", lg: "1280px" } : "full"}
+            mx="auto"
           >
             <ScrollToTop />
             <Header />
@@ -89,10 +96,11 @@ export const RootLayout = () => {
         <Box
           as="main"
           flex={1}
+          minH={0}
           w="full"
           mx="auto"
-          p="pagePadding"
-          overflowY={isMainRoute ? "visible" : "auto"}
+          p={isUploadStepRoute ? 0 : "pagePadding"}
+          overflowY={isUploadStepRoute || isMainRoute ? "visible" : "auto"}
         >
           <Outlet />
         </Box>
