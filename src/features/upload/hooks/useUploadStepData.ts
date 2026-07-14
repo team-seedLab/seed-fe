@@ -16,7 +16,7 @@ type Result = {
   promptData: ProjectStepPrompt | undefined;
   resultData: ProjectStepResult | null | undefined;
   isStepLoading: boolean;
-  savePrompt: (editedPrompt: string) => Promise<void>;
+  savePrompt: (editedPrompt: string, signal?: AbortSignal) => Promise<void>;
   savePromptOnPageExit: (editedPrompt: string) => void;
 };
 
@@ -29,7 +29,7 @@ export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
   const resultQuery = useGetProjectStepResult(projectId, normalizedStepCode);
   const updatePromptMutation = useUpdateProjectStepPrompt();
 
-  const savePrompt = async (editedPrompt: string) => {
+  const savePrompt = async (editedPrompt: string, signal?: AbortSignal) => {
     if (!projectId || !stepCode) {
       return;
     }
@@ -38,6 +38,7 @@ export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
       projectId,
       stepCode,
       editedPrompt,
+      ...(signal && { signal }),
     });
   };
 

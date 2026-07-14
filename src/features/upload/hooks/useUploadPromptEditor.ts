@@ -1,6 +1,10 @@
 import { useState } from "react";
 
 import {
+  type PromptPageExitSaveHandler,
+  useUploadPromptPageExit,
+} from "./useUploadPromptPageExit";
+import {
   type PromptSaveHandler,
   useUploadPromptSaveQueue,
 } from "./useUploadPromptSaveQueue";
@@ -10,7 +14,7 @@ type Params = {
   originalPrompt: string;
   initialEditedPrompt?: string | null;
   onSave?: PromptSaveHandler;
-  onSaveBeforePageExit?: PromptSaveHandler;
+  onSaveBeforePageExit?: PromptPageExitSaveHandler;
 };
 
 type Result = {
@@ -32,10 +36,19 @@ export const useUploadPromptEditor = ({
   >({});
   const initialPrompt = initialEditedPrompt ?? originalPrompt;
   const editedPrompt = editedPromptByKey[editorKey] ?? initialPrompt;
-  const { commitPrompt, setCurrentPrompt } = useUploadPromptSaveQueue({
+  const {
+    cancelPendingSaves,
+    commitPrompt,
+    flushPrompt,
+    getUnsavedPrompt,
+    setCurrentPrompt,
+  } = useUploadPromptSaveQueue({ editorKey, initialPrompt, onSave });
+
+  useUploadPromptPageExit({
     editorKey,
-    initialPrompt,
-    onSave,
+    cancelPendingSaves,
+    flushPrompt,
+    getUnsavedPrompt,
     onSaveBeforePageExit,
   });
 

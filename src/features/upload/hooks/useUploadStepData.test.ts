@@ -86,6 +86,27 @@ describe("useUploadStepData", () => {
     });
   });
 
+  it("진행 중인 프롬프트 저장을 취소할 수 있도록 신호를 전달한다", async () => {
+    const controller = new AbortController();
+    const { result } = renderHook(() =>
+      useUploadStepData({
+        projectId: "project-1",
+        stepCode: "constraint_analysis",
+      }),
+    );
+
+    await act(async () => {
+      await result.current.savePrompt("수정된 프롬프트", controller.signal);
+    });
+
+    expect(updatePromptMutateAsyncMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      editedPrompt: "수정된 프롬프트",
+      signal: controller.signal,
+    });
+  });
+
   it("페이지 종료 시 수정 프롬프트를 keepalive 저장 함수에 전달한다", () => {
     const { result } = renderHook(() =>
       useUploadStepData({

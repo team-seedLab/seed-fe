@@ -1,35 +1,38 @@
-import { useEffect, useEffectEvent, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-export type PromptSaveHandler = (editedPrompt: string) => Promise<void> | void;
+export type PromptSaveHandler = (
+  editedPrompt: string,
+  signal?: AbortSignal,
+) => Promise<void> | void;
 
 type Params = {
   editorKey: string;
   initialPrompt: string;
   onSave?: PromptSaveHandler;
-  onSaveBeforePageExit?: PromptSaveHandler;
 };
 
 export const useUploadPromptSaveQueue = ({
   editorKey,
   initialPrompt,
   onSave,
-  onSaveBeforePageExit,
 }: Params) => {
   const currentPromptByKeyRef = useRef<Record<string, string>>({});
   const initialPromptByKeyRef = useRef<Record<string, string>>({});
   const lastCommittedPromptByKeyRef = useRef<Record<string, string>>({});
   const pendingPromptByKeyRef = useRef<Record<string, string>>({});
   const saveQueueByKeyRef = useRef<Record<string, Promise<void>>>({});
+  const saveGenerationByKeyRef = useRef<Record<string, number>>({});
+  const activeSaveControllerByKeyRef = useRef<
+    Record<string, AbortController | undefined>
+  >({});
   const onSaveByKeyRef = useRef<Record<string, PromptSaveHandler | undefined>>(
     {},
   );
-  const onSaveBeforePageExitByKeyRef = useRef<
-    Record<string, PromptSaveHandler | undefined>
-  >({});
 
-  initialPromptByKeyRef.current[editorKey] = initialPrompt;
-  onSaveByKeyRef.current[editorKey] = onSave;
-  onSaveBeforePageExitByKeyRef.current[editorKey] = onSaveBeforePageExit;
+  useEffect(() => {
+    initialPromptByKeyRef.current[editorKey] = initialPrompt;
+    onSaveByKeyRef.current[editorKey] = onSave;
+  }, [editorKey, initialPrompt, onSave]);
 
   const setCurrentPrompt = (content: string) => {
     currentPromptByKeyRef.current[editorKey] = content;
@@ -48,27 +51,54 @@ export const useUploadPromptSaveQueue = ({
       return false;
     }
 
+    const saveGeneration = saveGenerationByKeyRef.current[targetKey] ?? 0;
     pendingPromptByKeyRef.current[targetKey] = content;
     const previousSave =
       saveQueueByKeyRef.current[targetKey] ?? Promise.resolve();
     const savePromise = previousSave
       .catch(() => undefined)
       .then(async () => {
-        await onSaveByKeyRef.current[targetKey]?.(content);
+        if (
+          (saveGenerationByKeyRef.current[targetKey] ?? 0) !== saveGeneration
+        ) {
+          return;
+        }
+
+        const controller = new AbortController();
+        activeSaveControllerByKeyRef.current[targetKey] = controller;
+
+        try {
+          await onSaveByKeyRef.current[targetKey]?.(content, controller.signal);
+        } finally {
+          if (activeSaveControllerByKeyRef.current[targetKey] === controller) {
+            delete activeSaveControllerByKeyRef.current[targetKey];
+          }
+        }
       });
     saveQueueByKeyRef.current[targetKey] = savePromise;
 
     try {
       await savePromise;
+
+      if ((saveGenerationByKeyRef.current[targetKey] ?? 0) !== saveGeneration) {
+        return false;
+      }
+
       lastCommittedPromptByKeyRef.current[targetKey] = content;
       return true;
     } catch {
       return false;
     } finally {
-      if (saveQueueByKeyRef.current[targetKey] === savePromise) {
+      const isLatestSave = saveQueueByKeyRef.current[targetKey] === savePromise;
+
+      if (isLatestSave) {
         delete saveQueueByKeyRef.current[targetKey];
       }
-      if (pendingPromptByKeyRef.current[targetKey] === content) {
+      if (
+        isLatestSave &&
+        (saveGenerationByKeyRef.current[targetKey] ?? 0) === saveGeneration &&
+        pendingPromptByKeyRef.current[targetKey] === content
+      ) {
         delete pendingPromptByKeyRef.current[targetKey];
       }
     }
@@ -79,57 +109,49 @@ export const useUploadPromptSaveQueue = ({
     return commitPromptForKey(editorKey, content);
   };
 
-  const flushPrompt = useEffectEvent(
-    (targetKey: string, isPageExit: boolean) => {
-      const currentPrompt =
-        currentPromptByKeyRef.current[targetKey] ??
-        initialPromptByKeyRef.current[targetKey] ??
-        "";
-      const lastCommittedPrompt =
-        lastCommittedPromptByKeyRef.current[targetKey] ??
-        initialPromptByKeyRef.current[targetKey] ??
-        "";
-      const hasPendingSave = saveQueueByKeyRef.current[targetKey] !== undefined;
+  const getUnsavedPrompt = (targetKey: string) => {
+    const currentPrompt =
+      currentPromptByKeyRef.current[targetKey] ??
+      initialPromptByKeyRef.current[targetKey] ??
+      "";
+    const lastCommittedPrompt =
+      lastCommittedPromptByKeyRef.current[targetKey] ??
+      initialPromptByKeyRef.current[targetKey] ??
+      "";
+    const hasPendingSave = saveQueueByKeyRef.current[targetKey] !== undefined;
 
-      if (currentPrompt === lastCommittedPrompt && !hasPendingSave) {
-        return;
-      }
+    if (currentPrompt === lastCommittedPrompt && !hasPendingSave) {
+      return null;
+    }
 
-      if (isPageExit) {
-        void onSaveBeforePageExitByKeyRef.current[targetKey]?.(currentPrompt);
-        return;
-      }
+    return currentPrompt;
+  };
 
-      void commitPromptForKey(targetKey, currentPrompt);
-    },
-  );
+  const flushPrompt = (targetKey: string) => {
+    const unsavedPrompt = getUnsavedPrompt(targetKey);
 
-  useEffect(() => {
-    const targetKey = editorKey;
-    let isPageExiting = false;
-    const handlePageHide = () => {
-      isPageExiting = true;
-      flushPrompt(targetKey, true);
-    };
-    const handlePageShow = () => {
-      isPageExiting = false;
-    };
+    if (unsavedPrompt === null) {
+      return;
+    }
 
-    window.addEventListener("pagehide", handlePageHide);
-    window.addEventListener("pageshow", handlePageShow);
+    void commitPromptForKey(targetKey, unsavedPrompt);
+  };
 
-    return () => {
-      window.removeEventListener("pagehide", handlePageHide);
-      window.removeEventListener("pageshow", handlePageShow);
+  const cancelPendingSaves = (targetKey: string) => {
+    saveGenerationByKeyRef.current[targetKey] =
+      (saveGenerationByKeyRef.current[targetKey] ?? 0) + 1;
+    activeSaveControllerByKeyRef.current[targetKey]?.abort();
 
-      if (!isPageExiting) {
-        flushPrompt(targetKey, false);
-      }
-    };
-  }, [editorKey]);
+    delete activeSaveControllerByKeyRef.current[targetKey];
+    delete pendingPromptByKeyRef.current[targetKey];
+    delete saveQueueByKeyRef.current[targetKey];
+  };
 
   return {
+    cancelPendingSaves,
     commitPrompt,
+    flushPrompt,
+    getUnsavedPrompt,
     setCurrentPrompt,
   };
 };

@@ -14,6 +14,7 @@ export type ProjectStepPromptParams = {
 
 export type UpdateProjectStepPromptParams = ProjectStepPromptParams & {
   editedPrompt: string;
+  signal?: AbortSignal;
 };
 
 const getPromptPath = ({ projectId, stepCode }: ProjectStepPromptParams) =>
@@ -45,6 +46,7 @@ export const updateProjectStepPromptAPI = async (
   const response = await fetchInstance.put<ApiResponse<ProjectStepPrompt>>(
     getPromptPath(params),
     { editedPrompt: params.editedPrompt },
+    { signal: params.signal },
   );
 
   return processApiResponse(response.data);
