@@ -1,6 +1,7 @@
 import {
   type ProjectStepPrompt,
   type ProjectStepResult,
+  updateProjectStepPromptOnPageExitAPI,
   useGetOrCreateProjectStepPrompt,
   useGetProjectStepResult,
   useUpdateProjectStepPrompt,
@@ -16,6 +17,7 @@ type Result = {
   resultData: ProjectStepResult | null | undefined;
   isStepLoading: boolean;
   savePrompt: (editedPrompt: string) => Promise<void>;
+  savePromptOnPageExit: (editedPrompt: string) => void;
 };
 
 export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
@@ -39,10 +41,23 @@ export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
     });
   };
 
+  const savePromptOnPageExit = (editedPrompt: string) => {
+    if (!projectId || !stepCode) {
+      return;
+    }
+
+    void updateProjectStepPromptOnPageExitAPI({
+      projectId,
+      stepCode,
+      editedPrompt,
+    });
+  };
+
   return {
     promptData: promptQuery.data,
     resultData: resultQuery.data,
     isStepLoading: promptQuery.isLoading || resultQuery.isLoading,
     savePrompt,
+    savePromptOnPageExit,
   };
 };

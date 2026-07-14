@@ -49,10 +49,9 @@ export interface ProjectStepPrompt {
   providedPromptSnapshot: string;
   editedPrompt: string | null;
   finalPrompt: string;
-  formatPrompt: string;
   addedCount: number;
   removedCount: number;
-  diffJson: Record<string, unknown>;
+  diffJson: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -71,7 +70,6 @@ export interface ProjectStepResponse {
   stepName: string;
   providedPromptSnapshot: string;
   userEditedPrompt?: string | null;
-  formatPrompt: string;
   userSubmittedResult: string | null;
   createdAt?: string;
   updatedAt?: string;

@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { useUploadPromptEditor } from "./useUploadPromptEditor";
@@ -101,5 +101,77 @@ describe("useUploadPromptEditor", () => {
     });
 
     expect(result.current.editedPrompt).toBe("두 번째 단계 원본");
+  });
+
+  it("여러 수정본의 저장 요청을 입력 순서대로 처리한다", async () => {
+    let resolveFirstSave!: () => void;
+    const onSave = vi
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveFirstSave = resolve;
+          }),
+      )
+      .mockResolvedValueOnce(undefined);
+    const { result } = renderHook(() =>
+      useUploadPromptEditor({
+        editorKey: "project-1:step-1",
+        originalPrompt: "원본 프롬프트",
+        onSave,
+      }),
+    );
+    let firstCommit!: Promise<boolean>;
+    let secondCommit!: Promise<boolean>;
+
+    act(() => {
+      firstCommit = result.current.commitPrompt("첫 번째 수정본");
+      secondCommit = result.current.commitPrompt("두 번째 수정본");
+    });
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1));
+    expect(onSave).toHaveBeenNthCalledWith(1, "첫 번째 수정본");
+
+    await act(async () => {
+      resolveFirstSave();
+      await Promise.all([firstCommit, secondCommit]);
+    });
+
+    expect(onSave).toHaveBeenCalledTimes(2);
+    expect(onSave).toHaveBeenNthCalledWith(2, "두 번째 수정본");
+  });
+
+  it("화면에서 나갈 때 마지막 수정본을 일반 저장 요청으로 전달한다", async () => {
+    const onSave = vi.fn().mockResolvedValue(undefined);
+    const { result, unmount } = renderHook(() =>
+      useUploadPromptEditor({
+        editorKey: "project-1:step-1",
+        originalPrompt: "원본 프롬프트",
+        onSave,
+      }),
+    );
+
+    act(() => result.current.changePrompt("이동 전 수정본"));
+    unmount();
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledWith("이동 전 수정본"));
+  });
+
+  it("페이지가 종료될 때 마지막 수정본을 keepalive 저장 요청으로 전달한다", () => {
+    const onSaveBeforePageExit = vi.fn();
+    const { result, unmount } = renderHook(() =>
+      useUploadPromptEditor({
+        editorKey: "project-1:step-1",
+        originalPrompt: "원본 프롬프트",
+        onSaveBeforePageExit,
+      }),
+    );
+
+    act(() => result.current.changePrompt("종료 전 수정본"));
+    act(() => window.dispatchEvent(new Event("pagehide")));
+
+    expect(onSaveBeforePageExit).toHaveBeenCalledWith("종료 전 수정본");
+
+    unmount();
   });
 });

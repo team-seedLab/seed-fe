@@ -1,10 +1,16 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
+
+import {
+  type PromptSaveHandler,
+  useUploadPromptSaveQueue,
+} from "./useUploadPromptSaveQueue";
 
 type Params = {
   editorKey: string;
   originalPrompt: string;
   initialEditedPrompt?: string | null;
-  onSave?: (editedPrompt: string) => Promise<void> | void;
+  onSave?: PromptSaveHandler;
+  onSaveBeforePageExit?: PromptSaveHandler;
 };
 
 type Result = {
@@ -19,44 +25,26 @@ export const useUploadPromptEditor = ({
   originalPrompt,
   initialEditedPrompt,
   onSave,
+  onSaveBeforePageExit,
 }: Params): Result => {
   const [editedPromptByKey, setEditedPromptByKey] = useState<
     Record<string, string>
   >({});
-  const lastCommittedPromptByKeyRef = useRef<Record<string, string>>({});
-  const pendingPromptByKeyRef = useRef<Record<string, string>>({});
   const initialPrompt = initialEditedPrompt ?? originalPrompt;
   const editedPrompt = editedPromptByKey[editorKey] ?? initialPrompt;
+  const { commitPrompt, setCurrentPrompt } = useUploadPromptSaveQueue({
+    editorKey,
+    initialPrompt,
+    onSave,
+    onSaveBeforePageExit,
+  });
 
   const changePrompt = (content: string) => {
+    setCurrentPrompt(content);
     setEditedPromptByKey((previousState) => ({
       ...previousState,
       [editorKey]: content,
     }));
-  };
-
-  const commitPrompt = async (content: string) => {
-    const lastCommittedPrompt =
-      lastCommittedPromptByKeyRef.current[editorKey] ?? initialPrompt;
-
-    if (
-      content === lastCommittedPrompt ||
-      pendingPromptByKeyRef.current[editorKey] === content
-    ) {
-      return false;
-    }
-
-    pendingPromptByKeyRef.current[editorKey] = content;
-
-    try {
-      await onSave?.(content);
-      lastCommittedPromptByKeyRef.current[editorKey] = content;
-      return true;
-    } catch {
-      return false;
-    } finally {
-      delete pendingPromptByKeyRef.current[editorKey];
-    }
   };
 
   const resetPrompt = async () => {

@@ -3,12 +3,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUploadStepData } from "./useUploadStepData";
 
-const { promptQueryMock, resultQueryMock, updatePromptMutateAsyncMock } =
-  vi.hoisted(() => ({
-    promptQueryMock: vi.fn(),
-    resultQueryMock: vi.fn(),
-    updatePromptMutateAsyncMock: vi.fn(),
-  }));
+const {
+  promptQueryMock,
+  resultQueryMock,
+  updatePromptMutateAsyncMock,
+  updatePromptOnPageExitMock,
+} = vi.hoisted(() => ({
+  promptQueryMock: vi.fn(),
+  resultQueryMock: vi.fn(),
+  updatePromptMutateAsyncMock: vi.fn(),
+  updatePromptOnPageExitMock: vi.fn(),
+}));
 
 vi.mock("@/entities", async () => {
   const actual =
@@ -21,6 +26,7 @@ vi.mock("@/entities", async () => {
     useUpdateProjectStepPrompt: () => ({
       mutateAsync: updatePromptMutateAsyncMock,
     }),
+    updateProjectStepPromptOnPageExitAPI: updatePromptOnPageExitMock,
   };
 });
 
@@ -29,6 +35,7 @@ describe("useUploadStepData", () => {
     promptQueryMock.mockReset();
     resultQueryMock.mockReset();
     updatePromptMutateAsyncMock.mockReset();
+    updatePromptOnPageExitMock.mockReset();
 
     promptQueryMock.mockReturnValue({
       data: {
@@ -76,6 +83,25 @@ describe("useUploadStepData", () => {
       projectId: "project-1",
       stepCode: "constraint_analysis",
       editedPrompt: "수정된 프롬프트",
+    });
+  });
+
+  it("페이지 종료 시 수정 프롬프트를 keepalive 저장 함수에 전달한다", () => {
+    const { result } = renderHook(() =>
+      useUploadStepData({
+        projectId: "project-1",
+        stepCode: "constraint_analysis",
+      }),
+    );
+
+    act(() => {
+      result.current.savePromptOnPageExit("종료 전 수정 프롬프트");
+    });
+
+    expect(updatePromptOnPageExitMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      editedPrompt: "종료 전 수정 프롬프트",
     });
   });
 });

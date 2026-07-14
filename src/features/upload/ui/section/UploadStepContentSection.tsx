@@ -24,22 +24,26 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
     Record<string, string>
   >({});
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
-  const { copied: copiedFormat, copy: copyFormat } = useClipboardCopy();
   const { stepCode, isLastStep } = useUploadStepProject({ projectId, stepNum });
-  const { promptData, resultData, isStepLoading, savePrompt } =
-    useUploadStepData({
-      projectId,
-      stepCode,
-    });
+  const {
+    promptData,
+    resultData,
+    isStepLoading,
+    savePrompt,
+    savePromptOnPageExit,
+  } = useUploadStepData({
+    projectId,
+    stepCode,
+  });
   const stepName = promptData?.stepName;
   const providedPromptSnapshot = promptData?.providedPromptSnapshot;
-  const formatPrompt = promptData?.formatPrompt;
   const { editedPrompt, changePrompt, commitPrompt, resetPrompt } =
     useUploadPromptEditor({
       editorKey: `${projectId}:${stepNum}`,
       initialEditedPrompt: promptData?.editedPrompt,
       originalPrompt: providedPromptSnapshot ?? "",
       onSave: savePrompt,
+      onSaveBeforePageExit: savePromptOnPageExit,
     });
   const { isSubmitting, submitStepResult } = useUploadStepSubmission({
     projectId,
@@ -137,36 +141,6 @@ export const UploadStepContentSection = ({ projectId, stepNum }: Props) => {
             }}
           />
         ) : null}
-
-        {formatPrompt && (
-          <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
-            <Text
-              color="neutral.900"
-              fontSize={{ base: "xl", md: "2xl" }}
-              fontWeight="bold"
-              lineHeight="1.4"
-            >
-              결과 추출
-            </Text>
-            <Text
-              color="neutral.600"
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="regular"
-              lineHeight="1.5"
-              wordBreak="keep-all"
-            >
-              이 프롬프트를 사용하여 ai와 함께 작업한 결과를 추출해주세요.
-            </Text>
-            <PromptCard
-              content={formatPrompt}
-              copied={copiedFormat}
-              label="작업 결과 추출 프롬프트"
-              onCopy={() => {
-                void copyFormat(formatPrompt);
-              }}
-            />
-          </VStack>
-        )}
 
         <UploadStepResultInput
           value={resultText}

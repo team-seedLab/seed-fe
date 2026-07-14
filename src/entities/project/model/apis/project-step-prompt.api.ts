@@ -1,4 +1,9 @@
-import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
+import {
+  type ApiResponse,
+  SERVER_PATH,
+  fetchInstance,
+  processApiResponse,
+} from "@/shared";
 
 import type { ProjectStepPrompt } from "../types";
 
@@ -43,4 +48,23 @@ export const updateProjectStepPromptAPI = async (
   );
 
   return processApiResponse(response.data);
+};
+
+export const updateProjectStepPromptOnPageExitAPI = async (
+  params: UpdateProjectStepPromptParams,
+): Promise<void> => {
+  try {
+    await fetch(new URL(getPromptPath(params), SERVER_PATH), {
+      method: "PUT",
+      body: JSON.stringify({ editedPrompt: params.editedPrompt }),
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      keepalive: true,
+    });
+  } catch {
+    return;
+  }
 };

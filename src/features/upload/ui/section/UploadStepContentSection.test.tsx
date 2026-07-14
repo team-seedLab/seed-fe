@@ -15,13 +15,13 @@ vi.mock("../../hooks", async () => {
       isStepLoading: false,
       promptData: {
         editedPrompt: null,
-        formatPrompt: "# 결과 추출 프롬프트",
         providedPromptSnapshot: "원본 프롬프트\n분량: 제한 없음",
         stepCode: "RESEARCH",
         stepName: "자료 조사",
       },
       resultData: null,
       savePrompt: vi.fn(),
+      savePromptOnPageExit: vi.fn(),
     }),
     useUploadStepProject: () => ({
       isLastStep: false,
@@ -35,7 +35,7 @@ vi.mock("../../hooks", async () => {
 });
 
 describe("UploadStepContentSection", () => {
-  it("생성 프롬프트만 수정할 수 있고 추출 프롬프트는 읽기 전용으로 유지한다", () => {
+  it("생성 프롬프트를 수정하고 작업 결과를 입력할 수 있다", () => {
     renderWithProviders(
       <UploadStepContentSection projectId="project-1" stepNum={1} />,
     );
@@ -46,7 +46,8 @@ describe("UploadStepContentSection", () => {
     });
 
     expect(promptEditor).toHaveValue("수정된 프롬프트\n분량: A4 2장");
-    expect(screen.getByText("# 결과 추출 프롬프트")).toBeInTheDocument();
+    expect(screen.getByText("작업 결과 입력")).toBeInTheDocument();
+    expect(screen.queryByText("결과 추출")).not.toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "초기화" })).toHaveLength(1);
   });
 });
