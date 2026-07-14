@@ -1,15 +1,12 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { Project, ProjectStepResponse } from "../types";
+import {
+  type ProjectDetailApiResponse,
+  type ProjectDetailResponse,
+  mapProjectDetailResponse,
+} from "./project-detail.mapper";
 
-export interface ProjectDetailResponse extends Project {
-  stepResponses: ProjectStepResponse[];
-}
-
-interface ProjectDetailApiResponse {
-  summary: Project;
-  stepResponses: ProjectStepResponse[];
-}
+export type { ProjectDetailResponse } from "./project-detail.mapper";
 
 export const getProjectDetailAPI = async (
   projectId: string,
@@ -18,15 +15,5 @@ export const getProjectDetailAPI = async (
     ApiResponse<ProjectDetailApiResponse>
   >(`/api/projects/${projectId}`);
 
-  const data = processApiResponse(response.data);
-  const summary = data.summary;
-
-  return {
-    projectId: summary.projectId,
-    title: summary.title,
-    roadmapType: summary.roadmapType,
-    status: summary.status,
-    createdAt: summary.createdAt,
-    stepResponses: data.stepResponses,
-  };
+  return mapProjectDetailResponse(processApiResponse(response.data));
 };
