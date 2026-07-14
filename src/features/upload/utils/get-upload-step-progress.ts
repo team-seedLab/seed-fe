@@ -1,13 +1,10 @@
-import type { ProjectStepResponse } from "@/entities";
+import type { ProjectStepSummary } from "@/entities";
 
-type StepResponse = Pick<
-  ProjectStepResponse,
-  "stepCode" | "userSubmittedResult"
->;
+type StepSummary = Pick<ProjectStepSummary, "stepCode" | "status">;
 
 type Params = {
   stepCodes: readonly string[];
-  stepResponses: readonly StepResponse[];
+  stepSummaries: readonly StepSummary[];
 };
 
 type Result = {
@@ -18,12 +15,11 @@ type Result = {
 
 export const getUploadStepProgress = ({
   stepCodes,
-  stepResponses,
+  stepSummaries,
 }: Params): Result => {
   const completedStepCodes = stepCodes.filter((code) =>
-    stepResponses.some(
-      (step) =>
-        step.stepCode === code && Boolean(step.userSubmittedResult?.trim()),
+    stepSummaries.some(
+      (step) => step.stepCode === code && step.status === "COMPLETED",
     ),
   );
 
