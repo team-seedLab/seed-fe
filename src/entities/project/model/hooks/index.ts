@@ -5,4 +5,5 @@ export * from "./useDeleteProject";
 export * from "./useGetOrCreateProjectStepPrompt";
 export * from "./useGetProjectStepPrompt";
 export * from "./useGetProjectStepResult";
+export * from "./useGetProjectStepSelfCheck";
 export * from "./useUpdateProjectStepPrompt";

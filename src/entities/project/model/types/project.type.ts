@@ -65,6 +65,23 @@ export interface ProjectStepResult {
   updatedAt: string;
 }
 
+export interface ProjectStepSelfCheckItem {
+  key: string;
+  question: string;
+  answer: string | null;
+}
+
+export interface ProjectStepSelfCheck {
+  selfCheckId: string | null;
+  stepId: string;
+  stepCode: string;
+  stepName: string;
+  checkItems: ProjectStepSelfCheckItem[];
+  submittedAt: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+}
+
 export interface ProjectStepResponse {
   stepCode: string;
   stepName: string;
