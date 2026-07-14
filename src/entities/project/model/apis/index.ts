@@ -1,5 +1,6 @@
 export * from "./project-detail.api";
 export * from "./project-list.api";
+export * from "./project-step-ai-message.api";
 export * from "./project-step-prompt.api";
 export * from "./project-step-result.api";
 export * from "./project-step-self-check.api";
