@@ -24,4 +24,19 @@ describe("splitAiMentorAnswer", () => {
       guide: null,
     });
   });
+
+  it.each(["##", "####"])(
+    "%s 헤더로 작성된 다음 질문 가이드도 분리한다",
+    (heading) => {
+      const result = splitAiMentorAnswer(`핵심 답변입니다.
+
+${heading} 다음 질문 가이드
+- 보완할 정보: 자료 범위`);
+
+      expect(result).toEqual({
+        answer: "핵심 답변입니다.",
+        guide: "- 보완할 정보: 자료 범위",
+      });
+    },
+  );
 });

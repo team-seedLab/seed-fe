@@ -1,4 +1,4 @@
-const NEXT_QUESTION_GUIDE_PATTERN = /^###\s+다음 질문 가이드\s*$/m;
+const NEXT_QUESTION_GUIDE_PATTERN = /^#{2,4}\s+다음 질문 가이드\s*$/m;
 
 type AiMentorAnswerSections = {
   answer: string;
