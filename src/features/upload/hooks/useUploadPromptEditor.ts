@@ -17,10 +17,11 @@ type Params = {
   onSaveBeforePageExit?: PromptPageExitSaveHandler;
 };
 
-type Result = {
+export type UploadPromptEditorState = {
   editedPrompt: string;
   changePrompt: (content: string) => void;
   commitPrompt: (content: string) => Promise<boolean>;
+  ensurePromptSaved: (content: string) => Promise<boolean>;
   resetPrompt: () => Promise<boolean>;
 };
 
@@ -30,7 +31,7 @@ export const useUploadPromptEditor = ({
   initialEditedPrompt,
   onSave,
   onSaveBeforePageExit,
-}: Params): Result => {
+}: Params): UploadPromptEditorState => {
   const [editedPromptByKey, setEditedPromptByKey] = useState<
     Record<string, string>
   >({});
@@ -39,6 +40,7 @@ export const useUploadPromptEditor = ({
   const {
     cancelPendingSaves,
     commitPrompt,
+    ensurePromptSaved,
     flushPrompt,
     getUnsavedPrompt,
     setCurrentPrompt,
@@ -69,6 +71,7 @@ export const useUploadPromptEditor = ({
     editedPrompt,
     changePrompt,
     commitPrompt,
+    ensurePromptSaved,
     resetPrompt,
   };
 };
