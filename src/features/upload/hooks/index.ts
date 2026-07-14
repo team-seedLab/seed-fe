@@ -1,4 +1,7 @@
 export * from "./useUploadLoadingProgress";
+export * from "./useUploadAiMentorConversation";
+export * from "./useUploadAiMentorPanel";
+export * from "./useUploadAiMentorResize";
 export * from "./useUploadPromptEditor";
 export * from "./useUploadStepData";
 export * from "./useUploadFiles";
