@@ -16,7 +16,7 @@ export const ProjectStepRecord = ({
   stepCode,
   stepNumber,
 }: Props) => {
-  const { prompt, result, isLoading } = useProjectStepRecord({
+  const { prompt, result, isError, isLoading } = useProjectStepRecord({
     projectId,
     stepCode,
   });
@@ -24,8 +24,21 @@ export const ProjectStepRecord = ({
   const { copied: copiedEdited, copy: copyEdited } = useClipboardCopy();
   const { copied: copiedResult, copy: copyResult } = useClipboardCopy();
 
-  if (isLoading || !prompt) {
+  if (isLoading) {
     return null;
+  }
+
+  if (isError || !prompt) {
+    return (
+      <VStack align="flex-start" gap={{ base: 2, md: 2.5 }} w="full">
+        <Text color="seed" fontSize="xs" fontWeight="bold">
+          Step {stepNumber}
+        </Text>
+        <Text color="neutral.600" fontSize={{ base: "sm", md: "md" }}>
+          단계 기록을 불러오지 못했습니다.
+        </Text>
+      </VStack>
+    );
   }
 
   const hasEditedPrompt =

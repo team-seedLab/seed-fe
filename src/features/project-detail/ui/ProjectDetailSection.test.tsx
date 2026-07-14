@@ -50,10 +50,9 @@ const useStepRecordHandlers = (editedPrompt: string | null) => {
         createApiSuccessResponse({
           addedCount: editedPrompt ? 1 : 0,
           createdAt: "2026-07-10",
-          diffJson: {},
+          diffJson: null,
           editedPrompt,
           finalPrompt: editedPrompt ?? ORIGINAL_PROMPT,
-          formatPrompt: "결과 추출 프롬프트",
           providedPromptSnapshot: ORIGINAL_PROMPT,
           removedCount: editedPrompt ? 1 : 0,
           stepCode: "constraint_analysis",
@@ -113,5 +112,29 @@ describe("ProjectDetailSection", () => {
     );
 
     expect(screen.queryByText("생성된 프롬프트")).not.toBeInTheDocument();
+  });
+
+  it("단계 기록 조회에 실패하면 오류 상태를 표시한다", async () => {
+    useStepRecordHandlers(null);
+    server.use(
+      http.get(PROMPT_URL, () =>
+        HttpResponse.json(
+          {
+            data: null,
+            errorCode: "G002",
+            errorMessage: "서버 내부 오류가 발생했습니다.",
+            serverDataTime: "2026-07-14 10:00:00",
+            status: "ERROR",
+          },
+          { status: 500 },
+        ),
+      ),
+    );
+
+    renderWithProviders(<ProjectDetailSection project={createProject()} />);
+
+    expect(
+      await screen.findByText("단계 기록을 불러오지 못했습니다."),
+    ).toBeInTheDocument();
   });
 });

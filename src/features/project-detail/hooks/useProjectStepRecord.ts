@@ -12,6 +12,7 @@ export const useProjectStepRecord = ({ projectId, stepCode }: Params) => {
   return {
     prompt: promptQuery.data,
     result: resultQuery.data,
+    isError: promptQuery.isError || resultQuery.isError,
     isLoading: promptQuery.isLoading || resultQuery.isLoading,
   };
 };
