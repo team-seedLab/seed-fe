@@ -36,4 +36,30 @@ describe("useUserInfoStore", () => {
     expect(userInfo).toBeNull();
     expect(persistedProfile).toBeNull();
   });
+
+  it.each([
+    ["MENTOR", USER_ROLE.MENTOR],
+    ["MENTEE", USER_ROLE.MENTEE],
+  ])(
+    "기존 역할값 %s를 현재 역할값으로 마이그레이션한다",
+    async (role, expected) => {
+      sessionStorage.setItem(
+        "user-info-store",
+        JSON.stringify({
+          state: {
+            persistedProfile: {
+              nickname: "user",
+              profileUrl: "",
+              role,
+            },
+          },
+          version: 0,
+        }),
+      );
+
+      await useUserInfoStore.persist.rehydrate();
+
+      expect(useUserInfoStore.getState().persistedProfile?.role).toBe(expected);
+    },
+  );
 });
