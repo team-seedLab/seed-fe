@@ -42,6 +42,7 @@ export const PromptCardContent = ({ content, variant = "default" }: Props) => {
         <Text
           color="neutral.900"
           fontSize={{ base: "sm", md: "md" }}
+          overflowWrap="anywhere"
           whiteSpace="pre-wrap"
         >
           {content}

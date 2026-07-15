@@ -89,7 +89,9 @@ describe("ProjectDetailPage", () => {
     });
 
     expect(screen.getByText("글쓰기형")).toBeInTheDocument();
-    expect(screen.getByText("환경학 개론 과제")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "환경학 개론 과제" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("2026.07.08 - 2026.07.10")).toBeInTheDocument();
     expect(screen.getByText("완료됨")).toBeInTheDocument();
   });

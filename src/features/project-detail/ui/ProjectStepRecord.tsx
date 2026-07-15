@@ -66,6 +66,7 @@ export const ProjectStepRecord = ({
             Step {stepNumber}
           </Text>
           <Text
+            as="h2"
             color="neutral.900"
             fontSize={{ base: "xl", md: "26px" }}
             fontWeight="bold"

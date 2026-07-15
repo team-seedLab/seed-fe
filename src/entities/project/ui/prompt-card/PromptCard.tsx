@@ -16,15 +16,16 @@ type BaseProps = {
   content: string;
   onCopy: () => void;
   copied?: boolean;
-  contentVariant?: PromptCardContentVariant;
 };
 
 type ReadOnlyProps = BaseProps & {
   mode?: "readonly";
+  contentVariant?: PromptCardContentVariant;
 };
 
 type EditableProps = BaseProps & {
   mode: "editable";
+  contentVariant?: never;
   editorFocusRequestId?: number | null;
   originalContent: string;
   onCommit: (content: string) => void;
@@ -34,6 +35,7 @@ type EditableProps = BaseProps & {
 
 type ComparisonProps = BaseProps & {
   mode: "comparison";
+  contentVariant?: PromptCardContentVariant;
   originalContent: string;
 };
 

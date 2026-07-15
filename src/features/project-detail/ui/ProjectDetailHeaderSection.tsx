@@ -35,6 +35,7 @@ export const ProjectDetailHeaderSection = ({ project }: Props) => {
       </Box>
 
       <Text
+        as="h1"
         color="neutral.900"
         fontSize={{ base: "2xl", md: "3xl" }}
         fontWeight="bold"

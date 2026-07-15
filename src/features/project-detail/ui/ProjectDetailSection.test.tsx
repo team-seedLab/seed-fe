@@ -220,7 +220,10 @@ describe("ProjectDetailSection", () => {
     renderWithProviders(<ProjectDetailSection project={createProject()} />);
 
     expect(
-      await screen.findByText("제약사항 분석 프롬프트"),
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "제약사항 분석 프롬프트",
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -229,7 +232,7 @@ describe("ProjectDetailSection", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("수정 내용")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "작업 결과" }),
+      screen.getByRole("heading", { level: 2, name: "작업 결과" }),
     ).toBeInTheDocument();
     expect(screen.getByText("저장된 작업 결과")).toBeInTheDocument();
     expect(screen.queryByText("생성된 프롬프트")).not.toBeInTheDocument();
