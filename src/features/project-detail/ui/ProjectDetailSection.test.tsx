@@ -14,6 +14,12 @@ const EDITED_PROMPT = "첫 번째 줄\n분량: A4 2장\n마지막 줄";
 const PROMPT_URL = "*/api/projects/project-1/steps/constraint_analysis/prompt";
 const RESULT_URL = "*/api/projects/project-1/steps/constraint_analysis/result";
 
+const STEP_NAMES: Record<string, string> = {
+  constraint_analysis: "1단계 프롬프트",
+  argument_structuring: "2단계 프롬프트",
+  draft_generation: "3단계 프롬프트",
+};
+
 const createProject = (
   stepStatus: ProjectStepStatus = "COMPLETED",
 ): ProjectDetailResponse => ({
@@ -77,7 +83,106 @@ const useStepRecordHandlers = (editedPrompt: string | null) => {
   );
 };
 
+const createMultiStepProject = (): ProjectDetailResponse => ({
+  ...createProject(),
+  completedStepCount: 1,
+  currentStepCode: "argument_structuring",
+  currentStepOrder: 2,
+  progressPercent: 33,
+  steps: [
+    {
+      completedAt: null,
+      status: "IN_PROGRESS",
+      stepCode: "argument_structuring",
+      stepId: "step-2",
+      stepOrder: 2,
+    },
+    {
+      completedAt: "2026-07-10",
+      status: "COMPLETED",
+      stepCode: "constraint_analysis",
+      stepId: "step-1",
+      stepOrder: 1,
+    },
+    {
+      completedAt: null,
+      status: "PENDING",
+      stepCode: "draft_generation",
+      stepId: "step-3",
+      stepOrder: 3,
+    },
+  ],
+  totalStepCount: 3,
+});
+
+const useMultiStepRecordHandlers = () => {
+  server.use(
+    http.get(
+      "*/api/projects/project-1/steps/:stepCode/prompt",
+      ({ params }) => {
+        const stepCode = String(params.stepCode);
+
+        return HttpResponse.json(
+          createApiSuccessResponse({
+            addedCount: 0,
+            createdAt: "2026-07-10",
+            diffJson: null,
+            editedPrompt: null,
+            finalPrompt: `${stepCode} 내용`,
+            providedPromptSnapshot: `${stepCode} 내용`,
+            removedCount: 0,
+            stepCode,
+            stepId: stepCode,
+            stepName: STEP_NAMES[stepCode],
+            updatedAt: "2026-07-10",
+          }),
+        );
+      },
+    ),
+    http.get(
+      "*/api/projects/project-1/steps/:stepCode/result",
+      ({ params }) => {
+        const stepCode = String(params.stepCode);
+
+        return HttpResponse.json(
+          createApiSuccessResponse({
+            contentMarkdown: `${stepCode} 결과`,
+            createdAt: "2026-07-10",
+            stepCode,
+            stepId: stepCode,
+            stepName: STEP_NAMES[stepCode],
+            updatedAt: "2026-07-10",
+          }),
+        );
+      },
+    ),
+  );
+};
+
 describe("ProjectDetailSection", () => {
+  it("단계를 순서대로 표시하고 선택한 사용 가능 단계의 기록만 조회한다", async () => {
+    useMultiStepRecordHandlers();
+
+    renderWithProviders(
+      <ProjectDetailSection project={createMultiStepProject()} />,
+    );
+
+    expect(await screen.findByText("1단계 프롬프트")).toBeInTheDocument();
+    expect(screen.queryByText("2단계 프롬프트")).not.toBeInTheDocument();
+    expect(screen.getByText("목차별 단락 초안 분할 생성")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "목차별 단락 초안 분할 생성" }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "핵심 논거 검색 및 구조화" }),
+    );
+
+    expect(await screen.findByText("2단계 프롬프트")).toBeInTheDocument();
+    expect(screen.queryByText("1단계 프롬프트")).not.toBeInTheDocument();
+    expect(screen.queryByText("3단계 프롬프트")).not.toBeInTheDocument();
+  });
+
   it("수정본이 없으면 생성 프롬프트와 작업 결과를 읽기 전용으로 표시한다", async () => {
     useStepRecordHandlers(null);
 
