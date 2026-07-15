@@ -1,5 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 
+export type PromptCardContentVariant = "default" | "document";
+
 const PromptLine = ({ line }: { line: string }) => {
   let color = "neutral.900";
   if (line.startsWith("# ") || line === "#") {
@@ -24,9 +26,31 @@ const PromptLine = ({ line }: { line: string }) => {
 
 type Props = {
   content: string;
+  variant?: PromptCardContentVariant;
 };
 
-export const PromptCardContent = ({ content }: Props) => {
+export const PromptCardContent = ({ content, variant = "default" }: Props) => {
+  if (variant === "document") {
+    return (
+      <Box
+        bg="neutral.50"
+        minH={{ base: 60, md: "400px" }}
+        pb={{ base: 4, md: 6 }}
+        pt={{ base: 4, md: 2 }}
+        px={{ base: 4, md: 6 }}
+      >
+        <Text
+          color="neutral.900"
+          fontSize={{ base: "sm", md: "md" }}
+          overflowWrap="anywhere"
+          whiteSpace="pre-wrap"
+        >
+          {content}
+        </Text>
+      </Box>
+    );
+  }
+
   const lines = content.split("\n");
   const isPrompt = lines.some(
     (line) => line.startsWith("# ") || line === "#" || line.startsWith("//"),

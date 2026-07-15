@@ -1,4 +1,4 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import { PromptCard } from "@/entities";
 import { useClipboardCopy } from "@/shared";
@@ -20,12 +20,25 @@ export const ProjectStepRecord = ({
     projectId,
     stepCode,
   });
-  const { copied: copiedOriginal, copy: copyOriginal } = useClipboardCopy();
-  const { copied: copiedEdited, copy: copyEdited } = useClipboardCopy();
+  const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const { copied: copiedResult, copy: copyResult } = useClipboardCopy();
 
   if (isLoading) {
-    return null;
+    return (
+      <Flex
+        align="center"
+        color="neutral.600"
+        gap={3}
+        justify="center"
+        minH={40}
+        w="full"
+      >
+        <Spinner color="seed" size="sm" />
+        <Text fontSize={{ base: "sm", md: "md" }}>
+          단계 기록을 불러오는 중입니다.
+        </Text>
+      </Flex>
+    );
   }
 
   if (isError || !prompt) {
@@ -41,67 +54,67 @@ export const ProjectStepRecord = ({
     );
   }
 
-  const hasEditedPrompt =
-    prompt.editedPrompt != null &&
-    prompt.editedPrompt !== prompt.providedPromptSnapshot;
+  const promptSectionTitle = prompt.stepName.endsWith("프롬프트")
+    ? prompt.stepName
+    : `${prompt.stepName} 프롬프트`;
 
   return (
-    <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
-      <VStack align="flex-start" gap={{ base: 2, md: 2.5 }} w="full">
-        <Text color="seed" fontSize="xs" fontWeight="bold">
-          Step {stepNumber}
-        </Text>
-        <Text
-          color="neutral.900"
-          fontSize={{ base: "xl", md: "26px" }}
-          fontWeight="bold"
-          lineHeight="1.4"
-        >
-          {prompt.stepName}
-        </Text>
+    <VStack align="flex-start" gap={{ base: 8, md: 12 }} w="full">
+      <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
+        <VStack align="flex-start" gap={{ base: 2, md: 3 }} w="full">
+          <Text color="seed" fontSize="xs" fontWeight="bold">
+            Step {stepNumber}
+          </Text>
+          <Text
+            as="h2"
+            color="neutral.900"
+            fontSize={{ base: "xl", md: "26px" }}
+            fontWeight="bold"
+            wordBreak="keep-all"
+          >
+            {promptSectionTitle}
+          </Text>
+          <Text
+            color="neutral.600"
+            fontSize={{ base: "sm", md: "md" }}
+            wordBreak="keep-all"
+          >
+            왼쪽 프롬프트 복사 → AI에서 실행 → 오른쪽에서 수정 → 결과 기록
+          </Text>
+        </VStack>
+
+        <PromptCard
+          content={prompt.finalPrompt}
+          contentVariant="document"
+          copied={copiedPrompt}
+          label="수정 내용"
+          mode="comparison"
+          originalContent={prompt.providedPromptSnapshot}
+          onCopy={() => {
+            void copyPrompt(prompt.finalPrompt);
+          }}
+        />
       </VStack>
 
-      {hasEditedPrompt ? (
-        <>
-          <PromptCard
-            content={prompt.providedPromptSnapshot}
-            copied={copiedOriginal}
-            label="원본 프롬프트"
-            onCopy={() => {
-              void copyOriginal(prompt.providedPromptSnapshot);
-            }}
-          />
-          <PromptCard
-            content={prompt.finalPrompt}
-            copied={copiedEdited}
-            label="최종 프롬프트"
-            mode="comparison"
-            originalContent={prompt.providedPromptSnapshot}
-            onCopy={() => {
-              void copyEdited(prompt.finalPrompt);
-            }}
-          />
-        </>
-      ) : (
-        <PromptCard
-          content={prompt.providedPromptSnapshot}
-          copied={copiedOriginal}
-          label="생성된 프롬프트"
-          onCopy={() => {
-            void copyOriginal(prompt.providedPromptSnapshot);
-          }}
-        />
-      )}
-
       {result && (
-        <PromptCard
-          content={result.contentMarkdown}
-          copied={copiedResult}
-          label="작업 결과"
-          onCopy={() => {
-            void copyResult(result.contentMarkdown);
-          }}
-        />
+        <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
+          <Text
+            as="h2"
+            color="neutral.900"
+            fontSize={{ base: "xl", md: "26px" }}
+            fontWeight="bold"
+          >
+            작업 결과
+          </Text>
+          <PromptCard
+            content={result.contentMarkdown}
+            copied={copiedResult}
+            label="작업 결과"
+            onCopy={() => {
+              void copyResult(result.contentMarkdown);
+            }}
+          />
+        </VStack>
       )}
     </VStack>
   );

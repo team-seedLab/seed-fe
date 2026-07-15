@@ -100,6 +100,23 @@ describe("PromptCard", () => {
     expect(onCopy).toHaveBeenCalledOnce();
   });
 
+  it("문서형 내용의 긴 문자열을 카드 너비 안에서 줄바꿈한다", () => {
+    const longContent = "https://example.com/".repeat(20);
+
+    renderWithProviders(
+      <PromptCard
+        content={longContent}
+        contentVariant="document"
+        label="수정 내용"
+        onCopy={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText(longContent)).toHaveStyle({
+      overflowWrap: "anywhere",
+    });
+  });
+
   it("편집 모드에서 수정본 변경과 초기화를 전달한다", () => {
     const onContentChange = vi.fn();
     const onReset = vi.fn();
