@@ -5,14 +5,12 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 import {
   type ProjectStepPrompt,
   type ProjectStepResult,
+  ProjectStepResultCard,
   PromptCard,
 } from "@/entities";
 import { useClipboardCopy } from "@/shared";
 
-import {
-  UploadStepResultInput,
-  UploadStepSubmissionControl,
-} from "../../components";
+import { UploadStepSubmissionControl } from "../../components";
 import type { UploadPromptEditorState } from "../../hooks";
 
 type Props = {
@@ -137,9 +135,10 @@ export const UploadStepContentSection = ({
           />
         ) : null}
 
-        <UploadStepResultInput
-          value={resultText}
-          onChange={handleResultTextChange}
+        <ProjectStepResultCard
+          content={resultText}
+          mode="editable"
+          onContentChange={handleResultTextChange}
         />
 
         <UploadStepSubmissionControl
