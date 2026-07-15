@@ -2,7 +2,10 @@ import type { FocusEvent } from "react";
 
 import { Box } from "@chakra-ui/react";
 
-import { PromptCardContent } from "./PromptCardContent";
+import {
+  PromptCardContent,
+  type PromptCardContentVariant,
+} from "./PromptCardContent";
 import { PromptCardEditor } from "./PromptCardEditor";
 import { PromptCardHeader } from "./PromptCardHeader";
 import { PromptDiffContent } from "./PromptDiffContent";
@@ -13,6 +16,7 @@ type BaseProps = {
   content: string;
   onCopy: () => void;
   copied?: boolean;
+  contentVariant?: PromptCardContentVariant;
 };
 
 type ReadOnlyProps = BaseProps & {
@@ -36,7 +40,13 @@ type ComparisonProps = BaseProps & {
 type Props = ReadOnlyProps | EditableProps | ComparisonProps;
 
 export const PromptCard = (props: Props) => {
-  const { label, content, onCopy, copied = false } = props;
+  const {
+    label,
+    content,
+    contentVariant = "default",
+    onCopy,
+    copied = false,
+  } = props;
   const mode = props.mode ?? "readonly";
   const originalContent =
     props.mode === "editable" || props.mode === "comparison"
@@ -103,7 +113,7 @@ export const PromptCard = (props: Props) => {
       />
 
       {isDiffVisible && mode !== "readonly" ? (
-        <PromptDiffContent lines={diff.lines} />
+        <PromptDiffContent lines={diff.lines} variant={contentVariant} />
       ) : props.mode === "editable" ? (
         <PromptCardEditor
           content={content}
@@ -112,7 +122,7 @@ export const PromptCard = (props: Props) => {
           onContentChange={props.onContentChange}
         />
       ) : (
-        <PromptCardContent content={content} />
+        <PromptCardContent content={content} variant={contentVariant} />
       )}
     </Box>
   );

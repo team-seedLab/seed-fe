@@ -20,8 +20,7 @@ export const ProjectStepRecord = ({
     projectId,
     stepCode,
   });
-  const { copied: copiedOriginal, copy: copyOriginal } = useClipboardCopy();
-  const { copied: copiedEdited, copy: copyEdited } = useClipboardCopy();
+  const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const { copied: copiedResult, copy: copyResult } = useClipboardCopy();
 
   if (isLoading) {
@@ -55,64 +54,46 @@ export const ProjectStepRecord = ({
     );
   }
 
-  const hasEditedPrompt =
-    prompt.editedPrompt != null &&
-    prompt.editedPrompt !== prompt.providedPromptSnapshot;
+  const promptSectionTitle = prompt.stepName.endsWith("프롬프트")
+    ? prompt.stepName
+    : `${prompt.stepName} 프롬프트`;
 
   return (
     <VStack align="flex-start" gap={{ base: 8, md: 12 }} w="full">
-      <VStack align="flex-start" gap={{ base: 2, md: 3 }} w="full">
-        <Text color="seed" fontSize="xs" fontWeight="bold">
-          Step {stepNumber}
-        </Text>
-        <Text
-          color="neutral.900"
-          fontSize={{ base: "xl", md: "26px" }}
-          fontWeight="bold"
-          wordBreak="keep-all"
-        >
-          {prompt.stepName}
-        </Text>
-        <Text
-          color="neutral.600"
-          fontSize={{ base: "sm", md: "md" }}
-          wordBreak="keep-all"
-        >
-          이 단계에서 사용한 프롬프트와 작업 결과를 확인할 수 있습니다.
-        </Text>
-      </VStack>
+      <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
+        <VStack align="flex-start" gap={{ base: 2, md: 3 }} w="full">
+          <Text color="seed" fontSize="xs" fontWeight="bold">
+            Step {stepNumber}
+          </Text>
+          <Text
+            color="neutral.900"
+            fontSize={{ base: "xl", md: "26px" }}
+            fontWeight="bold"
+            wordBreak="keep-all"
+          >
+            {promptSectionTitle}
+          </Text>
+          <Text
+            color="neutral.600"
+            fontSize={{ base: "sm", md: "md" }}
+            wordBreak="keep-all"
+          >
+            왼쪽 프롬프트 복사 → AI에서 실행 → 오른쪽에서 수정 → 결과 기록
+          </Text>
+        </VStack>
 
-      {hasEditedPrompt ? (
-        <>
-          <PromptCard
-            content={prompt.providedPromptSnapshot}
-            copied={copiedOriginal}
-            label="원본 프롬프트"
-            onCopy={() => {
-              void copyOriginal(prompt.providedPromptSnapshot);
-            }}
-          />
-          <PromptCard
-            content={prompt.finalPrompt}
-            copied={copiedEdited}
-            label="최종 프롬프트"
-            mode="comparison"
-            originalContent={prompt.providedPromptSnapshot}
-            onCopy={() => {
-              void copyEdited(prompt.finalPrompt);
-            }}
-          />
-        </>
-      ) : (
         <PromptCard
-          content={prompt.providedPromptSnapshot}
-          copied={copiedOriginal}
-          label="생성된 프롬프트"
+          content={prompt.finalPrompt}
+          contentVariant="document"
+          copied={copiedPrompt}
+          label="수정 내용"
+          mode="comparison"
+          originalContent={prompt.providedPromptSnapshot}
           onCopy={() => {
-            void copyOriginal(prompt.providedPromptSnapshot);
+            void copyPrompt(prompt.finalPrompt);
           }}
         />
-      )}
+      </VStack>
 
       {result && (
         <PromptCard
