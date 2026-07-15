@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getProjectDetailAPI } from "../apis";
 import { projectKeys } from "../constants";
 
-export const useGetProjectDetail = (projectId: string) => {
+export const useGetProjectDetail = (projectId: string, enabled = true) => {
   return useQuery({
     queryKey: projectKeys.detail(projectId),
     queryFn: () => getProjectDetailAPI(projectId),
-    enabled: Boolean(projectId),
+    enabled: enabled && Boolean(projectId),
     throwOnError: false,
     meta: {
       showErrorToast: true,

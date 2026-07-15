@@ -1,12 +1,14 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
-import { type ProjectDetailResponse, ROADMAP_TYPE_LABEL } from "@/entities";
+import { type Project, ROADMAP_TYPE_LABEL } from "@/entities";
 import { CheckCircleIcon } from "@/shared";
 
 import { formatProjectDetailPeriod } from "../utils";
 
 type Props = {
-  project: ProjectDetailResponse;
+  project: Project & {
+    completedAt: string | null;
+  };
 };
 
 export const ProjectDetailHeaderSection = ({ project }: Props) => {

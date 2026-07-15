@@ -1,3 +1,4 @@
+export * from "./mentor-project-detail.api";
 export * from "./project-detail.api";
 export * from "./project-list.api";
 export * from "./project-step-ai-message.api";

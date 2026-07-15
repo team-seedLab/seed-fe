@@ -1,4 +1,4 @@
-const formatProjectDetailDate = (value: string) => {
+export const formatProjectDetailDate = (value: string) => {
   const matched = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
 
   if (!matched) {
