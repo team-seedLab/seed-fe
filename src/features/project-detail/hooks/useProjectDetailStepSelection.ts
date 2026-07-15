@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import type { ProjectStepSummary } from "@/entities";
 
-export const useProjectDetailStepSelection = (
-  steps: readonly ProjectStepSummary[],
+export const useProjectDetailStepSelection = <TStep extends ProjectStepSummary>(
+  steps: readonly TStep[],
 ) => {
   const [selectedStepId, setSelectedStepId] = useState<string | null>(null);
   const orderedSteps = [...steps].sort(
