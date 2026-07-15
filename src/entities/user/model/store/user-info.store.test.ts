@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { UserInfoResponse } from "../apis";
+import { USER_ROLE } from "../constants";
 
 import { useUserInfoStore } from "./user-info.store";
 
@@ -8,7 +9,7 @@ const USER_INFO: UserInfoResponse = {
   userId: "user-1",
   nickname: "테스트 사용자",
   profileUrl: "https://example.com/profile.png",
-  role: "MENTEE",
+  role: USER_ROLE.MENTEE,
 };
 
 describe("useUserInfoStore", () => {
@@ -35,4 +36,30 @@ describe("useUserInfoStore", () => {
     expect(userInfo).toBeNull();
     expect(persistedProfile).toBeNull();
   });
+
+  it.each([
+    ["MENTOR", USER_ROLE.MENTOR],
+    ["MENTEE", USER_ROLE.MENTEE],
+  ])(
+    "기존 역할값 %s를 현재 역할값으로 마이그레이션한다",
+    async (role, expected) => {
+      sessionStorage.setItem(
+        "user-info-store",
+        JSON.stringify({
+          state: {
+            persistedProfile: {
+              nickname: "user",
+              profileUrl: "",
+              role,
+            },
+          },
+          version: 0,
+        }),
+      );
+
+      await useUserInfoStore.persist.rehydrate();
+
+      expect(useUserInfoStore.getState().persistedProfile?.role).toBe(expected);
+    },
+  );
 });

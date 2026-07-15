@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useUserInfoStore } from "@/entities";
+import { USER_ROLE, useUserInfoStore } from "@/entities";
 import { renderWithProviders } from "@/test/test-utils";
 
 import MentorDashboardPage from "./MentorDashboardPage";
@@ -45,7 +45,7 @@ describe("MentorDashboardPage", () => {
       persistedProfile: {
         nickname: "서연",
         profileUrl: "",
-        role: "MENTOR",
+        role: USER_ROLE.MENTOR,
       },
     });
 

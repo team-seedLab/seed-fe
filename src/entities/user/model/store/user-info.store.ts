@@ -8,6 +8,8 @@ import {
 import { immer } from "zustand/middleware/immer";
 
 import type { UserInfoResponse } from "../apis";
+import { USER_ROLE } from "../constants";
+import type { UserRole } from "../types";
 
 type PersistedUserProfile = Pick<
   UserInfoResponse,
@@ -24,9 +26,43 @@ type UserInfoActions = {
   clearUserInfo: () => void;
 };
 
+type PersistedUserInfoState = Pick<UserInfoState, "persistedProfile">;
+
 const initialState: UserInfoState = {
   userInfo: null,
   persistedProfile: null,
+};
+
+const migrateUserRole = (role: unknown): UserRole | undefined => {
+  if (role === "MENTOR" || role === USER_ROLE.MENTOR) {
+    return USER_ROLE.MENTOR;
+  }
+
+  if (role === "MENTEE" || role === USER_ROLE.MENTEE) {
+    return USER_ROLE.MENTEE;
+  }
+
+  return undefined;
+};
+
+const migratePersistedUserInfo = (persistedState: unknown) => {
+  if (!persistedState || typeof persistedState !== "object") {
+    return { persistedProfile: null } satisfies PersistedUserInfoState;
+  }
+
+  const state = persistedState as Partial<PersistedUserInfoState>;
+
+  if (!state.persistedProfile) {
+    return state;
+  }
+
+  return {
+    ...state,
+    persistedProfile: {
+      ...state.persistedProfile,
+      role: migrateUserRole(state.persistedProfile.role),
+    },
+  };
 };
 
 export const useUserInfoStore = create<UserInfoState & UserInfoActions>()(
@@ -54,6 +90,8 @@ export const useUserInfoStore = create<UserInfoState & UserInfoActions>()(
         name: "user-info-store",
         storage: createJSONStorage(() => sessionStorage),
         partialize: (state) => ({ persistedProfile: state.persistedProfile }),
+        version: 1,
+        migrate: migratePersistedUserInfo,
       },
     ),
     {

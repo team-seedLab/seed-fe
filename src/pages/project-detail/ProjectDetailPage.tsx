@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import {
+  USER_ROLE,
   getUserEntryRoutePath,
   useGetMentorProjectDetail,
   useGetProjectDetail,
@@ -27,8 +28,8 @@ export default function ProjectDetailPage() {
   const role = useUserInfoStore((state) => {
     return state.userInfo?.role ?? state.persistedProfile?.role;
   });
-  const isMentor = role === "MENTOR";
-  const isMentee = role === "MENTEE";
+  const isMentor = role === USER_ROLE.MENTOR;
+  const isMentee = role === USER_ROLE.MENTEE;
   const menteeProjectQuery = useGetProjectDetail(projectId ?? "", isMentee);
   const mentorProjectQuery = useGetMentorProjectDetail(
     projectId ?? "",

@@ -1,6 +1,6 @@
 import { HttpResponse, http } from "msw";
 
-import type { UserInfoResponse } from "@/entities";
+import { USER_ROLE, type UserInfoResponse } from "@/entities";
 import type { ApiResponse, ErrorResponse } from "@/shared";
 
 export const createApiSuccessResponse = <T>(data: T): ApiResponse<T> => ({
@@ -23,7 +23,7 @@ export const DEFAULT_USER_INFO: UserInfoResponse = {
   userId: "user-1",
   nickname: "테스트 사용자",
   profileUrl: "",
-  role: "MENTEE",
+  role: USER_ROLE.MENTEE,
 };
 
 export const handlers = [
