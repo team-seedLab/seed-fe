@@ -87,7 +87,7 @@ describe("UploadStepContentSection", () => {
     });
 
     expect(promptEditor).toHaveValue("수정된 프롬프트\n분량: A4 2장");
-    expect(screen.getByText("작업 결과 입력")).toBeInTheDocument();
+    expect(screen.getByText("학습 결과 입력")).toBeInTheDocument();
     expect(screen.queryByText("결과 추출")).not.toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "초기화" })).toHaveLength(1);
   });
@@ -96,7 +96,7 @@ describe("UploadStepContentSection", () => {
     openSelfCheckMock.mockClear();
     renderWithProviders(<UploadStepContentSectionTestHarness />);
 
-    fireEvent.change(screen.getByRole("textbox", { name: "작업 결과" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "학습 결과" }), {
       target: { value: "단계 작업 결과" },
     });
     fireEvent.click(screen.getByRole("button", { name: "다음 단계로 진행" }));

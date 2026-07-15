@@ -232,7 +232,7 @@ describe("ProjectDetailSection", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("수정 내용")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "작업 결과" }),
+      screen.getByRole("heading", { level: 2, name: "학습 결과" }),
     ).toBeInTheDocument();
     expect(screen.getByText("저장된 작업 결과")).toBeInTheDocument();
     expect(screen.queryByText("생성된 프롬프트")).not.toBeInTheDocument();
