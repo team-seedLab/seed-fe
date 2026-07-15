@@ -1,15 +1,15 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
+import type { MentorProjectReviewStatus } from "../types";
+
 import {
   type MentorProjectDetailApiResponse,
   type MentorProjectDetailResponse,
-  type MentorProjectReviewStatus,
   mapMentorProjectDetailResponse,
 } from "./mentor-project-detail.mapper";
 
 export type {
   MentorProjectDetailResponse,
-  MentorProjectReviewStatus,
   MentorProjectStepDetail,
 } from "./mentor-project-detail.mapper";
 

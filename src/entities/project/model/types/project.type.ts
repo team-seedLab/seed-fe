@@ -32,6 +32,8 @@ export type RoadmapType =
 
 export type ProjectStatus = "IN_PROGRESS" | "COMPLETED";
 
+export type MentorProjectReviewStatus = "REVIEWING" | "REVIEWED";
+
 export type ProjectStepStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED";
 
 export interface ProjectStepSummary {

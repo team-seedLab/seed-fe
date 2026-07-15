@@ -1,24 +1,15 @@
 import type {
   MentorDashboardMentee as MentorDashboardMenteeModel,
   MentorDashboardSummary as MentorDashboardSummaryModel,
+  MentorStudentProjectListProject,
   MentorStudentReviewStatus,
-  ProjectStatus,
 } from "@/entities";
 
 export type MenteeReviewStatus = MentorStudentReviewStatus;
 export type MentorDashboardMentee = MentorDashboardMenteeModel;
 export type MentorDashboardSummary = MentorDashboardSummaryModel;
 
-export type MentorMenteeProject = {
-  projectId: string;
-  title: string;
-  status: ProjectStatus;
-  startedAt: string;
-  submittedAt: string;
-  currentStep: number;
-  totalSteps: number;
-  completionRate: number;
-};
+export type MentorMenteeProject = MentorStudentProjectListProject;
 
 export type MentorMenteeProjectGroup = {
   menteeId: string;
