@@ -1,6 +1,8 @@
-import { VStack } from "@chakra-ui/react";
+import { Text, VStack } from "@chakra-ui/react";
 
-import type { ProjectDetailResponse } from "@/entities";
+import { type ProjectDetailResponse, ProjectStepIndicator } from "@/entities";
+
+import { useProjectDetailStepSelection } from "../hooks";
 
 import { ProjectStepRecord } from "./ProjectStepRecord";
 
@@ -9,9 +11,14 @@ type Props = {
 };
 
 export const ProjectDetailSection = ({ project }: Props) => {
-  const startedSteps = project.steps.filter(
-    (step) => step.status !== "PENDING",
-  );
+  const {
+    activeStep,
+    completedStepCodes,
+    orderedStepCodes,
+    selectableStepCodes,
+    selectedStep,
+    selectStep,
+  } = useProjectDetailStepSelection(project.steps);
 
   return (
     <VStack
@@ -25,14 +32,26 @@ export const ProjectDetailSection = ({ project }: Props) => {
       p={{ base: 4, md: 12 }}
       w="full"
     >
-      {startedSteps.map((step) => (
+      <ProjectStepIndicator
+        activeStep={activeStep}
+        completedStepCodes={completedStepCodes}
+        selectableStepCodes={selectableStepCodes}
+        stepCodes={orderedStepCodes}
+        onStepSelect={selectStep}
+      />
+
+      {selectedStep ? (
         <ProjectStepRecord
-          key={step.stepId}
+          key={selectedStep.stepId}
           projectId={project.projectId}
-          stepCode={step.stepCode}
-          stepNumber={step.stepOrder}
+          stepCode={selectedStep.stepCode}
+          stepNumber={selectedStep.stepOrder}
         />
-      ))}
+      ) : (
+        <Text color="neutral.600" fontSize={{ base: "sm", md: "md" }}>
+          조회할 수 있는 단계 기록이 없습니다.
+        </Text>
+      )}
     </VStack>
   );
 };
