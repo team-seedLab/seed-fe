@@ -6,6 +6,7 @@ export const projectKeys = {
   all: () => [PROJECT_QUERY_KEY] as const,
   lists: () => [...projectKeys.all(), "list"] as const,
   details: () => [...projectKeys.all(), "detail"] as const,
+  mentorDetails: () => [...projectKeys.all(), "mentor-detail"] as const,
   steps: (projectId: string) =>
     [...projectKeys.detail(projectId), "step"] as const,
   step: (projectId: string, stepCode: string) =>
@@ -27,6 +28,8 @@ export const projectKeys = {
       params.status,
     ] as const,
   detail: (projectId: string) => [...projectKeys.details(), projectId] as const,
+  mentorDetail: (projectId: string) =>
+    [...projectKeys.mentorDetails(), projectId] as const,
 };
 
 export const normalizeProjectListQueryParams = (
