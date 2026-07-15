@@ -10,6 +10,7 @@ import { server } from "@/test/msw/server";
 import { renderHookWithProviders } from "@/test/test-utils";
 
 import type { UserInfoResponse } from "../apis";
+import { USER_ROLE } from "../constants";
 import { useUserInfoStore } from "../store";
 
 import { useGetUserInfo } from "./useGetUserInfo";
@@ -18,14 +19,14 @@ const MENTEE_USER_INFO: UserInfoResponse = {
   userId: "user-1",
   nickname: "테스트 사용자",
   profileUrl: "",
-  role: "MENTEE",
+  role: USER_ROLE.MENTEE,
 };
 
 describe("useGetUserInfo", () => {
   it("성공 응답이면 role 을 포함한 사용자 정보를 store 에 저장한다", async () => {
     const mentorUserInfo: UserInfoResponse = {
       ...MENTEE_USER_INFO,
-      role: "MENTOR",
+      role: USER_ROLE.MENTOR,
     };
 
     server.use(

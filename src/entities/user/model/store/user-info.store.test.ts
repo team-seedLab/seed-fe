@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { UserInfoResponse } from "../apis";
+import { USER_ROLE } from "../constants";
 
 import { useUserInfoStore } from "./user-info.store";
 
@@ -8,7 +9,7 @@ const USER_INFO: UserInfoResponse = {
   userId: "user-1",
   nickname: "테스트 사용자",
   profileUrl: "https://example.com/profile.png",
-  role: "MENTEE",
+  role: USER_ROLE.MENTEE,
 };
 
 describe("useUserInfoStore", () => {

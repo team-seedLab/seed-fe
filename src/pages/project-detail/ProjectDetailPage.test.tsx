@@ -1,7 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useUserInfoStore } from "@/entities";
+import { USER_ROLE, useUserInfoStore } from "@/entities";
 import { ROUTE_PATHS } from "@/shared";
 import { renderWithProviders } from "@/test/test-utils";
 
@@ -88,7 +88,7 @@ describe("ProjectDetailPage", () => {
       persistedProfile: {
         nickname: "mentor",
         profileUrl: "",
-        role: "MENTOR",
+        role: USER_ROLE.MENTOR,
       },
     });
   });
@@ -196,7 +196,7 @@ describe("ProjectDetailPage", () => {
       persistedProfile: {
         nickname: "mentee",
         profileUrl: "",
-        role: "MENTEE",
+        role: USER_ROLE.MENTEE,
       },
     });
     useGetProjectDetailMock.mockReturnValue({
