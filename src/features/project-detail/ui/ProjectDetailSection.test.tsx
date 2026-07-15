@@ -214,24 +214,36 @@ describe("ProjectDetailSection", () => {
     expect(screen.queryByText("3단계 프롬프트")).not.toBeInTheDocument();
   });
 
-  it("수정본이 없으면 생성 프롬프트와 작업 결과를 읽기 전용으로 표시한다", async () => {
+  it("수정본이 없으면 단계 프롬프트를 단일 비교 카드로 표시한다", async () => {
     useStepRecordHandlers(null);
 
     renderWithProviders(<ProjectDetailSection project={createProject()} />);
 
-    expect(await screen.findByText("생성된 프롬프트")).toBeInTheDocument();
+    expect(
+      await screen.findByText("제약사항 분석 프롬프트"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "왼쪽 프롬프트 복사 → AI에서 실행 → 오른쪽에서 수정 → 결과 기록",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("수정 내용")).toBeInTheDocument();
     expect(screen.getByText("저장된 작업 결과")).toBeInTheDocument();
+    expect(screen.queryByText("생성된 프롬프트")).not.toBeInTheDocument();
+    expect(screen.queryByText("원본 프롬프트")).not.toBeInTheDocument();
     expect(screen.queryByText("최종 프롬프트")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "차이보기" })).toBeDisabled();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });
 
-  it("수정본이 있으면 원본과 최종본을 읽기 전용으로 표시한다", async () => {
+  it("수정본이 있으면 단일 카드에서 원본과 수정본의 차이를 표시한다", async () => {
     useStepRecordHandlers(EDITED_PROMPT);
 
     renderWithProviders(<ProjectDetailSection project={createProject()} />);
 
-    expect(await screen.findByText("원본 프롬프트")).toBeInTheDocument();
-    expect(screen.getByText("최종 프롬프트")).toBeInTheDocument();
+    expect(await screen.findByText("수정 내용")).toBeInTheDocument();
+    expect(screen.queryByText("원본 프롬프트")).not.toBeInTheDocument();
+    expect(screen.queryByText("최종 프롬프트")).not.toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "초기화" }),
@@ -247,7 +259,7 @@ describe("ProjectDetailSection", () => {
       <ProjectDetailSection project={createProject("PENDING")} />,
     );
 
-    expect(screen.queryByText("생성된 프롬프트")).not.toBeInTheDocument();
+    expect(screen.queryByText("수정 내용")).not.toBeInTheDocument();
   });
 
   it("단계 기록 조회에 실패하면 오류 상태를 표시한다", async () => {
