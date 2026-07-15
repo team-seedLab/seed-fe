@@ -36,7 +36,7 @@ export const ProjectStepResultCard = (props: Props) => {
           {isEditable ? "학습 결과 입력" : "학습 결과"}
         </Text>
 
-        {!isEditable && (
+        {!isEditable && Boolean(props.content.trim()) && (
           <ProjectContentCopyButton
             copied={props.copied ?? false}
             onCopy={props.onCopy}

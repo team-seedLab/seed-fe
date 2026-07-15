@@ -228,4 +228,15 @@ describe("ProjectStepResultCard", () => {
     fireEvent.click(screen.getByRole("button", { name: "복사하기" }));
     expect(onCopy).toHaveBeenCalledOnce();
   });
+
+  it("읽기 전용 내용이 없으면 복사 버튼을 표시하지 않는다", () => {
+    renderWithProviders(<ProjectStepResultCard content="" onCopy={vi.fn()} />);
+
+    expect(
+      screen.getByText("등록된 학습 결과가 없습니다."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "복사하기" }),
+    ).not.toBeInTheDocument();
+  });
 });
