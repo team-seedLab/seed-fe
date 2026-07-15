@@ -242,4 +242,30 @@ describe("ProjectDetailPage", () => {
       false,
     );
   });
+
+  it("역할을 확인하기 전에는 프로젝트 상세 API를 호출하지 않는다", () => {
+    useUserInfoStore.setState({
+      userInfo: null,
+      persistedProfile: null,
+    });
+
+    renderWithProviders(<ProjectDetailPage />, {
+      authValue: {
+        isAuthenticated: true,
+        isLoading: false,
+      },
+    });
+
+    expect(useGetProjectDetailMock).toHaveBeenCalledWith(
+      "mentor-project-1",
+      false,
+    );
+    expect(useGetMentorProjectDetailMock).toHaveBeenCalledWith(
+      "mentor-project-1",
+      false,
+    );
+    expect(
+      screen.queryByText("프로젝트 정보가 없습니다."),
+    ).not.toBeInTheDocument();
+  });
 });

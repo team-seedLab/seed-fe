@@ -28,19 +28,21 @@ export default function ProjectDetailPage() {
     return state.userInfo?.role ?? state.persistedProfile?.role;
   });
   const isMentor = role === "MENTOR";
-  const menteeProjectQuery = useGetProjectDetail(projectId ?? "", !isMentor);
+  const isMentee = role === "MENTEE";
+  const menteeProjectQuery = useGetProjectDetail(projectId ?? "", isMentee);
   const mentorProjectQuery = useGetMentorProjectDetail(
     projectId ?? "",
     isMentor,
   );
-  const project = isMentor ? mentorProjectQuery.data : menteeProjectQuery.data;
-  const isError = isMentor
-    ? mentorProjectQuery.isError
-    : menteeProjectQuery.isError;
-  const isLoading = isMentor
-    ? mentorProjectQuery.isLoading
-    : menteeProjectQuery.isLoading;
-  const error = isMentor ? mentorProjectQuery.error : menteeProjectQuery.error;
+  const projectQuery = isMentor
+    ? mentorProjectQuery
+    : isMentee
+      ? menteeProjectQuery
+      : null;
+  const project = projectQuery?.data;
+  const isError = projectQuery?.isError ?? false;
+  const isLoading = !projectQuery || projectQuery.isLoading;
+  const error = projectQuery?.error;
   const backTo = (location.state as ProjectDetailLocationState | null)?.backTo;
   const errorMessage = isMentor
     ? getMentorProjectDetailErrorMessage(error)
