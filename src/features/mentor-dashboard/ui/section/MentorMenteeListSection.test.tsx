@@ -52,4 +52,23 @@ describe("MentorMenteeListSection", () => {
       DYNAMIC_ROUTE_PATHS.MENTOR_MENTEE_PROJECTS(SAMPLE_MENTEE_ID),
     );
   });
+
+  it("프로젝트가 없는 멘티의 최근 수정일과 검토 상태를 대시로 표시한다", () => {
+    renderWithProviders(
+      <MentorMenteeListSection
+        mentees={[
+          {
+            menteeId: "mentee-without-project",
+            name: "프로젝트 없음",
+            projectCount: 0,
+            latestUpdatedAt: null,
+            reviewStatus: "NOT_APPLICABLE",
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getAllByText("최근 수정")).not.toHaveLength(0);
+    expect(screen.getAllByText("-")).not.toHaveLength(0);
+  });
 });

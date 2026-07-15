@@ -1,4 +1,4 @@
-export const formatSubmittedDate = (value: string | null | undefined) => {
+export const formatUpdatedDate = (value: string | null | undefined) => {
   if (!value) {
     return "-";
   }

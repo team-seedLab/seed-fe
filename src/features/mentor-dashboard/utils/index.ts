@@ -1,1 +1,1 @@
-export * from "./format-submitted-date";
+export * from "./format-updated-date";

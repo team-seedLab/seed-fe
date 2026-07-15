@@ -7,7 +7,7 @@ import {
   REVIEW_STATUS_LABEL,
 } from "../constants";
 import type { MentorDashboardMentee } from "../types";
-import { formatSubmittedDate } from "../utils";
+import { formatUpdatedDate } from "../utils";
 
 type Props = {
   mentee: MentorDashboardMentee;
@@ -69,7 +69,7 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
           {mentee.projectCount}
         </Text>
         <Text color="text" fontSize="sm" fontWeight="medium">
-          {formatSubmittedDate(mentee.latestSubmittedAt)}
+          {formatUpdatedDate(mentee.latestUpdatedAt)}
         </Text>
         <Text color="text" fontSize="sm" fontWeight="medium">
           {REVIEW_STATUS_LABEL[mentee.reviewStatus]}
@@ -92,10 +92,10 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
 
         <VStack align="flex-start" gap={1}>
           <Text color="text.secondary" fontSize="2xs" fontWeight="medium">
-            최근 제출
+            최근 수정
           </Text>
           <Text color="text" fontSize="sm" fontWeight="medium">
-            {formatSubmittedDate(mentee.latestSubmittedAt)}
+            {formatUpdatedDate(mentee.latestUpdatedAt)}
           </Text>
         </VStack>
 
