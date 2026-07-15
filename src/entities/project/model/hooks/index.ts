@@ -1,5 +1,6 @@
 export * from "./useCompleteMentorProjectReview";
 export * from "./useGetMentorProjectDetail";
+export * from "./useGetMentorStudentProjectList";
 export * from "./useGetProjectDetail";
 export * from "./useGetProjectList";
 export * from "./useCreateProjectStepAiMessage";

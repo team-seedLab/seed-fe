@@ -7,6 +7,8 @@ export const projectKeys = {
   lists: () => [...projectKeys.all(), "list"] as const,
   details: () => [...projectKeys.all(), "detail"] as const,
   mentorDetails: () => [...projectKeys.all(), "mentor-detail"] as const,
+  mentorStudentProjectLists: () =>
+    [...projectKeys.all(), "mentor-student-project-list"] as const,
   steps: (projectId: string) =>
     [...projectKeys.detail(projectId), "step"] as const,
   step: (projectId: string, stepCode: string) =>
@@ -30,6 +32,8 @@ export const projectKeys = {
   detail: (projectId: string) => [...projectKeys.details(), projectId] as const,
   mentorDetail: (projectId: string) =>
     [...projectKeys.mentorDetails(), projectId] as const,
+  mentorStudentProjectList: (menteeId: string) =>
+    [...projectKeys.mentorStudentProjectLists(), menteeId] as const,
 };
 
 export const normalizeProjectListQueryParams = (
