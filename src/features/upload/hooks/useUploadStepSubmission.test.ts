@@ -184,7 +184,9 @@ describe("useUploadStepSubmission", () => {
     expect(invalidateQueriesMock.mock.invocationCallOrder[1]).toBeLessThan(
       navigateMock.mock.invocationCallOrder[0],
     );
-    expect(navigateMock).toHaveBeenCalledWith("/project/project-1");
+    expect(navigateMock).toHaveBeenCalledWith("/project/project-1", {
+      replace: true,
+    });
   });
 
   it("마지막 단계 결과 저장 후 프로젝트 완료에 실패해도 상세 캐시를 갱신한다", async () => {
