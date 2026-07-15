@@ -1,14 +1,13 @@
-import type { ProjectStatus } from "@/entities";
+import type {
+  MentorDashboardMentee as MentorDashboardMenteeModel,
+  MentorDashboardSummary as MentorDashboardSummaryModel,
+  MentorStudentReviewStatus,
+  ProjectStatus,
+} from "@/entities";
 
-export type MenteeReviewStatus = "REVIEWED" | "REVIEW_REQUIRED";
-
-export type MentorDashboardMentee = {
-  menteeId: string;
-  name: string;
-  projectCount: number;
-  latestSubmittedAt: string | null;
-  reviewStatus: MenteeReviewStatus;
-};
+export type MenteeReviewStatus = MentorStudentReviewStatus;
+export type MentorDashboardMentee = MentorDashboardMenteeModel;
+export type MentorDashboardSummary = MentorDashboardSummaryModel;
 
 export type MentorMenteeProject = {
   projectId: string;

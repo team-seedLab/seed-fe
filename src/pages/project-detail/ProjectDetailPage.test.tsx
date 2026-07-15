@@ -242,4 +242,30 @@ describe("ProjectDetailPage", () => {
       false,
     );
   });
+
+  it("역할 정보가 없으면 프로젝트 상세 API를 호출하지 않고 오류를 표시한다", () => {
+    useUserInfoStore.setState({
+      userInfo: null,
+      persistedProfile: null,
+    });
+
+    renderWithProviders(<ProjectDetailPage />, {
+      authValue: {
+        isAuthenticated: true,
+        isLoading: false,
+      },
+    });
+
+    expect(useGetProjectDetailMock).toHaveBeenCalledWith(
+      "mentor-project-1",
+      false,
+    );
+    expect(useGetMentorProjectDetailMock).toHaveBeenCalledWith(
+      "mentor-project-1",
+      false,
+    );
+    expect(
+      screen.getByText("사용자 역할 정보를 확인하지 못했습니다."),
+    ).toBeInTheDocument();
+  });
 });

@@ -28,23 +28,28 @@ export default function ProjectDetailPage() {
     return state.userInfo?.role ?? state.persistedProfile?.role;
   });
   const isMentor = role === "MENTOR";
-  const menteeProjectQuery = useGetProjectDetail(projectId ?? "", !isMentor);
+  const isMentee = role === "MENTEE";
+  const menteeProjectQuery = useGetProjectDetail(projectId ?? "", isMentee);
   const mentorProjectQuery = useGetMentorProjectDetail(
     projectId ?? "",
     isMentor,
   );
-  const project = isMentor ? mentorProjectQuery.data : menteeProjectQuery.data;
-  const isError = isMentor
-    ? mentorProjectQuery.isError
-    : menteeProjectQuery.isError;
-  const isLoading = isMentor
-    ? mentorProjectQuery.isLoading
-    : menteeProjectQuery.isLoading;
-  const error = isMentor ? mentorProjectQuery.error : menteeProjectQuery.error;
+  const projectQuery = isMentor
+    ? mentorProjectQuery
+    : isMentee
+      ? menteeProjectQuery
+      : null;
+  const hasSupportedRole = isMentor || isMentee;
+  const project = projectQuery?.data;
+  const isError = !hasSupportedRole || (projectQuery?.isError ?? false);
+  const isLoading = projectQuery?.isLoading ?? false;
+  const error = projectQuery?.error;
   const backTo = (location.state as ProjectDetailLocationState | null)?.backTo;
-  const errorMessage = isMentor
-    ? getMentorProjectDetailErrorMessage(error)
-    : "프로젝트 정보를 불러오지 못했습니다.";
+  const errorMessage = !hasSupportedRole
+    ? "사용자 역할 정보를 확인하지 못했습니다."
+    : isMentor
+      ? getMentorProjectDetailErrorMessage(error)
+      : "프로젝트 정보를 불러오지 못했습니다.";
 
   return (
     <Flex

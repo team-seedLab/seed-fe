@@ -1,35 +1,31 @@
 import { Box, Flex, Grid, Skeleton, Text, VStack } from "@chakra-ui/react";
 
-import type { MentorDashboardMentee } from "../../types";
+import type { MentorDashboardSummary } from "../../types";
 
 type Props = {
-  mentees: MentorDashboardMentee[];
   nickname?: string | null;
+  summary: MentorDashboardSummary;
 };
 
-const createSummaryItems = (mentees: MentorDashboardMentee[]) => {
-  const reviewRequiredCount = mentees.filter((mentee) => {
-    return mentee.reviewStatus === "REVIEW_REQUIRED";
-  }).length;
-
+const createSummaryItems = (summary: MentorDashboardSummary) => {
   return [
     {
       label: "학생 수",
-      value: mentees.length,
+      value: summary.studentCount,
     },
     {
       label: "검토중",
-      value: reviewRequiredCount,
+      value: summary.reviewingCount,
     },
     {
       label: "검토 완료",
-      value: mentees.length - reviewRequiredCount,
+      value: summary.reviewedCount,
     },
   ];
 };
 
-export const MentorDashboardSummarySection = ({ mentees, nickname }: Props) => {
-  const summaryItems = createSummaryItems(mentees);
+export const MentorDashboardSummarySection = ({ nickname, summary }: Props) => {
+  const summaryItems = createSummaryItems(summary);
 
   return (
     <Flex

@@ -51,7 +51,7 @@ export const MentorMenteeListSection = ({ mentees }: Props) => {
             프로젝트 수
           </Text>
           <Text color="text" fontSize="sm" fontWeight="bold">
-            최근 제출
+            최근 수정
           </Text>
           <Text color="text" fontSize="sm" fontWeight="bold">
             검토 상태
