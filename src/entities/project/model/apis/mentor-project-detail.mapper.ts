@@ -1,11 +1,10 @@
 import type {
+  MentorProjectReviewStatus,
   Project,
   ProjectStatus,
   ProjectStepStatus,
   RoadmapType,
 } from "../types";
-
-export type MentorProjectReviewStatus = "REVIEWING" | "REVIEWED";
 
 type MentorProjectStepPromptApiResponse = {
   providedPromptSnapshot: string;
