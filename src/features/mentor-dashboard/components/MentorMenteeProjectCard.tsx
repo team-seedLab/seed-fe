@@ -1,4 +1,4 @@
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { formatUpdatedAt } from "@/entities";
 import { ChevronRightIcon } from "@/shared";
@@ -11,6 +11,9 @@ type Props = {
 };
 
 export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
+  const currentStep = project.currentStepOrder ?? 0;
+  const progressPercent = Math.min(Math.max(project.progressPercent, 0), 100);
+
   return (
     <Flex
       bg="container.bg"
@@ -22,12 +25,32 @@ export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
       direction="column"
       gap={3}
       p={{ base: 5, md: "25px" }}
+      position="relative"
       textAlign="left"
       transition="background 0.15s"
       w="full"
       _hover={{ bg: "neutral.50" }}
-      onClick={onClick}
     >
+      <Button
+        aria-label={`${project.title} 프로젝트 열기`}
+        bg="transparent"
+        borderRadius="2xl"
+        h="auto"
+        inset={0}
+        minW={0}
+        p={0}
+        position="absolute"
+        type="button"
+        variant="plain"
+        zIndex={1}
+        _focusVisible={{
+          outline: "2px solid",
+          outlineColor: "seed",
+          outlineOffset: "2px",
+        }}
+        onClick={onClick}
+      />
+
       <Flex align="flex-start" gap={4} justify="space-between">
         <VStack align="flex-start" flex={1} gap={1} minW={0}>
           <Text
@@ -42,7 +65,7 @@ export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
             {project.title}
           </Text>
           <Text color="text.secondary" fontSize="xs" fontWeight="regular">
-            {formatUpdatedAt(project.submittedAt)}
+            {formatUpdatedAt(project.updatedAt)}
           </Text>
         </VStack>
 
@@ -61,10 +84,10 @@ export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
       <VStack align="stretch" gap={2} w="full">
         <Flex align="center" justify="space-between">
           <Text color="text" fontSize="xs" fontWeight="medium">
-            Step {project.currentStep} of {project.totalSteps}
+            Step {currentStep} of {project.totalStepCount}
           </Text>
           <Text color="seed" fontSize="xs" fontWeight="semibold">
-            {project.completionRate}%
+            {progressPercent}%
           </Text>
         </Flex>
 
@@ -73,7 +96,7 @@ export const MentorMenteeProjectCard = ({ project, onClick }: Props) => {
             bg="seed"
             borderRadius="full"
             h="full"
-            w={`${project.completionRate}%`}
+            w={`${progressPercent}%`}
           />
         </Box>
       </VStack>
