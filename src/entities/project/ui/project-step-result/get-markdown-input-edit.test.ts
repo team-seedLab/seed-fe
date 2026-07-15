@@ -54,6 +54,61 @@ describe("getMarkdownInputEdit", () => {
     });
   });
 
+  it("일반 문장 중간에서 Tab을 누르면 커서 위치에 공백을 입력한다", () => {
+    const result = getMarkdownInputEdit({
+      ctrlKey: false,
+      key: "Tab",
+      metaKey: false,
+      selectionEnd: 2,
+      selectionStart: 2,
+      shiftKey: false,
+      value: "첫째줄",
+    });
+
+    expect(result).toEqual({
+      selectionEnd: 6,
+      selectionStart: 6,
+      value: "첫째    줄",
+    });
+  });
+
+  it("줄 앞 공백 영역에서 Tab을 누르면 줄 전체를 들여쓴다", () => {
+    const result = getMarkdownInputEdit({
+      ctrlKey: false,
+      key: "Tab",
+      metaKey: false,
+      selectionEnd: 2,
+      selectionStart: 2,
+      shiftKey: false,
+      value: "  첫째 줄",
+    });
+
+    expect(result).toEqual({
+      selectionEnd: 6,
+      selectionStart: 6,
+      value: "      첫째 줄",
+    });
+  });
+
+  it("목록 줄에서 Tab을 누르면 기존처럼 줄 전체를 들여쓴다", () => {
+    const value = "- 첫 번째";
+    const result = getMarkdownInputEdit({
+      ctrlKey: false,
+      key: "Tab",
+      metaKey: false,
+      selectionEnd: value.length,
+      selectionStart: value.length,
+      shiftKey: false,
+      value,
+    });
+
+    expect(result).toEqual({
+      selectionEnd: value.length + 4,
+      selectionStart: value.length + 4,
+      value: `    ${value}`,
+    });
+  });
+
   it("링크 문법을 적용한 후 URL 입력 위치를 선택한다", () => {
     const result = getMarkdownInputEdit({
       ctrlKey: true,
@@ -142,6 +197,27 @@ describe("getMarkdownInputEdit", () => {
       selectionEnd: expected.length,
       selectionStart: expected.length,
       value: expected,
+    });
+  });
+
+  it("아래에 문장이 있는 빈 목록을 종료하면 커서를 빈 줄에 유지한다", () => {
+    const valueBeforeLine = "- 첫 번째\n";
+    const value = `${valueBeforeLine}- \n다음 문장`;
+
+    expect(
+      getMarkdownInputEdit({
+        ctrlKey: false,
+        key: "Enter",
+        metaKey: false,
+        selectionEnd: valueBeforeLine.length + 2,
+        selectionStart: valueBeforeLine.length + 2,
+        shiftKey: false,
+        value,
+      }),
+    ).toEqual({
+      selectionEnd: valueBeforeLine.length,
+      selectionStart: valueBeforeLine.length,
+      value: `${valueBeforeLine}\n다음 문장`,
     });
   });
 

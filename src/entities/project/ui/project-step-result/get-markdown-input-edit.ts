@@ -97,6 +97,17 @@ const removeIndent = (line: string) => {
   return line.slice(indentLength);
 };
 
+const getCursorIndentEdit = (params: Params): MarkdownInputEdit => {
+  const value = `${params.value.slice(0, params.selectionStart)}${MARKDOWN_INDENT}${params.value.slice(params.selectionEnd)}`;
+  const cursor = params.selectionStart + MARKDOWN_INDENT.length;
+
+  return {
+    selectionEnd: cursor,
+    selectionStart: cursor,
+    value,
+  };
+};
+
 const getLineEdit = (params: Params): MarkdownInputEdit => {
   const lineStart =
     params.value.lastIndexOf("\n", params.selectionStart - 1) + 1;
@@ -109,6 +120,17 @@ const getLineEdit = (params: Params): MarkdownInputEdit => {
   const nextLineBreak = params.value.indexOf("\n", effectiveSelectionEnd);
   const lineEnd = nextLineBreak === -1 ? params.value.length : nextLineBreak;
   const selectedLines = params.value.slice(lineStart, lineEnd);
+  const textBeforeCursor = params.value.slice(lineStart, params.selectionStart);
+  const shouldEditWholeLines =
+    params.selectionStart !== params.selectionEnd ||
+    params.shiftKey ||
+    /^[\t ]*$/.test(textBeforeCursor) ||
+    Boolean(getListLine(selectedLines));
+
+  if (!shouldEditWholeLines) {
+    return getCursorIndentEdit(params);
+  }
+
   const editedLines = selectedLines
     .split("\n")
     .map((line) =>
@@ -167,10 +189,7 @@ const getListContinuationEdit = (params: Params): MarkdownInputEdit | null => {
       !valueBeforeLine.endsWith("\n\n") &&
       !valueAfterLine.startsWith("\n");
     const blockSeparator = needsBlockSeparator ? "\n" : "";
-    const cursor =
-      valueBeforeLine.length +
-      blockSeparator.length +
-      (valueAfterLine.startsWith("\n") ? 1 : 0);
+    const cursor = valueBeforeLine.length + blockSeparator.length;
 
     return {
       selectionEnd: cursor,
