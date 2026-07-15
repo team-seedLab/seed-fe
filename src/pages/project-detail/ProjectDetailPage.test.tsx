@@ -243,7 +243,7 @@ describe("ProjectDetailPage", () => {
     );
   });
 
-  it("역할을 확인하기 전에는 프로젝트 상세 API를 호출하지 않는다", () => {
+  it("역할 정보가 없으면 프로젝트 상세 API를 호출하지 않고 오류를 표시한다", () => {
     useUserInfoStore.setState({
       userInfo: null,
       persistedProfile: null,
@@ -265,7 +265,7 @@ describe("ProjectDetailPage", () => {
       false,
     );
     expect(
-      screen.queryByText("프로젝트 정보가 없습니다."),
-    ).not.toBeInTheDocument();
+      screen.getByText("사용자 역할 정보를 확인하지 못했습니다."),
+    ).toBeInTheDocument();
   });
 });

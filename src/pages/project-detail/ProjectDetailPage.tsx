@@ -39,14 +39,17 @@ export default function ProjectDetailPage() {
     : isMentee
       ? menteeProjectQuery
       : null;
+  const hasSupportedRole = isMentor || isMentee;
   const project = projectQuery?.data;
-  const isError = projectQuery?.isError ?? false;
-  const isLoading = !projectQuery || projectQuery.isLoading;
+  const isError = !hasSupportedRole || (projectQuery?.isError ?? false);
+  const isLoading = projectQuery?.isLoading ?? false;
   const error = projectQuery?.error;
   const backTo = (location.state as ProjectDetailLocationState | null)?.backTo;
-  const errorMessage = isMentor
-    ? getMentorProjectDetailErrorMessage(error)
-    : "프로젝트 정보를 불러오지 못했습니다.";
+  const errorMessage = !hasSupportedRole
+    ? "사용자 역할 정보를 확인하지 못했습니다."
+    : isMentor
+      ? getMentorProjectDetailErrorMessage(error)
+      : "프로젝트 정보를 불러오지 못했습니다.";
 
   return (
     <Flex
