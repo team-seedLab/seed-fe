@@ -1,5 +1,5 @@
 import { fireEvent, screen } from "@testing-library/react";
-import { HttpResponse, http } from "msw";
+import { HttpResponse, delay, http } from "msw";
 import { describe, expect, it } from "vitest";
 
 import type { ProjectDetailResponse, ProjectStepStatus } from "@/entities";
@@ -160,6 +160,37 @@ const useMultiStepRecordHandlers = () => {
 };
 
 describe("ProjectDetailSection", () => {
+  it("선택한 단계 기록을 불러오는 동안 로딩 상태를 표시한다", () => {
+    useStepRecordHandlers(null);
+    server.use(
+      http.get(PROMPT_URL, async () => {
+        await delay(100);
+
+        return HttpResponse.json(
+          createApiSuccessResponse({
+            addedCount: 0,
+            createdAt: "2026-07-10",
+            diffJson: null,
+            editedPrompt: null,
+            finalPrompt: ORIGINAL_PROMPT,
+            providedPromptSnapshot: ORIGINAL_PROMPT,
+            removedCount: 0,
+            stepCode: "constraint_analysis",
+            stepId: "step-1",
+            stepName: "제약사항 분석",
+            updatedAt: "2026-07-10",
+          }),
+        );
+      }),
+    );
+
+    renderWithProviders(<ProjectDetailSection project={createProject()} />);
+
+    expect(
+      screen.getByText("단계 기록을 불러오는 중입니다."),
+    ).toBeInTheDocument();
+  });
+
   it("단계를 순서대로 표시하고 선택한 사용 가능 단계의 기록만 조회한다", async () => {
     useMultiStepRecordHandlers();
 
