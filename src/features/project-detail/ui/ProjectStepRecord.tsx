@@ -1,4 +1,4 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import { PromptCard } from "@/entities";
 import { useClipboardCopy } from "@/shared";
@@ -25,7 +25,21 @@ export const ProjectStepRecord = ({
   const { copied: copiedResult, copy: copyResult } = useClipboardCopy();
 
   if (isLoading) {
-    return null;
+    return (
+      <Flex
+        align="center"
+        color="neutral.600"
+        gap={3}
+        justify="center"
+        minH={40}
+        w="full"
+      >
+        <Spinner color="seed" size="sm" />
+        <Text fontSize={{ base: "sm", md: "md" }}>
+          단계 기록을 불러오는 중입니다.
+        </Text>
+      </Flex>
+    );
   }
 
   if (isError || !prompt) {
@@ -46,8 +60,8 @@ export const ProjectStepRecord = ({
     prompt.editedPrompt !== prompt.providedPromptSnapshot;
 
   return (
-    <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
-      <VStack align="flex-start" gap={{ base: 2, md: 2.5 }} w="full">
+    <VStack align="flex-start" gap={{ base: 8, md: 12 }} w="full">
+      <VStack align="flex-start" gap={{ base: 2, md: 3 }} w="full">
         <Text color="seed" fontSize="xs" fontWeight="bold">
           Step {stepNumber}
         </Text>
@@ -55,9 +69,16 @@ export const ProjectStepRecord = ({
           color="neutral.900"
           fontSize={{ base: "xl", md: "26px" }}
           fontWeight="bold"
-          lineHeight="1.4"
+          wordBreak="keep-all"
         >
           {prompt.stepName}
+        </Text>
+        <Text
+          color="neutral.600"
+          fontSize={{ base: "sm", md: "md" }}
+          wordBreak="keep-all"
+        >
+          이 단계에서 사용한 프롬프트와 작업 결과를 확인할 수 있습니다.
         </Text>
       </VStack>
 

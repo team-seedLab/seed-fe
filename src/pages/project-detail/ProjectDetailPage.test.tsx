@@ -11,9 +11,15 @@ const navigateMock = vi.fn();
 const useLocationMock = vi.fn();
 const useGetProjectDetailMock = vi.fn();
 
-vi.mock("@/features", () => ({
-  ProjectDetailSection: () => null,
-}));
+vi.mock("@/features", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/features")>("@/features");
+
+  return {
+    ...actual,
+    ProjectDetailSection: () => null,
+  };
+});
 
 vi.mock("@/entities", async () => {
   const actual =
