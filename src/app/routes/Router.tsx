@@ -9,7 +9,6 @@ import {
   MentorMenteeProjectsPage,
   MyPage,
   ProjectDetailPage,
-  UploadCompletePage,
   UploadLoadingPage,
   UploadPage,
   UploadStepPage,
@@ -78,14 +77,6 @@ export const Router = () => {
             element={
               <ProtectedRoute>
                 <UploadStepPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTE_PATHS.UPLOAD_COMPLETE}
-            element={
-              <ProtectedRoute>
-                <UploadCompletePage />
               </ProtectedRoute>
             }
           />
