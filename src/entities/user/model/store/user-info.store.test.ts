@@ -62,4 +62,50 @@ describe("useUserInfoStore", () => {
       expect(useUserInfoStore.getState().persistedProfile?.role).toBe(expected);
     },
   );
+
+  it.each([undefined, "ROLE_ADMIN"])(
+    "version 1 프로필의 역할값이 %s이면 프로필을 초기화한다",
+    async (role) => {
+      sessionStorage.setItem(
+        "user-info-store",
+        JSON.stringify({
+          state: {
+            persistedProfile: {
+              nickname: "user",
+              profileUrl: "",
+              role,
+            },
+          },
+          version: 1,
+        }),
+      );
+
+      await useUserInfoStore.persist.rehydrate();
+
+      expect(useUserInfoStore.getState().persistedProfile).toBeNull();
+    },
+  );
+
+  it.each([USER_ROLE.MENTEE, USER_ROLE.MENTOR])(
+    "version 1 프로필의 현재 역할값 %s를 보존한다",
+    async (role) => {
+      sessionStorage.setItem(
+        "user-info-store",
+        JSON.stringify({
+          state: {
+            persistedProfile: {
+              nickname: "user",
+              profileUrl: "",
+              role,
+            },
+          },
+          version: 1,
+        }),
+      );
+
+      await useUserInfoStore.persist.rehydrate();
+
+      expect(useUserInfoStore.getState().persistedProfile?.role).toBe(role);
+    },
+  );
 });
