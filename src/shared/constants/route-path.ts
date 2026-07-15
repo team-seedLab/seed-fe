@@ -11,7 +11,6 @@ export const ROUTE_PATHS = {
   UPLOAD_LOADING: "/upload/loading",
   UPLOAD_STEP_BASE: "/upload/step",
   UPLOAD_STEP: "/upload/step/:projectId/:step",
-  UPLOAD_COMPLETE: "/upload/complete/:projectId",
 
   PROJECT_DETAIL: "/project/:projectId",
 
@@ -30,6 +29,4 @@ export const DYNAMIC_ROUTE_PATHS = {
     ),
   UPLOAD_STEP_RESUME_ENTRY: (projectId: string) =>
     `${DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, 1)}?resume=true`,
-  UPLOAD_COMPLETE: (projectId: string) =>
-    ROUTE_PATHS.UPLOAD_COMPLETE.replace(":projectId", projectId),
 };

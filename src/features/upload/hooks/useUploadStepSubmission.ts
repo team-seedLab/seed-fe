@@ -104,7 +104,9 @@ export const useUploadStepSubmission = ({
             ]);
 
             if (activeStepVisitRef.current === submissionStepVisit) {
-              navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_COMPLETE(projectId));
+              navigate(DYNAMIC_ROUTE_PATHS.PROJECT_DETAIL(projectId), {
+                replace: true,
+              });
             }
           } catch (error) {
             await queryClient.invalidateQueries({
