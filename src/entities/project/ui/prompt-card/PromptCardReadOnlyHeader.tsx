@@ -2,7 +2,7 @@ import { Flex, Text } from "@chakra-ui/react";
 
 import { DocumentTextIcon } from "@/shared";
 
-import { PromptCardCopyButton } from "./PromptCardCopyButton";
+import { ProjectContentCopyButton } from "../ProjectContentCopyButton";
 
 type Props = {
   copied: boolean;
@@ -32,7 +32,7 @@ export const PromptCardReadOnlyHeader = ({ copied, label, onCopy }: Props) => {
         </Text>
       </Flex>
 
-      <PromptCardCopyButton copied={copied} onCopy={onCopy} />
+      <ProjectContentCopyButton copied={copied} onCopy={onCopy} />
     </Flex>
   );
 };

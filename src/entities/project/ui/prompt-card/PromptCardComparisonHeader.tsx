@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-import { PromptCardCopyButton } from "./PromptCardCopyButton";
+import { ProjectContentCopyButton } from "../ProjectContentCopyButton";
+
 import { PromptCardHeaderButton } from "./PromptCardHeaderButton";
 
 type Props = {
@@ -96,7 +97,7 @@ export const PromptCardComparisonHeader = ({
             </PromptCardHeaderButton>
           )}
 
-          <PromptCardCopyButton copied={copied} onCopy={onCopy} rounded />
+          <ProjectContentCopyButton copied={copied} onCopy={onCopy} rounded />
         </Flex>
       </Flex>
     </Box>

@@ -8,7 +8,7 @@ type Props = {
   onCopy: () => void;
 };
 
-export const PromptCardCopyButton = ({
+export const ProjectContentCopyButton = ({
   copied,
   rounded = false,
   onCopy,
