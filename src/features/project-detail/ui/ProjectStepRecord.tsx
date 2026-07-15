@@ -96,14 +96,24 @@ export const ProjectStepRecord = ({
       </VStack>
 
       {result && (
-        <PromptCard
-          content={result.contentMarkdown}
-          copied={copiedResult}
-          label="작업 결과"
-          onCopy={() => {
-            void copyResult(result.contentMarkdown);
-          }}
-        />
+        <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
+          <Text
+            as="h2"
+            color="neutral.900"
+            fontSize={{ base: "xl", md: "26px" }}
+            fontWeight="bold"
+          >
+            작업 결과
+          </Text>
+          <PromptCard
+            content={result.contentMarkdown}
+            copied={copiedResult}
+            label="작업 결과"
+            onCopy={() => {
+              void copyResult(result.contentMarkdown);
+            }}
+          />
+        </VStack>
       )}
     </VStack>
   );
