@@ -105,4 +105,31 @@ describe("useGetUserInfo", () => {
     expect(useUserInfoStore.getState().userInfo).toBeNull();
     expect(useUserInfoStore.getState().persistedProfile).toBeNull();
   });
+
+  it.each([undefined, "ROLE_ADMIN"])(
+    "성공 응답의 역할값이 %s이면 store 값을 저장하지 않는다",
+    async (role) => {
+      useUserInfoStore.getState().setUserInfo(MENTEE_USER_INFO);
+
+      server.use(
+        http.get("*/api/user/me", () => {
+          return HttpResponse.json(
+            createApiSuccessResponse({
+              ...MENTEE_USER_INFO,
+              role,
+            }),
+          );
+        }),
+      );
+
+      const { result } = renderHookWithProviders(() => useGetUserInfo());
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true);
+      });
+
+      expect(useUserInfoStore.getState().userInfo).toBeNull();
+      expect(useUserInfoStore.getState().persistedProfile).toBeNull();
+    },
+  );
 });

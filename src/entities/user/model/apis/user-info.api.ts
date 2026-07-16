@@ -1,16 +1,15 @@
 import { type ApiResponse, fetchInstance, processApiResponse } from "@/shared";
 
-import type { UserRole } from "../types";
+import {
+  type UserInfoApiResponse,
+  type UserInfoResponse,
+  mapUserInfoResponse,
+} from "./user-info.mapper";
 
-export interface UserInfoResponse {
-  userId: string;
-  nickname: string;
-  profileUrl: string;
-  role?: UserRole;
-}
+export type { UserInfoResponse } from "./user-info.mapper";
 
 export const getUserInfoAPI = async (): Promise<UserInfoResponse> => {
   const response =
-    await fetchInstance.get<ApiResponse<UserInfoResponse>>("/api/user/me");
-  return processApiResponse(response.data);
+    await fetchInstance.get<ApiResponse<UserInfoApiResponse>>("/api/user/me");
+  return mapUserInfoResponse(processApiResponse(response.data));
 };
