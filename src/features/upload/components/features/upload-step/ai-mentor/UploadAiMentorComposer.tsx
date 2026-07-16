@@ -55,6 +55,7 @@ export const UploadAiMentorComposer = ({
         color="neutral.900"
         disabled={isSending}
         fontSize="sm"
+        maxH="360px"
         maxLength={AI_MENTOR_QUESTION_MAX_LENGTH}
         minH={0}
         onChange={(event) => onChange(event.target.value)}
