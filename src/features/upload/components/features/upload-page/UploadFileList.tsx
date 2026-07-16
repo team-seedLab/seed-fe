@@ -42,7 +42,10 @@ export const UploadFileList = ({
         type="file"
         onChange={onFileInput}
       />
-      <Grid gap={3} templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}>
+      <Grid
+        gap={3}
+        templateColumns={{ base: "1fr", md: `repeat(${maxFiles}, 1fr)` }}
+      >
         {uploadedFiles.map(({ id, file }) => (
           <UploadFileItem
             key={id}

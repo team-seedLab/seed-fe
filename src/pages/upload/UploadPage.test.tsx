@@ -78,6 +78,34 @@ describe("UploadPage", () => {
     ).toBeEnabled();
   });
 
+  it("PDF 파일은 최대 두 개까지만 추가한다", () => {
+    renderWithProviders(<UploadPage />);
+
+    fireEvent.change(screen.getByLabelText("참고자료 파일 선택"), {
+      target: {
+        files: [
+          new File(["first pdf"], "first.pdf", {
+            type: "application/pdf",
+          }),
+          new File(["second pdf"], "second.pdf", {
+            type: "application/pdf",
+          }),
+          new File(["third pdf"], "third.pdf", {
+            type: "application/pdf",
+          }),
+        ],
+      },
+    });
+
+    expect(screen.getByText(/PDF 파일을 최대 2개까지/)).toBeInTheDocument();
+    expect(screen.getByText("first.pdf")).toBeInTheDocument();
+    expect(screen.getByText("second.pdf")).toBeInTheDocument();
+    expect(screen.queryByText("third.pdf")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "참고자료 추가" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("입력한 사용자 의도를 프로젝트 생성 API에 전달한다", async () => {
     let resolveRequestFormData!: (formData: FormData) => void;
     const requestFormDataPromise = new Promise<FormData>((resolve) => {
