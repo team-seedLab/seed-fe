@@ -19,6 +19,7 @@ const resizeProps = {
 
 describe("UploadAiMentorResponsivePanel", () => {
   it("분할 화면에서는 크기 조절 경계와 AI 패널을 함께 표시한다", () => {
+    resizeProps.onResizePointerDown.mockClear();
     renderWithProviders(
       <UploadAiMentorResponsivePanel
         {...resizeProps}
@@ -36,6 +37,11 @@ describe("UploadAiMentorResponsivePanel", () => {
     expect(separator).toHaveAttribute("aria-valuemin", "360");
     expect(separator).toHaveAttribute("aria-valuemax", "794");
     expect(separator).toHaveAttribute("aria-valuenow", "794");
+    expect(separator).toBeEmptyDOMElement();
+
+    fireEvent.pointerDown(separator);
+
+    expect(resizeProps.onResizePointerDown).toHaveBeenCalledOnce();
     expect(screen.getByText("AI 패널")).toBeVisible();
   });
 
