@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useId, useRef } from "react";
+import { type KeyboardEvent, useId, useRef, useState } from "react";
 
 import { Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
 
@@ -17,6 +17,9 @@ export const ProjectStepResultEditor = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const shouldReleaseTabRef = useRef(false);
   const tabExitInstructionId = useId();
+  const [selectedView, setSelectedView] = useState<"input" | "preview">(
+    "input",
+  );
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.nativeEvent.isComposing) {
@@ -62,9 +65,12 @@ export const ProjectStepResultEditor = ({
 
   return (
     <Tabs.Root
-      defaultValue="input"
-      lazyMount
-      unmountOnExit
+      onValueChange={({ value }) => {
+        if (value === "input" || value === "preview") {
+          setSelectedView(value);
+        }
+      }}
+      value={selectedView}
       variant="plain"
       w="full"
     >
@@ -142,10 +148,12 @@ export const ProjectStepResultEditor = ({
       </Tabs.Content>
 
       <Tabs.Content p={0} pt={3} value="preview">
-        <ProjectStepResultContent
-          content={content}
-          emptyMessage="미리보기할 학습 결과가 없습니다."
-        />
+        {selectedView === "preview" && (
+          <ProjectStepResultContent
+            content={content}
+            emptyMessage="미리보기할 학습 결과가 없습니다."
+          />
+        )}
       </Tabs.Content>
     </Tabs.Root>
   );

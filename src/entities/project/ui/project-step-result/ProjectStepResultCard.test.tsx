@@ -91,10 +91,8 @@ describe("ProjectStepResultCard", () => {
     await selectView("미리보기");
     await selectView("입력");
 
-    const restoredInput = await screen.findByRole<HTMLTextAreaElement>(
-      "textbox",
-      { name: "학습 결과" },
-    );
+    const restoredInput =
+      screen.getByLabelText<HTMLTextAreaElement>("학습 결과");
 
     expect(restoredInput).toBe(resultInput);
     expect(restoredInput.scrollTop).toBe(40);
