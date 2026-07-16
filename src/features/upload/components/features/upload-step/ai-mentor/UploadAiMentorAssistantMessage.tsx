@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { MarkdownContent, SparklesIcon } from "@/shared";
+import { MarkdownContent, SeedAiIcon } from "@/shared";
 
 import { splitAiMentorAnswer } from "../../../../utils";
 
@@ -26,7 +26,7 @@ export const UploadAiMentorAssistantMessage = ({
   return (
     <Flex align="flex-start" gap={4} w="full">
       <Flex align="center" boxSize={9} flexShrink={0} justify="center">
-        <SparklesIcon boxSize={5} color="seed" />
+        <SeedAiIcon boxSize={9} />
       </Flex>
 
       <VStack align="stretch" flex={1} gap={5} minW={0}>

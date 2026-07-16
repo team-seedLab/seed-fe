@@ -39,8 +39,21 @@ function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
+function hasMultiplePaintColors(svgContent) {
+  const paintColors = Array.from(
+    svgContent.matchAll(/\b(?:fill|stroke)=["']([^"']+)["']/gi),
+    ([, color]) => color.trim().toLowerCase(),
+  ).filter(
+    (color) =>
+      color !== "none" && color !== "currentcolor" && !color.startsWith("url("),
+  );
+
+  return new Set(paintColors).size > 1;
+}
+
 function optimizeSvg(filePath) {
   const svgContent = fs.readFileSync(filePath, "utf8");
+  const preservePaintColors = hasMultiplePaintColors(svgContent);
   const result = optimize(svgContent, {
     path: filePath,
     plugins: [
@@ -49,7 +62,7 @@ function optimizeSvg(filePath) {
         params: {
           overrides: {
             convertColors: {
-              currentColor: true, // fill/stroke 색상을 currentColor로 변환 → color prop으로 색상 제어 가능
+              currentColor: !preservePaintColors, // 단색 아이콘만 color prop으로 색상을 제어합니다.
             },
           },
         },
