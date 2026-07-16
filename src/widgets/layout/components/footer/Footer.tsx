@@ -1,9 +1,6 @@
-import { Link } from "react-router";
+import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 
-import Logo from "/logo.webp";
-import { Box, Flex, HStack, Image, Text } from "@chakra-ui/react";
-
-import { ROUTE_PATHS } from "@/shared";
+import { HomeLogoLink } from "../home-logo-link";
 
 export const Footer = () => {
   return (
@@ -17,9 +14,7 @@ export const Footer = () => {
           px={4}
           position="relative"
         >
-          <Link to={ROUTE_PATHS.ROOT}>
-            <Image src={Logo} alt="SEED" h={6} w="auto" objectFit="contain" />
-          </Link>
+          <HomeLogoLink height={6} />
           <HStack
             display={{ base: "none", md: "flex" }}
             gap={10}

@@ -1,13 +1,11 @@
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
-import Logo from "/logo.webp";
 import {
   Avatar,
   Box,
   Button,
   Flex,
   HStack,
-  Image,
   Menu,
   Portal,
   Text,
@@ -15,6 +13,8 @@ import {
 
 import { getUserEntryRoutePath, useAuth, useUserInfoStore } from "@/entities";
 import { DoorOutIcon, FolderIcon, PersonIcon, ROUTE_PATHS } from "@/shared";
+
+import { HomeLogoLink } from "../home-logo-link";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -41,9 +41,7 @@ export const Header = () => {
         px={4}
         position="relative"
       >
-        <Link to={ROUTE_PATHS.ROOT}>
-          <Image src={Logo} alt="SEED" h={8} w="auto" objectFit="contain" />
-        </Link>
+        <HomeLogoLink height={8} />
         {!isAuthenticated && (
           <HStack
             gap={10}
