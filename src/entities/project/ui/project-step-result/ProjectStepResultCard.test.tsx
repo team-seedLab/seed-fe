@@ -79,6 +79,29 @@ describe("ProjectStepResultCard", () => {
     ).toHaveValue("수정한 학습 결과");
   });
 
+  it("미리보기를 확인한 뒤에도 입력창 DOM 상태를 유지한다", async () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.scrollTop = 40;
+    resultInput.setSelectionRange(1, 3);
+
+    await selectView("미리보기");
+    await selectView("입력");
+
+    const restoredInput = await screen.findByRole<HTMLTextAreaElement>(
+      "textbox",
+      { name: "학습 결과" },
+    );
+
+    expect(restoredInput).toBe(resultInput);
+    expect(restoredInput.scrollTop).toBe(40);
+    expect(restoredInput.selectionStart).toBe(1);
+    expect(restoredInput.selectionEnd).toBe(3);
+  });
+
   it("미리보기에서 GFM 표를 렌더링한다", async () => {
     renderEditableResult(`| 항목 | 내용 |
 | --- | --- |
