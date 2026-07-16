@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { Button, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 
 import type { ProjectStepAiMessage } from "@/entities";
-import { SparklesIcon } from "@/shared";
+import { SeedAiIcon } from "@/shared";
 
 import { UploadAiMentorAssistantMessage } from "./UploadAiMentorAssistantMessage";
 import { UploadAiMentorUserMessage } from "./UploadAiMentorUserMessage";
@@ -116,7 +116,7 @@ export const UploadAiMentorConversation = ({
             boxSize={12}
             justify="center"
           >
-            <SparklesIcon boxSize={6} color="seed" />
+            <SeedAiIcon boxSize={9} />
           </Flex>
           <VStack gap={1}>
             <Text color="neutral.900" fontSize="md" fontWeight="bold">

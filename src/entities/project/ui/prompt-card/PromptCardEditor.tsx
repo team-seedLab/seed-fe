@@ -24,6 +24,7 @@ export const PromptCardEditor = ({
     >
       <Textarea
         aria-label={label}
+        autoresize
         bg="neutral.50"
         border="none"
         color="neutral.900"
@@ -34,7 +35,6 @@ export const PromptCardEditor = ({
         minH={0}
         onChange={(event) => onContentChange(event.target.value)}
         p={0}
-        resize="vertical"
         ref={editorRef}
         value={content}
         _focusVisible={{ boxShadow: "none", outline: "none" }}

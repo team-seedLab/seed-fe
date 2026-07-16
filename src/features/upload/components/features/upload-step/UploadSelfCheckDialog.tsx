@@ -113,14 +113,14 @@ export const UploadSelfCheckDialog = ({
             )}
           </DialogBody>
 
-          <DialogFooter px={{ base: 5, md: 6 }} pb={{ base: 5, md: 6 }} pt={0}>
+          <DialogFooter px={{ base: 5, md: 6 }} py={{ base: 5, md: 6 }}>
             <Button
               bg="seed"
               borderRadius="xl"
               color="white"
               disabled={isSubmitDisabled}
-              fontSize="md"
-              fontWeight="bold"
+              fontSize="sm"
+              fontWeight="medium"
               gap={1}
               onClick={onSubmit}
               px={10}

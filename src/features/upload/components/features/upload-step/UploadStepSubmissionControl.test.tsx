@@ -41,6 +41,7 @@ describe("UploadStepSubmissionControl", () => {
   it("단계가 변경되면 열려 있던 Self-Check 모달 상태를 초기화한다", async () => {
     const { rerender } = renderWithProviders(
       <UploadStepSubmissionControl
+        ensureResultSaved={vi.fn().mockResolvedValue(true)}
         isLastStep={false}
         isStepLoading={false}
         key="project-1:constraint_analysis"
@@ -57,6 +58,7 @@ describe("UploadStepSubmissionControl", () => {
 
     rerender(
       <UploadStepSubmissionControl
+        ensureResultSaved={vi.fn().mockResolvedValue(true)}
         isLastStep={false}
         isStepLoading={false}
         key="project-1:argument_structuring"

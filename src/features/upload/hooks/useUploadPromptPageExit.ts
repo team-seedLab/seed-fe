@@ -1,8 +1,9 @@
-import { useEffect, useEffectEvent, useRef } from "react";
+import {
+  type ContentPageExitSaveHandler,
+  useUploadContentPageExit,
+} from "./useUploadContentPageExit";
 
-export type PromptPageExitSaveHandler = (
-  editedPrompt: string,
-) => Promise<void> | void;
+export type PromptPageExitSaveHandler = ContentPageExitSaveHandler;
 
 type Params = {
   editorKey: string;
@@ -19,50 +20,11 @@ export const useUploadPromptPageExit = ({
   getUnsavedPrompt,
   onSaveBeforePageExit,
 }: Params) => {
-  const pageExitSaveHandlerByKeyRef = useRef<
-    Record<string, PromptPageExitSaveHandler | undefined>
-  >({});
-
-  useEffect(() => {
-    pageExitSaveHandlerByKeyRef.current[editorKey] = onSaveBeforePageExit;
-  }, [editorKey, onSaveBeforePageExit]);
-
-  const saveBeforePageExit = useEffectEvent((targetKey: string) => {
-    const unsavedPrompt = getUnsavedPrompt(targetKey);
-    const saveHandler = pageExitSaveHandlerByKeyRef.current[targetKey];
-
-    if (unsavedPrompt === null || !saveHandler) {
-      return;
-    }
-
-    cancelPendingSaves(targetKey);
-    void saveHandler(unsavedPrompt);
+  useUploadContentPageExit({
+    editorKey,
+    cancelPendingSaves,
+    flushContent: flushPrompt,
+    getUnsavedContent: getUnsavedPrompt,
+    onSaveBeforePageExit,
   });
-  const saveBeforeScreenExit = useEffectEvent((targetKey: string) => {
-    flushPrompt(targetKey);
-  });
-
-  useEffect(() => {
-    const targetKey = editorKey;
-    let isPageExiting = false;
-    const handlePageHide = () => {
-      isPageExiting = true;
-      saveBeforePageExit(targetKey);
-    };
-    const handlePageShow = () => {
-      isPageExiting = false;
-    };
-
-    window.addEventListener("pagehide", handlePageHide);
-    window.addEventListener("pageshow", handlePageShow);
-
-    return () => {
-      window.removeEventListener("pagehide", handlePageHide);
-      window.removeEventListener("pageshow", handlePageShow);
-
-      if (!isPageExiting) {
-        saveBeforeScreenExit(targetKey);
-      }
-    };
-  }, [editorKey]);
 };

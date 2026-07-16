@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import {
+  act,
   createEvent,
   fireEvent,
   screen,
@@ -14,10 +15,12 @@ import { ProjectStepResultCard } from "./ProjectStepResultCard";
 
 type HarnessProps = {
   initialContent?: string;
+  onCommit?: (content: string) => void;
 };
 
 const ProjectStepResultCardTestHarness = ({
   initialContent = "",
+  onCommit = () => undefined,
 }: HarnessProps) => {
   const [content, setContent] = useState(initialContent);
 
@@ -25,14 +28,21 @@ const ProjectStepResultCardTestHarness = ({
     <ProjectStepResultCard
       content={content}
       mode="editable"
+      onCommit={onCommit}
       onContentChange={setContent}
     />
   );
 };
 
-const renderEditableResult = (initialContent?: string) => {
+const renderEditableResult = (
+  initialContent?: string,
+  onCommit?: (content: string) => void,
+) => {
   renderWithProviders(
-    <ProjectStepResultCardTestHarness initialContent={initialContent} />,
+    <ProjectStepResultCardTestHarness
+      initialContent={initialContent}
+      onCommit={onCommit}
+    />,
   );
 };
 
@@ -49,6 +59,127 @@ const selectView = async (name: "입력" | "미리보기") => {
 };
 
 describe("ProjectStepResultCard", () => {
+  it("카드 내부 이동은 저장하지 않고 카드 밖으로 포커스가 나가면 저장한다", () => {
+    const onCommit = vi.fn();
+    renderEditableResult("작성 중인 학습 결과", onCommit);
+
+    const editor = screen.getByRole("textbox");
+    const previewTab = screen.getAllByRole("tab")[1];
+
+    fireEvent.blur(editor, { relatedTarget: previewTab });
+    expect(onCommit).not.toHaveBeenCalled();
+
+    fireEvent.blur(previewTab, { relatedTarget: null });
+    expect(onCommit).toHaveBeenCalledWith("작성 중인 학습 결과");
+  });
+
+  it("입력과 미리보기 토글을 디자인 높이로 표시하고 선택 배경을 제공한다", () => {
+    renderEditableResult();
+
+    const tabList = screen.getByRole("tablist");
+    const inputTab = screen.getByRole("tab", { name: "입력" });
+    const previewTab = screen.getByRole("tab", { name: "미리보기" });
+
+    expect(tabList).toHaveStyle({
+      gap: "4px",
+      padding: "4px",
+    });
+    expect(inputTab).toHaveStyle({
+      height: "32px",
+      paddingBlock: "6px",
+      paddingInline: "12px",
+    });
+    expect(previewTab).toHaveStyle({
+      height: "32px",
+      paddingBlock: "6px",
+      paddingInline: "12px",
+    });
+    inputTab.setAttribute("data-focus-visible", "");
+    expect(inputTab).toHaveStyle({
+      outline: "2px solid",
+      outlineOffset: "2px",
+    });
+    expect(
+      tabList.querySelector('[data-part="indicator"]'),
+    ).toBeInTheDocument();
+  });
+
+  it("미리보기 화면을 입력 화면보다 낮게 줄이지 않는다", async () => {
+    const originalResizeObserver = globalThis.ResizeObserver;
+    let resizeCallback: ResizeObserverCallback | undefined;
+
+    class TestResizeObserver implements ResizeObserver {
+      private readonly callback: ResizeObserverCallback;
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback;
+      }
+
+      disconnect = vi.fn();
+      observe = vi.fn((target: Element) => {
+        if (
+          target.getAttribute("role") === "tabpanel" &&
+          target.getAttribute("aria-labelledby")?.endsWith("trigger-input")
+        ) {
+          resizeCallback = this.callback;
+        }
+      });
+      unobserve = vi.fn();
+    }
+
+    vi.stubGlobal("ResizeObserver", TestResizeObserver);
+
+    try {
+      renderEditableResult("학습 결과");
+
+      const inputView = screen.getByRole("tabpanel", {
+        hidden: true,
+        name: "입력",
+      });
+      const previewView = document.querySelector<HTMLElement>(
+        '[data-part="content"][data-state="closed"]',
+      );
+
+      if (!previewView) {
+        throw new Error("미리보기 화면을 찾을 수 없습니다.");
+      }
+
+      vi.spyOn(inputView, "getBoundingClientRect").mockReturnValue(
+        new DOMRect(0, 0, 0, 360),
+      );
+      const callback = resizeCallback;
+
+      if (!callback) {
+        throw new Error("입력 화면 높이 관찰자를 찾을 수 없습니다.");
+      }
+
+      act(() => {
+        callback([], {} as ResizeObserver);
+      });
+
+      await waitFor(() => {
+        expect(previewView).toHaveStyle({ minHeight: "360px" });
+      });
+      await selectView("미리보기");
+
+      expect(previewView).toHaveStyle({ minHeight: "360px" });
+    } finally {
+      vi.stubGlobal("ResizeObserver", originalResizeObserver);
+    }
+  });
+
+  it("입력 탭에서는 미리보기 마크다운을 렌더링하지 않는다", () => {
+    renderEditableResult("# 숨겨진 미리보기");
+
+    expect(
+      screen.queryByRole("heading", {
+        hidden: true,
+        level: 3,
+        name: "숨겨진 미리보기",
+      }),
+    ).not.toBeInTheDocument();
+  });
+
   it("편집 모드에서 입력과 미리보기를 전환해도 입력값을 유지한다", async () => {
     renderEditableResult("기존 학습 결과");
 
@@ -62,9 +193,44 @@ describe("ProjectStepResultCard", () => {
     await selectView("미리보기");
     await selectView("입력");
 
+    expect(screen.getByLabelText("학습 결과")).toHaveValue("수정한 학습 결과");
+  });
+
+  it("미리보기를 확인한 뒤에도 입력창 DOM 상태를 유지한다", async () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.scrollTop = 40;
+    resultInput.setSelectionRange(1, 3);
+
+    await selectView("미리보기");
+    await selectView("입력");
+
+    const restoredInput =
+      screen.getByLabelText<HTMLTextAreaElement>("학습 결과");
+
+    expect(restoredInput).toBe(resultInput);
+    expect(restoredInput.scrollTop).toBe(40);
+    expect(restoredInput.selectionStart).toBe(1);
+    expect(restoredInput.selectionEnd).toBe(3);
+  });
+
+  it("미리보기에서 GFM 표를 렌더링한다", async () => {
+    renderEditableResult(`| 항목 | 내용 |
+| --- | --- |
+| 단계 | 제약사항 분석 |`);
+
+    await selectView("미리보기");
+
+    expect(screen.getByRole("table")).toBeInTheDocument();
     expect(
-      await screen.findByRole("textbox", { name: "학습 결과" }),
-    ).toHaveValue("수정한 학습 결과");
+      screen.getByRole("columnheader", { name: "항목" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("cell", { name: "제약사항 분석" }),
+    ).toBeInTheDocument();
   });
 
   it("미리보기에서 학습 결과 마크다운을 렌더링한다", async () => {
@@ -105,6 +271,17 @@ describe("ProjectStepResultCard", () => {
 
     await waitFor(() => {
       expect(resultInput).toHaveStyle({ height: "320px", resize: "none" });
+    });
+  });
+
+  it("키보드로 입력창에 접근하면 포커스 위치를 표시한다", () => {
+    renderEditableResult();
+
+    const resultInput = screen.getByRole("textbox", { name: "학습 결과" });
+    resultInput.setAttribute("data-focus-visible", "");
+
+    expect(resultInput).toHaveStyle({
+      boxShadow: "0 0 0 1px var(--sd-colors-seed)",
     });
   });
 

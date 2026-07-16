@@ -11,4 +11,5 @@ export * from "./useGetProjectStepPrompt";
 export * from "./useGetProjectStepResult";
 export * from "./useGetProjectStepSelfCheck";
 export * from "./useGetProjectStepAiMessages";
+export * from "./useSaveProjectStepResult";
 export * from "./useUpdateProjectStepPrompt";

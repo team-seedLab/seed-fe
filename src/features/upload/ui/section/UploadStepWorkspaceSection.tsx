@@ -14,6 +14,7 @@ import {
   useUploadPromptEditor,
   useUploadStepData,
   useUploadStepProject,
+  useUploadStepResultEditor,
 } from "../../hooks";
 
 import { UploadStepContentSection } from "./UploadStepContentSection";
@@ -31,11 +32,15 @@ type PromptEditorFocusRequest = {
 
 export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
   const workspaceLayoutRef = useRef<HTMLDivElement>(null);
-  const { isLastStep, stepCode } = useUploadStepProject({
+  const {
+    isLastStep,
+    isLoading: isProjectLoading,
+    stepCode,
+  } = useUploadStepProject({
     projectId,
     stepNum,
   });
-  const editorKey = `${projectId}:${stepCode ?? stepNum}`;
+  const editorKey = `${projectId}:${stepNum}`;
   const [promptEditorFocusRequest, setPromptEditorFocusRequest] =
     useState<PromptEditorFocusRequest>({
       editorKey,
@@ -47,7 +52,10 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
     resultData,
     savePrompt,
     savePromptOnPageExit,
+    saveResult,
+    saveResultOnPageExit,
   } = useUploadStepData({ projectId, stepCode });
+  const isWorkspaceLoading = isProjectLoading || isStepLoading;
   const originalPrompt = promptData?.providedPromptSnapshot ?? "";
   const promptEditor = useUploadPromptEditor({
     editorKey,
@@ -55,6 +63,13 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
     onSave: savePrompt,
     onSaveBeforePageExit: savePromptOnPageExit,
     originalPrompt,
+  });
+  const resultEditor = useUploadStepResultEditor({
+    editorKey,
+    initialResult: resultData?.contentMarkdown,
+    isReady: Boolean(stepCode) && !isWorkspaceLoading,
+    onSave: saveResult,
+    onSaveBeforePageExit: saveResultOnPageExit,
   });
   const { closePanel, isOpen, isSplitScreen, openPanel } =
     useUploadAiMentorPanel();
@@ -131,11 +146,11 @@ export const UploadStepWorkspaceSection = ({ projectId, stepNum }: Props) => {
                   : null
               }
               isLastStep={isLastStep}
-              isStepLoading={isStepLoading}
+              isStepLoading={isWorkspaceLoading}
               promptData={promptData}
               promptEditor={promptEditor}
               projectId={projectId}
-              resultData={resultData}
+              resultEditor={resultEditor}
               stepCode={stepCode}
               stepNum={stepNum}
             />

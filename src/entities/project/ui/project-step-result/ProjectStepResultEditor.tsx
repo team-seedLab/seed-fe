@@ -1,9 +1,10 @@
-import { type KeyboardEvent, useId, useRef } from "react";
+import { type KeyboardEvent, useId, useRef, useState } from "react";
 
 import { Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
 
 import { ProjectStepResultContent } from "./ProjectStepResultContent";
 import { getMarkdownInputEdit } from "./get-markdown-input-edit";
+import { useProjectStepResultInputViewHeight } from "./useProjectStepResultInputViewHeight";
 
 type Props = {
   content: string;
@@ -17,6 +18,11 @@ export const ProjectStepResultEditor = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const shouldReleaseTabRef = useRef(false);
   const tabExitInstructionId = useId();
+  const [selectedView, setSelectedView] = useState<"input" | "preview">(
+    "input",
+  );
+  const { inputViewHeight, inputViewRef } =
+    useProjectStepResultInputViewHeight();
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.nativeEvent.isComposing) {
@@ -61,49 +67,79 @@ export const ProjectStepResultEditor = ({
   };
 
   return (
-    <Tabs.Root defaultValue="input" variant="plain" w="full">
+    <Tabs.Root
+      onValueChange={({ value }) => {
+        if (value === "input" || value === "preview") {
+          setSelectedView(value);
+        }
+      }}
+      value={selectedView}
+      variant="plain"
+      w="full"
+    >
       <Tabs.List
         alignSelf="flex-start"
         bg="neutral.50"
+        borderColor="neutral.100"
         borderRadius="full"
-        gap={1}
-        p={1}
+        css={{
+          "--transition-duration": "180ms",
+          "--transition-timing-function": "ease-out",
+          "@media (prefers-reduced-motion: reduce)": {
+            "--transition-duration": "0ms",
+          },
+        }}
+        gap="4px"
+        p="4px"
       >
+        <Tabs.Indicator bg="white" borderRadius="full" boxShadow="xs" />
         <Tabs.Trigger
           borderRadius="full"
-          color="neutral.500"
+          color="neutral.600"
           fontSize="sm"
-          fontWeight="semibold"
-          px={4}
-          py={2}
+          fontWeight="medium"
+          h="32px"
+          px="12px"
+          py="6px"
           value="input"
+          zIndex={1}
+          _focusVisible={{
+            outline: "2px solid",
+            outlineColor: "seed",
+            outlineOffset: "2px",
+          }}
           _selected={{
-            bg: "white",
-            boxShadow: "sm",
             color: "neutral.900",
+            fontWeight: "bold",
           }}
         >
           입력
         </Tabs.Trigger>
         <Tabs.Trigger
           borderRadius="full"
-          color="neutral.500"
+          color="neutral.600"
           fontSize="sm"
-          fontWeight="semibold"
-          px={4}
-          py={2}
+          fontWeight="medium"
+          h="32px"
+          px="12px"
+          py="6px"
           value="preview"
+          zIndex={1}
+          _focusVisible={{
+            outline: "2px solid",
+            outlineColor: "seed",
+            outlineOffset: "2px",
+          }}
           _selected={{
-            bg: "white",
-            boxShadow: "sm",
             color: "neutral.900",
+            fontWeight: "bold",
           }}
         >
           미리보기
         </Tabs.Trigger>
       </Tabs.List>
 
-      <Tabs.Content p={0} pt={3} value="input">
+      <Tabs.Content ref={inputViewRef} p={0} pt={3} value="input">
         <Textarea
           ref={inputRef}
           aria-describedby={tabExitInstructionId}
@@ -111,7 +147,7 @@ export const ProjectStepResultEditor = ({
           autoresize
           _focusVisible={{
             outline: "none",
-            boxShadow: "none",
+            boxShadow: "0 0 0 1px var(--sd-colors-seed)",
           }}
           _placeholder={{ color: "neutral.300" }}
           bg="neutral.50"
@@ -135,11 +171,18 @@ export const ProjectStepResultEditor = ({
         </VisuallyHidden>
       </Tabs.Content>
 
-      <Tabs.Content p={0} pt={3} value="preview">
-        <ProjectStepResultContent
-          content={content}
-          emptyMessage="미리보기할 학습 결과가 없습니다."
-        />
+      <Tabs.Content
+        p={0}
+        pt={3}
+        style={{ minHeight: inputViewHeight ?? undefined }}
+        value="preview"
+      >
+        {selectedView === "preview" && (
+          <ProjectStepResultContent
+            content={content}
+            emptyMessage="미리보기할 학습 결과가 없습니다."
+          />
+        )}
       </Tabs.Content>
     </Tabs.Root>
   );

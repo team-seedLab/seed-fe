@@ -6,6 +6,22 @@ import { useUploadPromptSaveQueue } from "./useUploadPromptSaveQueue";
 const EDITOR_KEY = "project-1:step-1";
 
 describe("useUploadPromptSaveQueue", () => {
+  it("저장 함수가 없으면 저장 완료로 처리하지 않는다", async () => {
+    const { result } = renderHook(() =>
+      useUploadPromptSaveQueue({
+        editorKey: EDITOR_KEY,
+        initialPrompt: "원본 프롬프트",
+      }),
+    );
+    let isSaved = true;
+
+    await act(async () => {
+      isSaved = await result.current.commitPrompt("변경된 프롬프트");
+    });
+
+    expect(isSaved).toBe(false);
+  });
+
   it("변경된 수정본만 저장 요청한다", async () => {
     const onSave = vi.fn().mockResolvedValue(undefined);
     const { result } = renderHook(() =>
@@ -95,6 +111,48 @@ describe("useUploadPromptSaveQueue", () => {
 
     expect(await ensuredSave).toBe(true);
     expect(onSave).toHaveBeenCalledOnce();
+  });
+
+  it("이전 저장 중 원본으로 되돌리면 원본도 저장 큐에 추가한다", async () => {
+    let resolveFirstSave!: () => void;
+    const onSave = vi
+      .fn()
+      .mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveFirstSave = resolve;
+          }),
+      )
+      .mockResolvedValueOnce(undefined);
+    const { result } = renderHook(() =>
+      useUploadPromptSaveQueue({
+        editorKey: EDITOR_KEY,
+        initialPrompt: "원본 프롬프트",
+        onSave,
+      }),
+    );
+    let changedCommit!: Promise<boolean>;
+    let restoredCommit!: Promise<boolean>;
+
+    act(() => {
+      changedCommit = result.current.commitPrompt("변경된 프롬프트");
+      restoredCommit = result.current.ensurePromptSaved("원본 프롬프트");
+    });
+
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+
+    await act(async () => {
+      resolveFirstSave();
+      await Promise.all([changedCommit, restoredCommit]);
+    });
+
+    expect(await restoredCommit).toBe(true);
+    expect(onSave).toHaveBeenCalledTimes(2);
+    expect(onSave).toHaveBeenNthCalledWith(
+      2,
+      "원본 프롬프트",
+      expect.any(AbortSignal),
+    );
   });
 
   it("화면 이탈 시 현재 수정본을 저장 큐에 추가한다", async () => {

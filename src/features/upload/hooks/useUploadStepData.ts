@@ -1,9 +1,11 @@
 import {
   type ProjectStepPrompt,
   type ProjectStepResult,
+  saveProjectStepResultOnPageExitAPI,
   updateProjectStepPromptOnPageExitAPI,
   useGetOrCreateProjectStepPrompt,
   useGetProjectStepResult,
+  useSaveProjectStepResult,
   useUpdateProjectStepPrompt,
 } from "@/entities";
 
@@ -18,6 +20,8 @@ type Result = {
   isStepLoading: boolean;
   savePrompt: (editedPrompt: string, signal?: AbortSignal) => Promise<void>;
   savePromptOnPageExit: (editedPrompt: string) => void;
+  saveResult: (content: string, signal?: AbortSignal) => Promise<void>;
+  saveResultOnPageExit: (content: string) => void;
 };
 
 export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
@@ -28,6 +32,7 @@ export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
   );
   const resultQuery = useGetProjectStepResult(projectId, normalizedStepCode);
   const updatePromptMutation = useUpdateProjectStepPrompt();
+  const saveResultMutation = useSaveProjectStepResult();
 
   const savePrompt = async (editedPrompt: string, signal?: AbortSignal) => {
     if (!projectId || !stepCode) {
@@ -54,11 +59,38 @@ export const useUploadStepData = ({ projectId, stepCode }: Params): Result => {
     });
   };
 
+  const saveResult = async (contentMarkdown: string, signal?: AbortSignal) => {
+    if (!projectId || !stepCode) {
+      return;
+    }
+
+    await saveResultMutation.mutateAsync({
+      projectId,
+      stepCode,
+      contentMarkdown,
+      ...(signal && { signal }),
+    });
+  };
+
+  const saveResultOnPageExit = (contentMarkdown: string) => {
+    if (!projectId || !stepCode) {
+      return;
+    }
+
+    void saveProjectStepResultOnPageExitAPI({
+      projectId,
+      stepCode,
+      contentMarkdown,
+    });
+  };
+
   return {
     promptData: promptQuery.data,
     resultData: resultQuery.data,
     isStepLoading: promptQuery.isLoading || resultQuery.isLoading,
     savePrompt,
     savePromptOnPageExit,
+    saveResult,
+    saveResultOnPageExit,
   };
 };

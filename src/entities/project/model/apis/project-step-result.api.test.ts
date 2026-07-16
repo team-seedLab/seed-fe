@@ -1,6 +1,7 @@
 import { HttpResponse, http } from "msw";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
+import { SERVER_PATH } from "@/shared";
 import {
   createApiErrorResponse,
   createApiSuccessResponse,
@@ -10,6 +11,7 @@ import { server } from "@/test/msw/server";
 import {
   getProjectStepResultAPI,
   saveProjectStepResultAPI,
+  saveProjectStepResultOnPageExitAPI,
 } from "./project-step-result.api";
 
 const RESULT_RESPONSE = {
@@ -83,5 +85,43 @@ describe("project step result API", () => {
 
     expect(requestBody).toEqual({ contentMarkdown: "작업 결과" });
     expect(response).toEqual(RESULT_RESPONSE);
+  });
+
+  it("페이지 종료 전 학습 결과를 keepalive 요청으로 저장한다", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response(null, { status: 200 }));
+
+    await saveProjectStepResultOnPageExitAPI({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      contentMarkdown: "종료 전 학습 결과",
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      new URL(RESULT_URL.replace("*", ""), SERVER_PATH),
+      expect.objectContaining({
+        body: JSON.stringify({ contentMarkdown: "종료 전 학습 결과" }),
+        credentials: "include",
+        keepalive: true,
+        method: "PUT",
+      }),
+    );
+
+    fetchMock.mockRestore();
+  });
+
+  it("keepalive 허용 크기를 넘는 학습 결과는 종료 요청을 보내지 않는다", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+
+    await saveProjectStepResultOnPageExitAPI({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      contentMarkdown: "가".repeat(64 * 1024),
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    fetchMock.mockRestore();
   });
 });

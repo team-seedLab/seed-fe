@@ -40,6 +40,7 @@ const originalPrompt = "원본 프롬프트\n분량: 제한 없음";
 
 const UploadStepContentSectionTestHarness = () => {
   const [editedPrompt, setEditedPrompt] = useState(originalPrompt);
+  const [resultText, setResultText] = useState("");
 
   return (
     <UploadStepContentSection
@@ -70,7 +71,12 @@ const UploadStepContentSectionTestHarness = () => {
         },
       }}
       projectId="project-1"
-      resultData={null}
+      resultEditor={{
+        changeResult: setResultText,
+        commitResult: async () => true,
+        ensureResultSaved: async () => true,
+        resultText,
+      }}
       stepCode="RESEARCH"
       stepNum={1}
     />

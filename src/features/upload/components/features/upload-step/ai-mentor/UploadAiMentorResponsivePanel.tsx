@@ -6,7 +6,7 @@ import type {
 
 import { Button, Flex } from "@chakra-ui/react";
 
-import { SparklesIcon } from "@/shared";
+import { SeedAiIcon } from "@/shared";
 
 import { AI_MENTOR_PANEL_LAYOUT } from "../../../../constants";
 
@@ -121,7 +121,7 @@ export const UploadAiMentorResponsivePanel = ({
           zIndex="overlay"
           _hover={{ opacity: 0.85 }}
         >
-          <SparklesIcon boxSize={4} />
+          <SeedAiIcon boxSize={4} />
           AI 멘토
         </Button>
       )}

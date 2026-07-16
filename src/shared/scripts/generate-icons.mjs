@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { optimize } from "svgo";
 
+import { hasMultiplePaintColors } from "./svg-paint-colors.mjs";
+
 const projectRoot = process.cwd();
 
 const ICON_DIR = path.join(projectRoot, "src/shared/_assets/icons");
@@ -41,6 +43,7 @@ function ensureDir(dir) {
 
 function optimizeSvg(filePath) {
   const svgContent = fs.readFileSync(filePath, "utf8");
+  const preservePaintColors = hasMultiplePaintColors(svgContent);
   const result = optimize(svgContent, {
     path: filePath,
     plugins: [
@@ -49,7 +52,7 @@ function optimizeSvg(filePath) {
         params: {
           overrides: {
             convertColors: {
-              currentColor: true, // fill/stroke 색상을 currentColor로 변환 → color prop으로 색상 제어 가능
+              currentColor: !preservePaintColors, // 단색 아이콘만 color prop으로 색상을 제어합니다.
             },
           },
         },

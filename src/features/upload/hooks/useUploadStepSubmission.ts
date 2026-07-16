@@ -7,12 +7,12 @@ import {
   type ProjectStepSelfCheckAnswer,
   completeProjectAPI,
   projectKeys,
-  saveProjectStepResultAPI,
   saveProjectStepSelfCheckAPI,
 } from "@/entities";
 import { DYNAMIC_ROUTE_PATHS, getApiErrorMessage, toaster } from "@/shared";
 
 type Params = {
+  ensureResultSaved: (content: string) => Promise<boolean>;
   projectId: string;
   stepNum: number;
   stepCode?: string;
@@ -30,6 +30,7 @@ type SubmitStepParams = {
 };
 
 export const useUploadStepSubmission = ({
+  ensureResultSaved,
   projectId,
   stepNum,
   stepCode,
@@ -68,15 +69,12 @@ export const useUploadStepSubmission = ({
       setIsSaving(true);
 
       try {
-        const savedResult = await saveProjectStepResultAPI({
-          projectId,
-          stepCode,
-          contentMarkdown: resultText,
-        });
-        queryClient.setQueryData(
-          projectKeys.stepResult(projectId, stepCode),
-          savedResult,
-        );
+        const isResultSaved = await ensureResultSaved(resultText);
+
+        if (!isResultSaved) {
+          return;
+        }
+
         const savedSelfCheck = await saveProjectStepSelfCheckAPI({
           projectId,
           stepCode,
@@ -142,6 +140,7 @@ export const useUploadStepSubmission = ({
       }
     },
     [
+      ensureResultSaved,
       isCompleting,
       isLastStep,
       isSaving,

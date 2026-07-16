@@ -5,16 +5,16 @@ import { useUploadStepSubmission } from "./useUploadStepSubmission";
 
 const {
   completeProjectAPIMock,
+  ensureResultSavedMock,
   invalidateQueriesMock,
   navigateMock,
-  saveProjectStepResultAPIMock,
   saveProjectStepSelfCheckAPIMock,
   setQueryDataMock,
 } = vi.hoisted(() => ({
   completeProjectAPIMock: vi.fn(),
+  ensureResultSavedMock: vi.fn(),
   invalidateQueriesMock: vi.fn(),
   navigateMock: vi.fn(),
-  saveProjectStepResultAPIMock: vi.fn(),
   saveProjectStepSelfCheckAPIMock: vi.fn(),
   setQueryDataMock: vi.fn(),
 }));
@@ -26,7 +26,6 @@ vi.mock("@/entities", async () => {
   return {
     ...actual,
     completeProjectAPI: completeProjectAPIMock,
-    saveProjectStepResultAPI: saveProjectStepResultAPIMock,
     saveProjectStepSelfCheckAPI: saveProjectStepSelfCheckAPIMock,
   };
 });
@@ -70,21 +69,33 @@ vi.mock("react-router", async () => {
   };
 });
 
+const renderSubmissionHook = ({
+  isLastStep = false,
+  stepCode = "constraint_analysis",
+  stepNum = 1,
+} = {}) =>
+  renderHook(() =>
+    useUploadStepSubmission({
+      ensureResultSaved: ensureResultSavedMock,
+      isLastStep,
+      projectId: "project-1",
+      stepCode,
+      stepNum,
+    }),
+  );
+
 describe("useUploadStepSubmission", () => {
   beforeEach(() => {
     completeProjectAPIMock.mockReset();
+    ensureResultSavedMock.mockReset();
     invalidateQueriesMock.mockReset();
     navigateMock.mockReset();
-    saveProjectStepResultAPIMock.mockReset();
     saveProjectStepSelfCheckAPIMock.mockReset();
     setQueryDataMock.mockReset();
 
     completeProjectAPIMock.mockResolvedValue(undefined);
+    ensureResultSavedMock.mockResolvedValue(true);
     invalidateQueriesMock.mockResolvedValue(undefined);
-    saveProjectStepResultAPIMock.mockResolvedValue({
-      contentMarkdown: "단계 결과",
-      stepCode: "constraint_analysis",
-    });
     saveProjectStepSelfCheckAPIMock.mockResolvedValue({
       checkItems: SELF_CHECK_ANSWERS,
       selfCheckId: "self-check-1",
@@ -92,15 +103,8 @@ describe("useUploadStepSubmission", () => {
     });
   });
 
-  it("단계 결과와 Self-Check 저장 후 다음 단계로 이동한다", async () => {
-    const { result } = renderHook(() =>
-      useUploadStepSubmission({
-        isLastStep: false,
-        projectId: "project-1",
-        stepCode: "constraint_analysis",
-        stepNum: 1,
-      }),
-    );
+  it("학습 결과와 Self-Check 저장 후 다음 단계로 이동한다", async () => {
+    const { result } = renderSubmissionHook();
 
     await act(async () => {
       await result.current.submitStep({
@@ -109,14 +113,11 @@ describe("useUploadStepSubmission", () => {
       });
     });
 
-    expect(invalidateQueriesMock).toHaveBeenCalledWith({
-      exact: true,
-      queryKey: ["project", "detail", "project-1"],
-    });
-    expect(saveProjectStepResultAPIMock).toHaveBeenCalledWith({
+    expect(ensureResultSavedMock).toHaveBeenCalledWith("단계 결과");
+    expect(saveProjectStepSelfCheckAPIMock).toHaveBeenCalledWith({
       projectId: "project-1",
       stepCode: "constraint_analysis",
-      contentMarkdown: "단계 결과",
+      checkItems: SELF_CHECK_ANSWERS,
     });
     expect(setQueryDataMock).toHaveBeenCalledWith(
       [
@@ -125,18 +126,13 @@ describe("useUploadStepSubmission", () => {
         "project-1",
         "step",
         "constraint_analysis",
-        "result",
+        "self-check",
       ],
-      expect.objectContaining({ contentMarkdown: "단계 결과" }),
+      expect.objectContaining({ selfCheckId: "self-check-1" }),
     );
-    expect(saveProjectStepSelfCheckAPIMock).toHaveBeenCalledWith({
-      projectId: "project-1",
-      stepCode: "constraint_analysis",
-      checkItems: SELF_CHECK_ANSWERS,
-    });
-    expect(
-      saveProjectStepResultAPIMock.mock.invocationCallOrder[0],
-    ).toBeLessThan(saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0]);
+    expect(ensureResultSavedMock.mock.invocationCallOrder[0]).toBeLessThan(
+      saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0],
+    );
     expect(
       saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0],
     ).toBeLessThan(invalidateQueriesMock.mock.invocationCallOrder[0]);
@@ -146,15 +142,28 @@ describe("useUploadStepSubmission", () => {
     expect(navigateMock).toHaveBeenCalledWith("/upload/step/project-1/2");
   });
 
+  it("학습 결과 저장에 실패하면 Self-Check 저장과 단계 이동을 하지 않는다", async () => {
+    ensureResultSavedMock.mockResolvedValueOnce(false);
+    const { result } = renderSubmissionHook();
+
+    await act(async () => {
+      await result.current.submitStep({
+        checkItems: SELF_CHECK_ANSWERS,
+        resultText: "단계 결과",
+      });
+    });
+
+    expect(saveProjectStepSelfCheckAPIMock).not.toHaveBeenCalled();
+    expect(invalidateQueriesMock).not.toHaveBeenCalled();
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
   it("마지막 단계는 프로젝트 완료 후 프로젝트 캐시 전체를 갱신한다", async () => {
-    const { result } = renderHook(() =>
-      useUploadStepSubmission({
-        isLastStep: true,
-        projectId: "project-1",
-        stepCode: "report_revision",
-        stepNum: 4,
-      }),
-    );
+    const { result } = renderSubmissionHook({
+      isLastStep: true,
+      stepCode: "report_revision",
+      stepNum: 4,
+    });
 
     await act(async () => {
       await result.current.submitStep({
@@ -163,9 +172,9 @@ describe("useUploadStepSubmission", () => {
       });
     });
 
-    expect(
-      saveProjectStepResultAPIMock.mock.invocationCallOrder[0],
-    ).toBeLessThan(saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0]);
+    expect(ensureResultSavedMock.mock.invocationCallOrder[0]).toBeLessThan(
+      saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0],
+    );
     expect(
       saveProjectStepSelfCheckAPIMock.mock.invocationCallOrder[0],
     ).toBeLessThan(completeProjectAPIMock.mock.invocationCallOrder[0]);
@@ -189,17 +198,13 @@ describe("useUploadStepSubmission", () => {
     });
   });
 
-  it("마지막 단계 결과 저장 후 프로젝트 완료에 실패해도 상세 캐시를 갱신한다", async () => {
+  it("프로젝트 완료에 실패해도 상세 캐시를 갱신한다", async () => {
     completeProjectAPIMock.mockRejectedValueOnce(new Error("완료 실패"));
-
-    const { result } = renderHook(() =>
-      useUploadStepSubmission({
-        isLastStep: true,
-        projectId: "project-1",
-        stepCode: "report_revision",
-        stepNum: 4,
-      }),
-    );
+    const { result } = renderSubmissionHook({
+      isLastStep: true,
+      stepCode: "report_revision",
+      stepNum: 4,
+    });
 
     await act(async () => {
       await result.current.submitStep({
@@ -208,7 +213,7 @@ describe("useUploadStepSubmission", () => {
       });
     });
 
-    expect(saveProjectStepResultAPIMock).toHaveBeenCalled();
+    expect(ensureResultSavedMock).toHaveBeenCalled();
     expect(invalidateQueriesMock).toHaveBeenCalledWith({
       exact: true,
       queryKey: ["project", "detail", "project-1"],
@@ -224,14 +229,7 @@ describe("useUploadStepSubmission", () => {
     saveProjectStepSelfCheckAPIMock.mockRejectedValueOnce(
       new Error("Self-Check 저장 실패"),
     );
-    const { result } = renderHook(() =>
-      useUploadStepSubmission({
-        isLastStep: false,
-        projectId: "project-1",
-        stepCode: "constraint_analysis",
-        stepNum: 1,
-      }),
-    );
+    const { result } = renderSubmissionHook();
 
     await act(async () => {
       await result.current.submitStep({
@@ -240,17 +238,17 @@ describe("useUploadStepSubmission", () => {
       });
     });
 
-    expect(saveProjectStepResultAPIMock).toHaveBeenCalled();
+    expect(ensureResultSavedMock).toHaveBeenCalled();
     expect(saveProjectStepSelfCheckAPIMock).toHaveBeenCalled();
     expect(completeProjectAPIMock).not.toHaveBeenCalled();
     expect(navigateMock).not.toHaveBeenCalled();
   });
 
   it("저장 중 다른 단계로 이동하면 기존 요청이 화면 이동을 덮어쓰지 않는다", async () => {
-    let resolveSave!: () => void;
-    saveProjectStepResultAPIMock.mockImplementation(
+    let resolveSave!: (isSaved: boolean) => void;
+    ensureResultSavedMock.mockImplementation(
       () =>
-        new Promise<void>((resolve) => {
+        new Promise<boolean>((resolve) => {
           resolveSave = resolve;
         }),
     );
@@ -258,6 +256,7 @@ describe("useUploadStepSubmission", () => {
     const { result, rerender } = renderHook(
       ({ stepNum }) =>
         useUploadStepSubmission({
+          ensureResultSaved: ensureResultSavedMock,
           isLastStep: false,
           projectId: "project-1",
           stepCode:
@@ -277,7 +276,7 @@ describe("useUploadStepSubmission", () => {
     rerender({ stepNum: 2 });
 
     await act(async () => {
-      resolveSave();
+      resolveSave(true);
       await submissionPromise;
     });
 
@@ -285,10 +284,10 @@ describe("useUploadStepSubmission", () => {
   });
 
   it("저장 중 다른 단계에 갔다가 돌아와도 이전 요청이 자동 이동하지 않는다", async () => {
-    let resolveSave!: () => void;
-    saveProjectStepResultAPIMock.mockImplementation(
+    let resolveSave!: (isSaved: boolean) => void;
+    ensureResultSavedMock.mockImplementation(
       () =>
-        new Promise<void>((resolve) => {
+        new Promise<boolean>((resolve) => {
           resolveSave = resolve;
         }),
     );
@@ -296,6 +295,7 @@ describe("useUploadStepSubmission", () => {
     const { result, rerender } = renderHook(
       ({ stepNum }) =>
         useUploadStepSubmission({
+          ensureResultSaved: ensureResultSavedMock,
           isLastStep: false,
           projectId: "project-1",
           stepCode:
@@ -316,7 +316,7 @@ describe("useUploadStepSubmission", () => {
     rerender({ stepNum: 1 });
 
     await act(async () => {
-      resolveSave();
+      resolveSave(true);
       await submissionPromise;
     });
 

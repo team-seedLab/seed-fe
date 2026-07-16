@@ -6,11 +6,15 @@ import { useUploadStepData } from "./useUploadStepData";
 const {
   promptQueryMock,
   resultQueryMock,
+  saveResultMutateAsyncMock,
+  saveResultOnPageExitMock,
   updatePromptMutateAsyncMock,
   updatePromptOnPageExitMock,
 } = vi.hoisted(() => ({
   promptQueryMock: vi.fn(),
   resultQueryMock: vi.fn(),
+  saveResultMutateAsyncMock: vi.fn(),
+  saveResultOnPageExitMock: vi.fn(),
   updatePromptMutateAsyncMock: vi.fn(),
   updatePromptOnPageExitMock: vi.fn(),
 }));
@@ -23,9 +27,13 @@ vi.mock("@/entities", async () => {
     ...actual,
     useGetOrCreateProjectStepPrompt: () => promptQueryMock(),
     useGetProjectStepResult: () => resultQueryMock(),
+    useSaveProjectStepResult: () => ({
+      mutateAsync: saveResultMutateAsyncMock,
+    }),
     useUpdateProjectStepPrompt: () => ({
       mutateAsync: updatePromptMutateAsyncMock,
     }),
+    saveProjectStepResultOnPageExitAPI: saveResultOnPageExitMock,
     updateProjectStepPromptOnPageExitAPI: updatePromptOnPageExitMock,
   };
 });
@@ -34,6 +42,8 @@ describe("useUploadStepData", () => {
   beforeEach(() => {
     promptQueryMock.mockReset();
     resultQueryMock.mockReset();
+    saveResultMutateAsyncMock.mockReset();
+    saveResultOnPageExitMock.mockReset();
     updatePromptMutateAsyncMock.mockReset();
     updatePromptOnPageExitMock.mockReset();
 
@@ -51,6 +61,7 @@ describe("useUploadStepData", () => {
       },
       isLoading: false,
     });
+    saveResultMutateAsyncMock.mockResolvedValue(undefined);
     updatePromptMutateAsyncMock.mockResolvedValue(undefined);
   });
 
@@ -123,6 +134,46 @@ describe("useUploadStepData", () => {
       projectId: "project-1",
       stepCode: "constraint_analysis",
       editedPrompt: "종료 전 수정 프롬프트",
+    });
+  });
+
+  it("학습 결과를 현재 프로젝트와 단계에 저장한다", async () => {
+    const controller = new AbortController();
+    const { result } = renderHook(() =>
+      useUploadStepData({
+        projectId: "project-1",
+        stepCode: "constraint_analysis",
+      }),
+    );
+
+    await act(async () => {
+      await result.current.saveResult("작성 중인 학습 결과", controller.signal);
+    });
+
+    expect(saveResultMutateAsyncMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      contentMarkdown: "작성 중인 학습 결과",
+      signal: controller.signal,
+    });
+  });
+
+  it("페이지 종료 전 학습 결과를 keepalive 저장 함수에 전달한다", () => {
+    const { result } = renderHook(() =>
+      useUploadStepData({
+        projectId: "project-1",
+        stepCode: "constraint_analysis",
+      }),
+    );
+
+    act(() => {
+      result.current.saveResultOnPageExit("종료 전 학습 결과");
+    });
+
+    expect(saveResultOnPageExitMock).toHaveBeenCalledWith({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+      contentMarkdown: "종료 전 학습 결과",
     });
   });
 });
