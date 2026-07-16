@@ -61,7 +61,13 @@ export const ProjectStepResultEditor = ({
   };
 
   return (
-    <Tabs.Root defaultValue="input" variant="plain" w="full">
+    <Tabs.Root
+      defaultValue="input"
+      lazyMount
+      unmountOnExit
+      variant="plain"
+      w="full"
+    >
       <Tabs.List
         alignSelf="flex-start"
         bg="neutral.50"
