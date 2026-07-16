@@ -47,6 +47,42 @@ const UploadAiMentorPanelTestHarness = ({ onSend }: { onSend: () => void }) => {
 };
 
 describe("UploadAiMentorPanel", () => {
+  it("AI 답변의 GFM 표를 렌더링한다", () => {
+    renderWithProviders(
+      <UploadAiMentorPanel
+        draft=""
+        hasPromptChanges={false}
+        isError={false}
+        isLoading={false}
+        isSending={false}
+        messages={[
+          createMessage(
+            "assistant-1",
+            "ASSISTANT",
+            `| 항목 | 내용 |
+| --- | --- |
+| 단계 | 제약사항 분석 |`,
+          ),
+        ]}
+        pendingContent={null}
+        onChangeDraft={vi.fn()}
+        onClose={vi.fn()}
+        onEditPrompt={vi.fn()}
+        onReask={vi.fn()}
+        onRetry={vi.fn()}
+        onSend={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "항목" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("cell", { name: "제약사항 분석" }),
+    ).toBeInTheDocument();
+  });
+
   it("질문 내용에 따라 입력창 높이를 최대 360px까지 자동으로 조절한다", async () => {
     renderWithProviders(<UploadAiMentorPanelTestHarness onSend={vi.fn()} />);
 

@@ -1,10 +1,8 @@
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { SparklesIcon } from "@/shared";
+import { MarkdownContent, SparklesIcon } from "@/shared";
 
 import { splitAiMentorAnswer } from "../../../../utils";
-
-import { UploadAiMentorMarkdown } from "./UploadAiMentorMarkdown";
 
 type Props = {
   content: string;
@@ -36,7 +34,7 @@ export const UploadAiMentorAssistantMessage = ({
           <Text color="neutral.900" fontSize="xl" fontWeight="semibold">
             핵심 답변
           </Text>
-          <UploadAiMentorMarkdown content={answer} />
+          <MarkdownContent content={answer} />
         </Box>
 
         {guide && (
@@ -44,7 +42,7 @@ export const UploadAiMentorAssistantMessage = ({
             <Text color="neutral.900" fontSize="xl" fontWeight="semibold">
               프롬프트 개선 가이드
             </Text>
-            <UploadAiMentorMarkdown content={guide} />
+            <MarkdownContent content={guide} />
           </Box>
         )}
 
