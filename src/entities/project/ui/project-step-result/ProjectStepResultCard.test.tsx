@@ -49,6 +49,18 @@ const selectView = async (name: "입력" | "미리보기") => {
 };
 
 describe("ProjectStepResultCard", () => {
+  it("입력 탭에서는 미리보기 마크다운을 렌더링하지 않는다", () => {
+    renderEditableResult("# 숨겨진 미리보기");
+
+    expect(
+      screen.queryByRole("heading", {
+        hidden: true,
+        level: 3,
+        name: "숨겨진 미리보기",
+      }),
+    ).not.toBeInTheDocument();
+  });
+
   it("편집 모드에서 입력과 미리보기를 전환해도 입력값을 유지한다", async () => {
     renderEditableResult("기존 학습 결과");
 
