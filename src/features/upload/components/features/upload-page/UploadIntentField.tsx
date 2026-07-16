@@ -24,6 +24,7 @@ export const UploadIntentField = ({
       </Text>
       <Textarea
         aria-label={label}
+        autoresize
         id={id}
         bg="neutral.50"
         border="none"
@@ -34,7 +35,6 @@ export const UploadIntentField = ({
         name={id}
         p={4}
         placeholder={placeholder}
-        resize="vertical"
         value={value}
         _focusVisible={{
           boxShadow: "0 0 0 1px var(--sd-colors-seed)",
