@@ -47,7 +47,7 @@ const UploadAiMentorPanelTestHarness = ({ onSend }: { onSend: () => void }) => {
 };
 
 describe("UploadAiMentorPanel", () => {
-  it("질문 내용에 따라 입력창 높이를 자동으로 조절한다", async () => {
+  it("질문 내용에 따라 입력창 높이를 최대 360px까지 자동으로 조절한다", async () => {
     renderWithProviders(<UploadAiMentorPanelTestHarness onSend={vi.fn()} />);
 
     const composer = screen.getByRole<HTMLTextAreaElement>("textbox", {
@@ -64,7 +64,11 @@ describe("UploadAiMentorPanel", () => {
 
     await waitFor(() => {
       expect(composer.style.height).not.toBe("");
-      expect(composer).toHaveStyle({ overflowY: "hidden", resize: "none" });
+      expect(composer).toHaveStyle({
+        maxHeight: "360px",
+        overflowY: "hidden",
+        resize: "none",
+      });
     });
     expect(composer.parentElement).toHaveStyle({ minHeight: "95px" });
   });
