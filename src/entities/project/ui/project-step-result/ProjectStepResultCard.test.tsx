@@ -49,22 +49,6 @@ const selectView = async (name: "입력" | "미리보기") => {
 };
 
 describe("ProjectStepResultCard", () => {
-  it("미리보기에서 GFM 표를 렌더링한다", async () => {
-    renderEditableResult(`| 항목 | 내용 |
-| --- | --- |
-| 단계 | 제약사항 분석 |`);
-
-    await selectView("미리보기");
-
-    expect(screen.getByRole("table")).toBeInTheDocument();
-    expect(
-      screen.getByRole("columnheader", { name: "항목" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("cell", { name: "제약사항 분석" }),
-    ).toBeInTheDocument();
-  });
-
   it("편집 모드에서 입력과 미리보기를 전환해도 입력값을 유지한다", async () => {
     renderEditableResult("기존 학습 결과");
 
@@ -81,6 +65,22 @@ describe("ProjectStepResultCard", () => {
     expect(
       await screen.findByRole("textbox", { name: "학습 결과" }),
     ).toHaveValue("수정한 학습 결과");
+  });
+
+  it("미리보기에서 GFM 표를 렌더링한다", async () => {
+    renderEditableResult(`| 항목 | 내용 |
+| --- | --- |
+| 단계 | 제약사항 분석 |`);
+
+    await selectView("미리보기");
+
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "항목" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("cell", { name: "제약사항 분석" }),
+    ).toBeInTheDocument();
   });
 
   it("미리보기에서 학습 결과 마크다운을 렌더링한다", async () => {
