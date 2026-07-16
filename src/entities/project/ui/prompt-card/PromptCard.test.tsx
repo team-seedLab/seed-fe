@@ -170,6 +170,10 @@ describe("PromptCard", () => {
 
     expect(diffButton).toBeDisabled();
     expect(resetButton).toBeDisabled();
+    const disabledButtonStyle = window.getComputedStyle(diffButton);
+
+    expect(disabledButtonStyle.borderWidth).toBe("1px");
+    expect(disabledButtonStyle.borderStyle).toBe("solid");
 
     fireEvent.change(screen.getByRole("textbox", { name: "수정 내용" }), {
       target: { value: EDITED_PROMPT },

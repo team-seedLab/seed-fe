@@ -23,7 +23,8 @@ export const PromptCardHeaderButton = ({
   const surfaceStyle = disabled
     ? {
         bg: "transparent",
-        border: "none",
+        border: "1px solid",
+        borderColor: "transparent",
         boxShadow: "none",
       }
     : PROJECT_CONTENT_CONTROL_SURFACE_STYLE;
