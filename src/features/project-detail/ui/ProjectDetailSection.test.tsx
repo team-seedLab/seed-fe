@@ -49,7 +49,10 @@ const createProject = (
   updatedAt: "2026-07-10",
 });
 
-const useStepRecordHandlers = (editedPrompt: string | null) => {
+const useStepRecordHandlers = (
+  editedPrompt: string | null,
+  contentMarkdown: string | null = "저장된 작업 결과",
+) => {
   server.use(
     http.get(PROMPT_URL, () =>
       HttpResponse.json(
@@ -71,7 +74,7 @@ const useStepRecordHandlers = (editedPrompt: string | null) => {
     http.get(RESULT_URL, () =>
       HttpResponse.json(
         createApiSuccessResponse({
-          contentMarkdown: "저장된 작업 결과",
+          contentMarkdown,
           createdAt: "2026-07-10",
           stepCode: "constraint_analysis",
           stepId: "step-1",
@@ -258,6 +261,17 @@ describe("ProjectDetailSection", () => {
     fireEvent.click(screen.getByRole("button", { name: "차이보기" }));
     expect(await screen.findByText("- 분량: 제한 없음")).toBeInTheDocument();
     expect(screen.getByText("+ 분량: A4 2장")).toBeInTheDocument();
+  });
+
+  it("작업 결과 내용이 null이어도 단계 기록의 빈 상태를 표시한다", async () => {
+    useStepRecordHandlers(null, null);
+
+    renderWithProviders(<ProjectDetailSection project={createProject()} />);
+
+    expect(await screen.findByText("수정 내용")).toBeInTheDocument();
+    expect(
+      screen.getByText("등록된 학습 결과가 없습니다."),
+    ).toBeInTheDocument();
   });
 
   it("시작하지 않은 단계는 상세 기록을 요청하지 않는다", () => {

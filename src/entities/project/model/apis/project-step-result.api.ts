@@ -9,6 +9,11 @@ import {
 
 import type { ProjectStepResult } from "../types";
 
+import {
+  type ProjectStepResultApiResponse,
+  mapProjectStepResultResponse,
+} from "./project-step-result.mapper";
+
 export type ProjectStepResultParams = {
   projectId: string;
   stepCode: string;
@@ -27,11 +32,11 @@ export const getProjectStepResultAPI = async (
   params: ProjectStepResultParams,
 ): Promise<ProjectStepResult | null> => {
   try {
-    const response = await fetchInstance.get<ApiResponse<ProjectStepResult>>(
-      getResultPath(params),
-    );
+    const response = await fetchInstance.get<
+      ApiResponse<ProjectStepResultApiResponse>
+    >(getResultPath(params));
 
-    return processApiResponse(response.data);
+    return mapProjectStepResultResponse(processApiResponse(response.data));
   } catch (error) {
     if (
       isAxiosError<ErrorResponse>(error) &&
@@ -47,10 +52,9 @@ export const getProjectStepResultAPI = async (
 export const saveProjectStepResultAPI = async (
   params: SaveProjectStepResultParams,
 ): Promise<ProjectStepResult> => {
-  const response = await fetchInstance.put<ApiResponse<ProjectStepResult>>(
-    getResultPath(params),
-    { contentMarkdown: params.contentMarkdown },
-  );
+  const response = await fetchInstance.put<
+    ApiResponse<ProjectStepResultApiResponse>
+  >(getResultPath(params), { contentMarkdown: params.contentMarkdown });
 
-  return processApiResponse(response.data);
+  return mapProjectStepResultResponse(processApiResponse(response.data));
 };

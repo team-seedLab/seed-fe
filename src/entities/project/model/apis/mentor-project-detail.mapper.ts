@@ -14,8 +14,8 @@ type MentorProjectStepPromptApiResponse = {
   diffJson: Record<string, unknown> | null;
 };
 
-export type MentorProjectStepResult = {
-  contentMarkdown: string;
+type MentorProjectStepResultApiResponse = {
+  contentMarkdown: string | null;
 };
 
 export type MentorProjectStepSelfCheckItem = {
@@ -37,7 +37,7 @@ type MentorProjectStepDetailApiResponse = {
   status: ProjectStepStatus;
   completedAt: string | null;
   prompt: MentorProjectStepPromptApiResponse | null;
-  result: MentorProjectStepResult | null;
+  result: MentorProjectStepResultApiResponse | null;
   selfCheck: MentorProjectStepSelfCheck | null;
 };
 
@@ -66,6 +66,10 @@ export type MentorProjectStepPrompt = {
   addedCount: number;
   removedCount: number;
   diffJson: Record<string, unknown> | null;
+};
+
+export type MentorProjectStepResult = {
+  contentMarkdown: string;
 };
 
 export type MentorProjectStepDetail = {
@@ -128,7 +132,11 @@ export const mapMentorProjectDetailResponse = (
           removedCount: step.prompt.removedCount ?? 0,
         }
       : null,
-    result: step.result,
+    result: step.result
+      ? {
+          contentMarkdown: step.result.contentMarkdown ?? "",
+        }
+      : null,
     selfCheck: step.selfCheck,
   })),
 });
