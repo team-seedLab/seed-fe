@@ -84,6 +84,16 @@ const UploadStepContentSectionTestHarness = () => {
 };
 
 describe("UploadStepContentSection", () => {
+  it("학습 결과 입력창의 포커스 표시를 자르지 않는다", () => {
+    const { container } = renderWithProviders(
+      <UploadStepContentSectionTestHarness />,
+    );
+
+    expect(container.firstElementChild).not.toHaveStyle({
+      overflow: "hidden",
+    });
+  });
+
   it("생성 프롬프트를 수정하고 작업 결과를 입력할 수 있다", () => {
     renderWithProviders(<UploadStepContentSectionTestHarness />);
 

@@ -44,7 +44,7 @@ export const UploadStepContentSection = ({
   const { resultText, changeResult, commitResult, ensureResultSaved } =
     resultEditor;
   return (
-    <Box bg="white" border="1px solid white" overflow="hidden">
+    <Box bg="white" border="1px solid white">
       <VStack align="flex-start" gap={{ base: 6, md: 8 }}>
         <VStack align="flex-start" gap={{ base: 2, md: "11px" }} w="full">
           <Text color="seed" fontSize="xs" fontWeight="bold">
