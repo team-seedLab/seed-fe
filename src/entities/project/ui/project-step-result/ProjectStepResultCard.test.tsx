@@ -74,9 +74,7 @@ describe("ProjectStepResultCard", () => {
     await selectView("미리보기");
     await selectView("입력");
 
-    expect(
-      await screen.findByRole("textbox", { name: "학습 결과" }),
-    ).toHaveValue("수정한 학습 결과");
+    expect(screen.getByLabelText("학습 결과")).toHaveValue("수정한 학습 결과");
   });
 
   it("미리보기를 확인한 뒤에도 입력창 DOM 상태를 유지한다", async () => {
