@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { optimize } from "svgo";
 
+import { hasMultiplePaintColors } from "./svg-paint-colors.mjs";
+
 const projectRoot = process.cwd();
 
 const ICON_DIR = path.join(projectRoot, "src/shared/_assets/icons");
@@ -37,18 +39,6 @@ function readSvgFiles(dir) {
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
-}
-
-function hasMultiplePaintColors(svgContent) {
-  const paintColors = Array.from(
-    svgContent.matchAll(/\b(?:fill|stroke)=["']([^"']+)["']/gi),
-    ([, color]) => color.trim().toLowerCase(),
-  ).filter(
-    (color) =>
-      color !== "none" && color !== "currentcolor" && !color.startsWith("url("),
-  );
-
-  return new Set(paintColors).size > 1;
 }
 
 function optimizeSvg(filePath) {
