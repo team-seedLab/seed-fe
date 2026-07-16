@@ -24,6 +24,26 @@ const RESULT_RESPONSE = {
 const RESULT_URL = "*/api/projects/project-1/steps/constraint_analysis/result";
 
 describe("project step result API", () => {
+  it("조회한 작업 결과가 null이면 빈 문자열로 변환한다", async () => {
+    server.use(
+      http.get(RESULT_URL, () =>
+        HttpResponse.json(
+          createApiSuccessResponse({
+            ...RESULT_RESPONSE,
+            contentMarkdown: null,
+          }),
+        ),
+      ),
+    );
+
+    const response = await getProjectStepResultAPI({
+      projectId: "project-1",
+      stepCode: "constraint_analysis",
+    });
+
+    expect(response?.contentMarkdown).toBe("");
+  });
+
   it("저장된 결과가 없으면 빈 상태를 반환한다", async () => {
     server.use(
       http.get(RESULT_URL, () =>
