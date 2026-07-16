@@ -103,6 +103,12 @@ vi.mock("../../hooks", async () => {
       ensurePromptSaved: ensurePromptSavedMock,
       resetPrompt: vi.fn(),
     }),
+    useUploadStepResultEditor: () => ({
+      changeResult: vi.fn(),
+      commitResult: vi.fn(),
+      ensureResultSaved: vi.fn(),
+      resultText: "",
+    }),
     useUploadStepData: () => ({
       isStepLoading: false,
       promptData: {
@@ -112,9 +118,12 @@ vi.mock("../../hooks", async () => {
       resultData: null,
       savePrompt: vi.fn(),
       savePromptOnPageExit: vi.fn(),
+      saveResult: vi.fn(),
+      saveResultOnPageExit: vi.fn(),
     }),
     useUploadStepProject: ({ stepNum }: { stepNum: number }) => ({
       isLastStep: false,
+      isLoading: false,
       stepCode: `STEP_${stepNum}`,
     }),
   };

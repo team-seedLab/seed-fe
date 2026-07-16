@@ -10,6 +10,7 @@ import {
 import { UploadSelfCheckDialog } from "./UploadSelfCheckDialog";
 
 type Props = {
+  ensureResultSaved: (content: string) => Promise<boolean>;
   isLastStep: boolean;
   isStepLoading: boolean;
   projectId: string;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export const UploadStepSubmissionControl = ({
+  ensureResultSaved,
   isLastStep,
   isStepLoading,
   projectId,
@@ -27,6 +29,7 @@ export const UploadStepSubmissionControl = ({
   stepNum,
 }: Props) => {
   const { isSubmitting, submitStep } = useUploadStepSubmission({
+    ensureResultSaved,
     projectId,
     stepNum,
     stepCode,

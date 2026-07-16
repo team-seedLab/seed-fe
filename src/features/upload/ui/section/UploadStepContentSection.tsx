@@ -1,17 +1,17 @@
-import { useState } from "react";
-
 import { Box, Text, VStack } from "@chakra-ui/react";
 
 import {
   type ProjectStepPrompt,
-  type ProjectStepResult,
   ProjectStepResultCard,
   PromptCard,
 } from "@/entities";
 import { useClipboardCopy } from "@/shared";
 
 import { UploadStepSubmissionControl } from "../../components";
-import type { UploadPromptEditorState } from "../../hooks";
+import type {
+  UploadPromptEditorState,
+  UploadStepResultEditorState,
+} from "../../hooks";
 
 type Props = {
   editorFocusRequestId: number | null;
@@ -20,7 +20,7 @@ type Props = {
   promptData: ProjectStepPrompt | undefined;
   promptEditor: UploadPromptEditorState;
   projectId: string;
-  resultData: ProjectStepResult | null | undefined;
+  resultEditor: UploadStepResultEditorState;
   stepCode: string | undefined;
   stepNum: number;
 };
@@ -32,37 +32,19 @@ export const UploadStepContentSection = ({
   promptData,
   promptEditor,
   projectId,
-  resultData,
+  resultEditor,
   stepCode,
   stepNum,
 }: Props) => {
-  const [resultTextByStep, setResultTextByStep] = useState<
-    Record<string, string>
-  >({});
   const { copied: copiedPrompt, copy: copyPrompt } = useClipboardCopy();
   const stepName = promptData?.stepName;
   const providedPromptSnapshot = promptData?.providedPromptSnapshot;
   const { editedPrompt, changePrompt, commitPrompt, resetPrompt } =
     promptEditor;
-  const resultTextKey = `${projectId}:${stepNum}`;
-  const savedResultText =
-    resultData && resultData.stepCode === stepCode
-      ? resultData.contentMarkdown
-      : "";
-  const resultText = resultTextByStep[resultTextKey] ?? savedResultText;
-  const handleResultTextChange = (value: string) => {
-    setResultTextByStep((prev) => ({
-      ...prev,
-      [resultTextKey]: value,
-    }));
-  };
+  const { resultText, changeResult, commitResult, ensureResultSaved } =
+    resultEditor;
   return (
-    <Box
-      bg="white"
-      border="1px solid white"
-      borderRadius={{ base: "3xl", md: "4xl" }}
-      overflow="hidden"
-    >
+    <Box bg="white" border="1px solid white" overflow="hidden">
       <VStack align="flex-start" gap={{ base: 6, md: 8 }}>
         <VStack align="flex-start" gap={{ base: 2, md: "11px" }} w="full">
           <Text color="seed" fontSize="xs" fontWeight="bold">
@@ -134,10 +116,14 @@ export const UploadStepContentSection = ({
         <ProjectStepResultCard
           content={resultText}
           mode="editable"
-          onContentChange={handleResultTextChange}
+          onCommit={(content) => {
+            void commitResult(content);
+          }}
+          onContentChange={changeResult}
         />
 
         <UploadStepSubmissionControl
+          ensureResultSaved={ensureResultSaved}
           isLastStep={isLastStep}
           isStepLoading={isStepLoading}
           key={`${projectId}:${stepCode ?? stepNum}`}

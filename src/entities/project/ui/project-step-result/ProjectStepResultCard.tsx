@@ -1,3 +1,5 @@
+import type { FocusEvent } from "react";
+
 import { Flex, Text, VStack } from "@chakra-ui/react";
 
 import { ProjectContentCopyButton } from "../ProjectContentCopyButton";
@@ -8,6 +10,7 @@ import { ProjectStepResultEditor } from "./ProjectStepResultEditor";
 type EditableProps = {
   content: string;
   mode: "editable";
+  onCommit: (content: string) => void;
   onContentChange: (content: string) => void;
 };
 
@@ -22,9 +25,30 @@ type Props = EditableProps | ReadOnlyProps;
 
 export const ProjectStepResultCard = (props: Props) => {
   const isEditable = props.mode === "editable";
+  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
+    if (!isEditable) {
+      return;
+    }
+
+    const nextFocusedElement = event.relatedTarget;
+
+    if (
+      nextFocusedElement instanceof Node &&
+      event.currentTarget.contains(nextFocusedElement)
+    ) {
+      return;
+    }
+
+    props.onCommit(props.content);
+  };
 
   return (
-    <VStack align="flex-start" gap={{ base: 4, md: 6 }} w="full">
+    <VStack
+      align="flex-start"
+      gap={{ base: 4, md: 6 }}
+      onBlur={handleBlur}
+      w="full"
+    >
       <Flex align="center" justify="space-between" w="full">
         <Text
           as="h2"
