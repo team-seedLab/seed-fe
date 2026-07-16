@@ -2,6 +2,11 @@ import { type KeyboardEvent, useId, useRef, useState } from "react";
 
 import { Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
 
+import {
+  PROJECT_CONTENT_CONTROL_BASE_STYLE,
+  PROJECT_CONTENT_CONTROL_SURFACE_STYLE,
+} from "../project-content-control-style";
+
 import { ProjectStepResultContent } from "./ProjectStepResultContent";
 import { getMarkdownInputEdit } from "./get-markdown-input-edit";
 import { useProjectStepResultInputViewHeight } from "./useProjectStepResultInputViewHeight";
@@ -92,15 +97,13 @@ export const ProjectStepResultEditor = ({
         gap="4px"
         p="4px"
       >
-        <Tabs.Indicator bg="white" borderRadius="full" boxShadow="xs" />
+        <Tabs.Indicator
+          {...PROJECT_CONTENT_CONTROL_SURFACE_STYLE}
+          borderRadius={PROJECT_CONTENT_CONTROL_BASE_STYLE.borderRadius}
+        />
         <Tabs.Trigger
-          borderRadius="full"
+          {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
           color="neutral.600"
-          fontSize="sm"
-          fontWeight="medium"
-          h="32px"
-          px="12px"
-          py="6px"
           value="input"
           zIndex={1}
           _focusVisible={{
@@ -110,19 +113,13 @@ export const ProjectStepResultEditor = ({
           }}
           _selected={{
             color: "neutral.900",
-            fontWeight: "bold",
           }}
         >
           입력
         </Tabs.Trigger>
         <Tabs.Trigger
-          borderRadius="full"
+          {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
           color="neutral.600"
-          fontSize="sm"
-          fontWeight="medium"
-          h="32px"
-          px="12px"
-          py="6px"
           value="preview"
           zIndex={1}
           _focusVisible={{
@@ -132,7 +129,6 @@ export const ProjectStepResultEditor = ({
           }}
           _selected={{
             color: "neutral.900",
-            fontWeight: "bold",
           }}
         >
           미리보기
