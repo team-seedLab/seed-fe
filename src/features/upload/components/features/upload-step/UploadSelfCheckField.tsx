@@ -19,6 +19,7 @@ export const UploadSelfCheckField = ({ answer, question, onChange }: Props) => {
       </Text>
       <Textarea
         aria-label={question}
+        autoresize
         bg="neutral.50"
         border="none"
         borderRadius="xl"
@@ -29,7 +30,6 @@ export const UploadSelfCheckField = ({ answer, question, onChange }: Props) => {
         onChange={(event) => onChange(event.target.value)}
         p={6}
         placeholder="여기에 작성해 주세요."
-        resize="vertical"
         value={answer}
         _focusVisible={{
           boxShadow: "0 0 0 1px var(--sd-colors-seed)",

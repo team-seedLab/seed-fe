@@ -63,8 +63,10 @@ describe("UploadAiMentorPanel", () => {
     });
 
     await waitFor(() => {
-      expect(composer).toHaveStyle({ height: "180px", resize: "none" });
+      expect(composer.style.height).not.toBe("");
+      expect(composer).toHaveStyle({ overflowY: "hidden", resize: "none" });
     });
+    expect(composer.parentElement).toHaveStyle({ minHeight: "95px" });
   });
 
   it("빈 대화에서 질문을 입력하고 Enter로 전송한다", () => {

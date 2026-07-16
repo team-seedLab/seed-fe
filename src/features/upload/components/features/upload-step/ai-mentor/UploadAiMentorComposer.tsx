@@ -42,19 +42,19 @@ export const UploadAiMentorComposer = ({
       bg="neutral.50"
       borderRadius="xl"
       flexShrink={0}
-      h="95px"
+      minH="95px"
       p={3}
       position="relative"
       w="full"
     >
       <Textarea
         aria-label="AI 멘토에게 질문하기"
+        autoresize
         bg="transparent"
         border="none"
         color="neutral.900"
         disabled={isSending}
         fontSize="sm"
-        h="full"
         maxLength={AI_MENTOR_QUESTION_MAX_LENGTH}
         minH={0}
         onChange={(event) => onChange(event.target.value)}
@@ -63,7 +63,6 @@ export const UploadAiMentorComposer = ({
         pb={10}
         pr={10}
         placeholder="프롬프트를 입력해주세요..."
-        resize="none"
         value={draft}
         _focusVisible={{ boxShadow: "none", outline: "none" }}
       />
