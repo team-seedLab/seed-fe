@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { ProjectStepAiMessage } from "@/entities";
@@ -47,6 +47,26 @@ const UploadAiMentorPanelTestHarness = ({ onSend }: { onSend: () => void }) => {
 };
 
 describe("UploadAiMentorPanel", () => {
+  it("질문 내용에 따라 입력창 높이를 자동으로 조절한다", async () => {
+    renderWithProviders(<UploadAiMentorPanelTestHarness onSend={vi.fn()} />);
+
+    const composer = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "AI 멘토에게 질문하기",
+    });
+    Object.defineProperty(composer, "scrollHeight", {
+      configurable: true,
+      value: 180,
+    });
+
+    fireEvent.input(composer, {
+      target: { value: "여러 줄로 작성한 AI 멘토 질문" },
+    });
+
+    await waitFor(() => {
+      expect(composer).toHaveStyle({ height: "180px", resize: "none" });
+    });
+  });
+
   it("빈 대화에서 질문을 입력하고 Enter로 전송한다", () => {
     const onSend = vi.fn();
     renderWithProviders(<UploadAiMentorPanelTestHarness onSend={onSend} />);

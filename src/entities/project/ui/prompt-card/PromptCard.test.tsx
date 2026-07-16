@@ -77,6 +77,26 @@ const FocusablePromptCard = () => {
 };
 
 describe("PromptCard", () => {
+  it("편집 내용에 따라 입력창 높이를 자동으로 조절한다", async () => {
+    renderWithProviders(<EditablePromptCard />);
+
+    const editor = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "수정 내용",
+    });
+    Object.defineProperty(editor, "scrollHeight", {
+      configurable: true,
+      value: 360,
+    });
+
+    fireEvent.input(editor, {
+      target: { value: "여러 줄로 작성한 수정 프롬프트" },
+    });
+
+    await waitFor(() => {
+      expect(editor).toHaveStyle({ height: "360px", resize: "none" });
+    });
+  });
+
   beforeEach(() => {
     Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
       configurable: true,
