@@ -44,16 +44,6 @@ export const UploadAiMentorResizeHandle = ({
       touchAction="none"
       w={3}
       _focusVisible={{ outline: "2px solid", outlineColor: "seed" }}
-    >
-      <Box
-        bg="neutral.100"
-        h="full"
-        left="50%"
-        position="absolute"
-        top={0}
-        transform="translateX(-50%)"
-        w="1px"
-      />
-    </Box>
+    />
   );
 };

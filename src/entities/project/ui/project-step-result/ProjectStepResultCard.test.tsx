@@ -85,23 +85,30 @@ describe("ProjectStepResultCard", () => {
       padding: "4px",
     });
     expect(inputTab).toHaveStyle({
-      height: "32px",
-      paddingBlock: "6px",
-      paddingInline: "12px",
+      height: "var(--sd-sizes-8)",
     });
     expect(previewTab).toHaveStyle({
-      height: "32px",
-      paddingBlock: "6px",
-      paddingInline: "12px",
+      height: "var(--sd-sizes-8)",
     });
     inputTab.setAttribute("data-focus-visible", "");
     expect(inputTab).toHaveStyle({
       outline: "2px solid",
       outlineOffset: "2px",
     });
-    expect(
-      tabList.querySelector('[data-part="indicator"]'),
-    ).toBeInTheDocument();
+    const indicator = tabList.querySelector('[data-part="indicator"]');
+
+    if (!indicator) {
+      throw new Error("선택된 탭의 배경을 찾을 수 없습니다.");
+    }
+
+    expect(indicator).toBeInTheDocument();
+    const indicatorStyle = window.getComputedStyle(indicator);
+
+    expect(indicatorStyle.background).toBe("var(--sd-colors-white)");
+    expect(indicatorStyle.borderWidth).toBe("1px");
+    expect(indicatorStyle.borderStyle).toBe("solid");
+    expect(indicatorStyle.borderRadius).toBe("var(--sd-radii-full)");
+    expect(indicatorStyle.boxShadow).toBe("0px 1px 2px rgba(0,0,0,0.05)");
   });
 
   it("미리보기 화면을 입력 화면보다 낮게 줄이지 않는다", async () => {

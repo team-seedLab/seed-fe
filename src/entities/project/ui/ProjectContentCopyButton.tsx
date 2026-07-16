@@ -2,6 +2,11 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 
 import { CopyIcon } from "@/shared";
 
+import {
+  PROJECT_CONTENT_CONTROL_BASE_STYLE,
+  PROJECT_CONTENT_CONTROL_SURFACE_STYLE,
+} from "./project-content-control-style";
+
 type Props = {
   copied: boolean;
   rounded?: boolean;
@@ -15,13 +20,10 @@ export const ProjectContentCopyButton = ({
 }: Props) => {
   return (
     <Button
-      bg="white"
-      border="1px solid"
-      borderColor="neutral.50"
+      {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
+      {...PROJECT_CONTENT_CONTROL_SURFACE_STYLE}
       borderRadius={rounded ? "full" : "lg"}
-      boxShadow="0px 1px 2px 0px rgba(0,0,0,0.05)"
       cursor="pointer"
-      h={8}
       onClick={onCopy}
       px={{ base: 3, md: "13px" }}
       type="button"
