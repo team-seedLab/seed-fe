@@ -5,7 +5,6 @@ import { renderWithProviders } from "@/test/test-utils";
 
 import { UploadStepHeaderSection } from "./UploadStepHeaderSection";
 
-const goToPrevStepMock = vi.fn();
 const goToStepMock = vi.fn();
 
 vi.mock("../../hooks", async () => {
@@ -15,7 +14,6 @@ vi.mock("../../hooks", async () => {
   return {
     ...actual,
     useUploadStepNavigation: () => ({
-      goToPrevStep: goToPrevStepMock,
       goToStep: goToStepMock,
     }),
     useUploadStepProject: () => ({
@@ -36,7 +34,6 @@ vi.mock("../../hooks", async () => {
 
 describe("UploadStepHeaderSection", () => {
   beforeEach(() => {
-    goToPrevStepMock.mockReset();
     goToStepMock.mockReset();
   });
 

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
 
-import { DYNAMIC_ROUTE_PATHS, ROUTE_PATHS } from "@/shared";
+import { DYNAMIC_ROUTE_PATHS } from "@/shared";
 
 type Params = {
   projectId: string;
@@ -9,7 +9,6 @@ type Params = {
 };
 
 type Result = {
-  goToPrevStep: () => void;
   goToStep: (step: number) => void;
 };
 
@@ -18,15 +17,6 @@ export const useUploadStepNavigation = ({
   stepNum,
 }: Params): Result => {
   const navigate = useNavigate();
-
-  const goToPrevStep = useCallback(() => {
-    if (stepNum <= 1) {
-      navigate(ROUTE_PATHS.FILE_UPLOAD);
-      return;
-    }
-
-    navigate(DYNAMIC_ROUTE_PATHS.UPLOAD_STEP(projectId, stepNum - 1));
-  }, [navigate, projectId, stepNum]);
 
   const goToStep = useCallback(
     (step: number) => {
@@ -39,5 +29,5 @@ export const useUploadStepNavigation = ({
     [navigate, projectId, stepNum],
   );
 
-  return { goToPrevStep, goToStep };
+  return { goToStep };
 };
