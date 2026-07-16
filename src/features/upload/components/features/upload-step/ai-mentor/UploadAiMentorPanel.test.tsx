@@ -109,6 +109,62 @@ describe("UploadAiMentorPanel", () => {
     expect(composer.parentElement).toHaveStyle({ minHeight: "95px" });
   });
 
+  it("질문 내용이 최대 높이를 넘으면 입력창 내부를 스크롤한다", async () => {
+    const getComputedStyle = window.getComputedStyle.bind(window);
+    const getComputedStyleSpy = vi
+      .spyOn(window, "getComputedStyle")
+      .mockImplementation((element, pseudoElement) => {
+        const style = getComputedStyle(element, pseudoElement);
+
+        if (!(element instanceof HTMLTextAreaElement)) {
+          return style;
+        }
+
+        return new Proxy(style, {
+          get(target, property) {
+            const textareaStyle = {
+              borderBottomWidth: "0px",
+              borderTopWidth: "0px",
+              boxSizing: "border-box",
+              maxHeight: "360px",
+              overflowY: "hidden",
+            } as const;
+
+            if (property in textareaStyle) {
+              return textareaStyle[property as keyof typeof textareaStyle];
+            }
+
+            const value = Reflect.get(target, property, target);
+
+            return typeof value === "function" ? value.bind(target) : value;
+          },
+        });
+      });
+
+    try {
+      renderWithProviders(<UploadAiMentorPanelTestHarness onSend={vi.fn()} />);
+
+      const composer = screen.getByRole<HTMLTextAreaElement>("textbox", {
+        name: "AI 멘토에게 질문하기",
+      });
+      Object.defineProperty(composer, "scrollHeight", {
+        configurable: true,
+        value: 420,
+      });
+
+      fireEvent.input(composer, {
+        target: { value: "최대 높이를 넘는 여러 줄의 AI 멘토 질문" },
+      });
+
+      await waitFor(() => {
+        expect(composer.style.height).toBe("360px");
+      });
+      expect(composer.style.overflowY).toBe("scroll");
+    } finally {
+      getComputedStyleSpy.mockRestore();
+    }
+  });
+
   it("빈 대화에서 질문을 입력하고 Enter로 전송한다", () => {
     const onSend = vi.fn();
     renderWithProviders(<UploadAiMentorPanelTestHarness onSend={onSend} />);
