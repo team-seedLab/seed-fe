@@ -35,6 +35,7 @@ beforeAll(() => {
 afterEach(() => {
   cleanup();
   server.resetHandlers();
+  localStorage.clear();
   sessionStorage.clear();
   useUserInfoStore.setState({
     userInfo: null,
