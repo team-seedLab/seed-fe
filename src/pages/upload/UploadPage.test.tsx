@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUploadFlowStore } from "@/entities";
-import { ROUTE_PATHS } from "@/shared";
+import { ROUTE_PATHS, toaster } from "@/shared";
 import { createApiSuccessResponse } from "@/test/msw/handlers";
 import { server } from "@/test/msw/server";
 import { renderWithProviders } from "@/test/test-utils";
@@ -26,6 +26,10 @@ describe("UploadPage", () => {
   beforeEach(() => {
     navigateMock.mockReset();
     useUploadFlowStore.getState().reset();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("프로젝트 제목과 세 가지 사용자 의도 입력란을 표시한다", () => {
@@ -79,6 +83,10 @@ describe("UploadPage", () => {
   });
 
   it("PDF 파일은 최대 두 개까지만 추가한다", () => {
+    const createToastSpy = vi
+      .spyOn(toaster, "create")
+      .mockReturnValue("file-count-warning");
+
     renderWithProviders(<UploadPage />);
 
     fireEvent.change(screen.getByLabelText("참고자료 파일 선택"), {
@@ -104,6 +112,11 @@ describe("UploadPage", () => {
     expect(
       screen.queryByRole("button", { name: "참고자료 추가" }),
     ).not.toBeInTheDocument();
+    expect(createToastSpy).toHaveBeenCalledWith({
+      type: "warning",
+      description:
+        "최대 2개까지만 업로드할 수 있어 일부 파일은 제외되었습니다.",
+    });
   });
 
   it("입력한 사용자 의도를 프로젝트 생성 API에 전달한다", async () => {
