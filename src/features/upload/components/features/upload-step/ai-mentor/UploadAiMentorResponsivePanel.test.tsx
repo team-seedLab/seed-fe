@@ -1,5 +1,5 @@
 import { fireEvent, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
 
@@ -18,8 +18,15 @@ const resizeProps = {
 };
 
 describe("UploadAiMentorResponsivePanel", () => {
-  it("분할 화면에서는 크기 조절 경계와 AI 패널을 함께 표시한다", () => {
+  beforeEach(() => {
+    resizeProps.onResizeKeyDown.mockClear();
+    resizeProps.onResizePointerCancel.mockClear();
     resizeProps.onResizePointerDown.mockClear();
+    resizeProps.onResizePointerMove.mockClear();
+    resizeProps.onResizePointerUp.mockClear();
+  });
+
+  it("분할 화면에서는 크기 조절 경계와 AI 패널을 함께 표시한다", () => {
     renderWithProviders(
       <UploadAiMentorResponsivePanel
         {...resizeProps}
