@@ -63,11 +63,7 @@ export const UploadStepContentSection = ({
       borderRadius={{ base: "3xl", md: "4xl" }}
       overflow="hidden"
     >
-      <VStack
-        align="flex-start"
-        gap={{ base: 6, md: 8 }}
-        p={{ base: 4, md: 12 }}
-      >
+      <VStack align="flex-start" gap={{ base: 6, md: 8 }}>
         <VStack align="flex-start" gap={{ base: 2, md: "11px" }} w="full">
           <Text color="seed" fontSize="xs" fontWeight="bold">
             Step {stepNum}
