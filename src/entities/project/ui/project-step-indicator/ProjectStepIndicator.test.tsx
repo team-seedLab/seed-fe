@@ -83,4 +83,37 @@ describe("ProjectStepIndicator", () => {
       screen.queryByRole("button", { name: "목차별 단락 초안 분할 생성" }),
     ).not.toBeInTheDocument();
   });
+
+  it("각 단계의 중앙에서 다음 단계의 중앙까지 연결선을 표시한다", () => {
+    const { container } = renderWithProviders(
+      <ProjectStepIndicator activeStep={1} stepCodes={STEP_CODES} />,
+    );
+
+    const connectors = container.querySelectorAll('[data-part="connector"]');
+
+    expect(connectors).toHaveLength(STEP_CODES.length - 1);
+    connectors.forEach((connector) => {
+      expect(connector).toHaveStyle({
+        left: "50%",
+        position: "absolute",
+        width: "100%",
+      });
+    });
+  });
+
+  it("양쪽 단계가 모두 활성 상태인 연결선만 활성화한다", () => {
+    const { container } = renderWithProviders(
+      <ProjectStepIndicator
+        activeStep={2}
+        completedStepCodes={["constraint_analysis"]}
+        stepCodes={STEP_CODES}
+      />,
+    );
+
+    const connectorStates = Array.from(
+      container.querySelectorAll('[data-part="connector"]'),
+    ).map((connector) => connector.getAttribute("data-state"));
+
+    expect(connectorStates).toEqual(["active", "inactive"]);
+  });
 });

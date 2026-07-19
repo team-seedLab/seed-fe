@@ -2,6 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 
 import { ROADMAP_STEP_NAMES } from "../../model/constants";
 
+import { ProjectStepIndicatorConnector } from "./ProjectStepIndicatorConnector";
 import { ProjectStepIndicatorItem } from "./ProjectStepIndicatorItem";
 
 type Props = {
@@ -20,10 +21,9 @@ export const ProjectStepIndicator = ({
   onStepSelect,
 }: Props) => {
   return (
-    <Box overflowX={{ base: "auto", md: "visible" }} w="full">
+    <Box overflowX="auto" w="full">
       <Flex
         align="flex-start"
-        justify={{ base: "flex-start", md: "space-between" }}
         maxW={{ base: "none", md: "672px" }}
         mx={{ base: 0, md: "auto" }}
         px={{ base: 4, md: 0 }}
@@ -33,14 +33,37 @@ export const ProjectStepIndicator = ({
         {stepCodes.map((code, index) => {
           const step = index + 1;
           const isLast = index === stepCodes.length - 1;
+          const isActive = step === activeStep;
+          const isCompleted = completedStepCodes.includes(code);
+          const isCurrentStepActivated = isActive || isCompleted;
+          const nextCode = stepCodes[index + 1];
+          const isNextStepActive =
+            nextCode !== undefined && step + 1 === activeStep;
+          const isNextStepCompleted =
+            nextCode !== undefined && completedStepCodes.includes(nextCode);
+          const isNextStepActivated = isNextStepActive || isNextStepCompleted;
           const isSelectable =
             !selectableStepCodes || selectableStepCodes.includes(code);
 
           return (
-            <Flex align="flex-start" flexShrink={0} key={code} role="listitem">
+            <Flex
+              align="flex-start"
+              flex={{ base: "0 0 112px", md: "1 1 0" }}
+              justify="center"
+              key={code}
+              minW={{ base: "112px", md: "96px" }}
+              position="relative"
+              role="listitem"
+            >
+              {!isLast && (
+                <ProjectStepIndicatorConnector
+                  isActive={isCurrentStepActivated && isNextStepActivated}
+                />
+              )}
+
               <ProjectStepIndicatorItem
-                isActive={step === activeStep}
-                isCompleted={completedStepCodes.includes(code)}
+                isActive={isActive}
+                isCompleted={isCompleted}
                 step={step}
                 stepName={ROADMAP_STEP_NAMES[code] ?? code}
                 onSelect={
@@ -49,17 +72,6 @@ export const ProjectStepIndicator = ({
                     : undefined
                 }
               />
-
-              {!isLast && (
-                <Box
-                  alignSelf="flex-start"
-                  bg="neutral.100"
-                  flexShrink={0}
-                  h="2px"
-                  mt={{ base: "19px", md: "23px" }}
-                  w={{ base: "24px", md: "48px" }}
-                />
-              )}
             </Flex>
           );
         })}
