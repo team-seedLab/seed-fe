@@ -35,10 +35,13 @@ export const ProjectStepIndicator = ({
           const isLast = index === stepCodes.length - 1;
           const isActive = step === activeStep;
           const isCompleted = completedStepCodes.includes(code);
+          const isCurrentStepActivated = isActive || isCompleted;
           const nextCode = stepCodes[index + 1];
-          const isNextStepActivated =
-            nextCode !== undefined &&
-            (step + 1 === activeStep || completedStepCodes.includes(nextCode));
+          const isNextStepActive =
+            nextCode !== undefined && step + 1 === activeStep;
+          const isNextStepCompleted =
+            nextCode !== undefined && completedStepCodes.includes(nextCode);
+          const isNextStepActivated = isNextStepActive || isNextStepCompleted;
           const isSelectable =
             !selectableStepCodes || selectableStepCodes.includes(code);
 
@@ -54,7 +57,7 @@ export const ProjectStepIndicator = ({
             >
               {!isLast && (
                 <ProjectStepIndicatorConnector
-                  isActive={(isActive || isCompleted) && isNextStepActivated}
+                  isActive={isCurrentStepActivated && isNextStepActivated}
                 />
               )}
 
