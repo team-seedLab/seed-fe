@@ -3,13 +3,13 @@ import { Text, VStack } from "@chakra-ui/react";
 import {
   type MentorProjectDetailResponse,
   ProjectStepIndicator,
-  useCompleteMentorProjectReview,
 } from "@/entities";
 
+import { SAMPLE_MENTOR_PROJECT_AI_DEPENDENCY } from "../constants";
 import { useProjectDetailStepSelection } from "../hooks";
 
+import { MentorProjectAiDependencySection } from "./MentorProjectAiDependencySection";
 import { MentorProjectInitialIntentSection } from "./MentorProjectInitialIntentSection";
-import { MentorProjectReviewSection } from "./MentorProjectReviewSection";
 import { MentorProjectStepRecord } from "./MentorProjectStepRecord";
 
 type Props = {
@@ -25,16 +25,11 @@ export const MentorProjectDetailSection = ({ project }: Props) => {
     selectedStep,
     selectStep,
   } = useProjectDetailStepSelection(project.steps);
-  const { isPending: isCompletingReview, mutate: completeReview } =
-    useCompleteMentorProjectReview(project.projectId);
 
   return (
     <VStack align="flex-start" gap={{ base: 10, md: 16 }} w="full">
-      <MentorProjectReviewSection
-        isCompleting={isCompletingReview}
-        reviewedAt={project.reviewedAt}
-        status={project.reviewStatus}
-        onComplete={completeReview}
+      <MentorProjectAiDependencySection
+        metrics={SAMPLE_MENTOR_PROJECT_AI_DEPENDENCY}
       />
 
       <MentorProjectInitialIntentSection
@@ -44,14 +39,6 @@ export const MentorProjectDetailSection = ({ project }: Props) => {
       />
 
       <VStack align="flex-start" gap={{ base: 6, md: 8 }} w="full">
-        <Text
-          as="h2"
-          color="neutral.900"
-          fontSize={{ base: "xl", md: "2xl" }}
-          fontWeight="bold"
-        >
-          단계별 기록
-        </Text>
         <ProjectStepIndicator
           activeStep={activeStep}
           completedStepCodes={completedStepCodes}

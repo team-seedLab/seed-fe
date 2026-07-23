@@ -1,25 +1,10 @@
-import { fireEvent, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 import type { MentorProjectDetailResponse } from "@/entities";
 import { renderWithProviders } from "@/test/test-utils";
 
 import { MentorProjectDetailSection } from "./MentorProjectDetailSection";
-
-const completeReviewMock = vi.fn();
-
-vi.mock("@/entities", async () => {
-  const actual =
-    await vi.importActual<typeof import("@/entities")>("@/entities");
-
-  return {
-    ...actual,
-    useCompleteMentorProjectReview: () => ({
-      isPending: false,
-      mutate: completeReviewMock,
-    }),
-  };
-});
 
 const PROJECT: MentorProjectDetailResponse = {
   projectId: "project-1",
@@ -31,8 +16,6 @@ const PROJECT: MentorProjectDetailResponse = {
   desiredOutcome: "A4 3장 분량의 보고서",
   keyFocus: "사용자 경험 중심",
   requiredElements: "비교 표와 참고 문헌",
-  reviewStatus: "REVIEWING",
-  reviewedAt: null,
   createdAt: "2026-07-08T14:20:00",
   updatedAt: "2026-07-10T14:20:00",
   completedAt: "2026-07-10T14:20:00",
@@ -55,7 +38,21 @@ const PROJECT: MentorProjectDetailResponse = {
       result: {
         contentMarkdown: "# 1단계 학습 결과",
       },
-      selfCheck: null,
+      selfCheck: {
+        checkItems: [
+          {
+            key: "core-learning",
+            question: "이번 단계에서 이해한 핵심 내용은 무엇인가요?",
+            answer: "자료의 신뢰성과 과제의 제약사항을 함께 확인해야 합니다.",
+          },
+          {
+            key: "remaining-question",
+            question: "추가로 확인해야 할 내용은 무엇인가요?",
+            answer: null,
+          },
+        ],
+        submittedAt: "2026-07-09T10:00:00",
+      },
     },
     {
       stepId: "step-2",
@@ -83,22 +80,57 @@ const PROJECT: MentorProjectDetailResponse = {
 };
 
 describe("MentorProjectDetailSection", () => {
-  beforeEach(() => {
-    completeReviewMock.mockReset();
-  });
-
-  it("초기 의도와 검토 상태, 첫 번째 단계 기록을 표시한다", () => {
+  it("멘토가 검토할 프로젝트 정보와 첫 번째 단계 기록을 표시한다", () => {
     renderWithProviders(<MentorProjectDetailSection project={PROJECT} />);
 
+    const aiDependencyHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "AI 의존도 분석",
+    });
+    const initialIntentHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "초기 의도",
+    });
+
+    expect(aiDependencyHeading).toBeInTheDocument();
+    expect(initialIntentHeading).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "초기 의도" }),
-    ).toBeInTheDocument();
+      aiDependencyHeading.compareDocumentPosition(initialIntentHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(screen.getByText("A4 3장 분량의 보고서")).toBeInTheDocument();
-    expect(screen.getByText("검토 중")).toBeInTheDocument();
-    expect(screen.getByText("수정 프롬프트")).toBeInTheDocument();
+    expect(screen.getByText("78")).toBeInTheDocument();
+    expect(screen.getByText("65%")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 3, name: "1단계 학습 결과" }),
+      screen.getByRole("progressbar", { name: "AI 의존도" }),
+    ).toHaveAttribute("aria-valuenow", "35");
+    expect(screen.getByText("수정 프롬프트")).toBeInTheDocument();
+    const resultHeading = screen.getByRole("heading", {
+      level: 3,
+      name: "1단계 학습 결과",
+    });
+    const selfCheckHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "이해 확인 및 검증",
+    });
+
+    expect(resultHeading).toBeInTheDocument();
+    expect(
+      screen.getByText("이번 단계에서 이해한 핵심 내용은 무엇인가요?"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "자료의 신뢰성과 과제의 제약사항을 함께 확인해야 합니다.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("작성된 답변이 없습니다.")).toBeInTheDocument();
+    expect(
+      resultHeading.compareDocumentPosition(selfCheckHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("heading", { name: "단계별 기록" }),
+    ).not.toBeInTheDocument();
   });
 
   it("진행 중인 단계는 선택하고 Pending 단계는 선택하지 못한다", () => {
@@ -113,38 +145,12 @@ describe("MentorProjectDetailSection", () => {
       screen.getByText("등록된 학습 결과가 없습니다."),
     ).toBeInTheDocument();
     expect(
+      screen.getByText("제출된 Self-Check가 없습니다."),
+    ).toBeInTheDocument();
+    expect(
       screen.queryByRole("button", {
         name: "목차별 단락 초안 분할 생성",
       }),
-    ).not.toBeInTheDocument();
-  });
-
-  it("확인창을 거쳐 검토 완료를 요청한다", async () => {
-    renderWithProviders(<MentorProjectDetailSection project={PROJECT} />);
-
-    fireEvent.click(screen.getByRole("button", { name: "검토 완료" }));
-
-    const dialog = await screen.findByRole("dialog");
-    fireEvent.click(within(dialog).getByRole("button", { name: "검토 완료" }));
-
-    expect(completeReviewMock).toHaveBeenCalledOnce();
-  });
-
-  it("검토 완료 상태와 검토 날짜를 읽기 전용으로 표시한다", () => {
-    renderWithProviders(
-      <MentorProjectDetailSection
-        project={{
-          ...PROJECT,
-          reviewStatus: "REVIEWED",
-          reviewedAt: "2026-07-15T10:00:00",
-        }}
-      />,
-    );
-
-    expect(screen.getByText("검토 완료")).toBeInTheDocument();
-    expect(screen.getByText("2026.07.15에 검토했습니다.")).toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "검토 완료" }),
     ).not.toBeInTheDocument();
   });
 });

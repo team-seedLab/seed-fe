@@ -7,6 +7,8 @@ import {
 } from "@/entities";
 import { useClipboardCopy } from "@/shared";
 
+import { MentorProjectSelfCheckSection } from "./MentorProjectSelfCheckSection";
+
 type Props = {
   step: MentorProjectStepDetail;
 };
@@ -80,6 +82,8 @@ export const MentorProjectStepRecord = ({ step }: Props) => {
           void copyResult(step.result?.contentMarkdown ?? "");
         }}
       />
+
+      <MentorProjectSelfCheckSection selfCheck={step.selfCheck} />
     </VStack>
   );
 };
