@@ -56,19 +56,19 @@ export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
               minH={32}
               p={6}
             >
-              <Text color="neutral.700" fontSize="sm" fontWeight="semibold">
+              <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
                 주도성 점수
               </Text>
               <Flex align="baseline" gap={1}>
                 <Text
-                  color="seed.600"
+                  color="seed"
                   fontSize={{ base: "3xl", md: "4xl" }}
                   fontWeight="bold"
                   lineHeight="1.2"
                 >
                   {metrics.initiativeScore}
                 </Text>
-                <Text color="neutral.700" fontSize="md">
+                <Text color="neutral.600" fontSize="md">
                   /100
                 </Text>
               </Flex>
@@ -82,7 +82,7 @@ export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
               minH={32}
               p={6}
             >
-              <Text color="neutral.700" fontSize="sm" fontWeight="semibold">
+              <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
                 직접 수정 비율
               </Text>
               <Text
@@ -105,7 +105,7 @@ export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
             p={6}
             mt={{ base: 3, md: 5 }}
           >
-            <Text color="neutral.700" fontSize="sm" textAlign="center">
+            <Text color="neutral.500" fontSize="sm" textAlign="center">
               AI 의존도 분석 결과가 아직 생성되지 않았습니다.
             </Text>
           </Flex>
