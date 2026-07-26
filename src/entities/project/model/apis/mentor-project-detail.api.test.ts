@@ -24,6 +24,14 @@ const MENTOR_PROJECT_DETAIL_RESPONSE = {
   createdAt: "2026-07-14T10:00:00",
   updatedAt: "2026-07-14T11:00:00",
   completedAt: "2026-07-14T12:00:00",
+  dependencyAnalysis: {
+    dependencyAnalysisId: "analysis-1",
+    initiativeScore: 78,
+    userEditRatio: 65,
+    aiDependencyRatio: 35,
+    createdAt: "2026-07-14T12:00:00",
+    updatedAt: "2026-07-14T12:00:00",
+  },
   steps: [],
 };
 
@@ -43,6 +51,11 @@ describe("mentor project detail API", () => {
       projectId: "project-1",
       studentNickname: "김멘티",
       reviewStatus: "REVIEWING",
+      dependencyAnalysis: {
+        initiativeScore: 78,
+        userEditRatio: 65,
+        aiDependencyRatio: 35,
+      },
     });
   });
 

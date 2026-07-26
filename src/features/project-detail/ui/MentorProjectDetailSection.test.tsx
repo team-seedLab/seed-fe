@@ -16,9 +16,19 @@ const PROJECT: MentorProjectDetailResponse = {
   desiredOutcome: "A4 3장 분량의 보고서",
   keyFocus: "사용자 경험 중심",
   requiredElements: "비교 표와 참고 문헌",
+  reviewStatus: "REVIEWING",
+  reviewedAt: null,
   createdAt: "2026-07-08T14:20:00",
   updatedAt: "2026-07-10T14:20:00",
   completedAt: "2026-07-10T14:20:00",
+  dependencyAnalysis: {
+    dependencyAnalysisId: "analysis-1",
+    initiativeScore: 78,
+    userEditRatio: 65,
+    aiDependencyRatio: 35,
+    createdAt: "2026-07-10T14:20:00",
+    updatedAt: "2026-07-10T14:20:00",
+  },
   steps: [
     {
       stepId: "step-1",

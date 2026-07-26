@@ -64,6 +64,7 @@ describe("ProjectDetailPage", () => {
     useGetMentorProjectDetailMock.mockReturnValue({
       data: {
         completedAt: "2026-07-10T14:20:00",
+        dependencyAnalysis: null,
         desiredOutcome: null,
         keyFocus: null,
         projectId: "mentor-project-1",

@@ -19,6 +19,14 @@ describe("mapMentorProjectDetailResponse", () => {
       createdAt: "2026-07-14T10:00:00",
       updatedAt: "2026-07-14T11:00:00",
       completedAt: "2026-07-14T12:00:00",
+      dependencyAnalysis: {
+        dependencyAnalysisId: "analysis-1",
+        initiativeScore: 78,
+        userEditRatio: 65,
+        aiDependencyRatio: 35,
+        createdAt: "2026-07-14T12:00:00",
+        updatedAt: "2026-07-14T12:00:00",
+      },
       steps: [
         {
           stepId: "step-1",
@@ -67,6 +75,12 @@ describe("mapMentorProjectDetailResponse", () => {
       studentId: "student-1",
       status: "COMPLETED",
       reviewStatus: "REVIEWING",
+      dependencyAnalysis: {
+        dependencyAnalysisId: "analysis-1",
+        initiativeScore: 78,
+        userEditRatio: 65,
+        aiDependencyRatio: 35,
+      },
       steps: [
         {
           stepCode: "constraint_analysis",
@@ -104,6 +118,7 @@ describe("mapMentorProjectDetailResponse", () => {
       createdAt: "2026-07-14T10:00:00",
       updatedAt: "2026-07-14T11:00:00",
       completedAt: null,
+      dependencyAnalysis: null,
       steps: [
         {
           stepId: "step-1",
@@ -144,6 +159,7 @@ describe("mapMentorProjectDetailResponse", () => {
       createdAt: "2026-07-14T10:00:00",
       updatedAt: "2026-07-14T11:00:00",
       completedAt: null,
+      dependencyAnalysis: null,
       steps: [
         {
           stepId: "step-1",
@@ -162,5 +178,6 @@ describe("mapMentorProjectDetailResponse", () => {
     });
 
     expect(response.steps[0].result?.contentMarkdown).toBe("");
+    expect(response.dependencyAnalysis).toBeNull();
   });
 });
