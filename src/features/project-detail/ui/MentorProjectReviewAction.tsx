@@ -22,16 +22,16 @@ export const MentorProjectReviewAction = ({ projectId, status }: Props) => {
   return (
     <>
       <Button
-        bg={isReviewed ? "neutral.100" : "seed"}
+        bg={isReviewed ? "neutral.100" : "seed.700"}
         borderRadius="xl"
-        color={isReviewed ? "neutral.600" : "white"}
+        color={isReviewed ? "neutral.700" : "white"}
         disabled={isReviewed || isPending}
         fontSize="sm"
         fontWeight="bold"
         minH={10}
         px={5}
         _disabled={{ cursor: "default", opacity: isReviewed ? 1 : 0.5 }}
-        _hover={{ bg: isReviewed ? "neutral.100" : "seed.hover" }}
+        _hover={{ bg: isReviewed ? "neutral.100" : "seed.800" }}
         onClick={() => setIsConfirmOpen(true)}
       >
         {isReviewed ? "검토 완료됨" : isPending ? "처리 중" : "검토 완료"}

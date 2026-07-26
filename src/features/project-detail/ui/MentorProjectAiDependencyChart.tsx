@@ -18,7 +18,7 @@ export const MentorProjectAiDependencyChart = ({ value }: Props) => {
         }}
       >
         <ProgressCircle.Track stroke="neutral.100" />
-        <ProgressCircle.Range stroke="seed" />
+        <ProgressCircle.Range stroke="seed.600" />
       </ProgressCircle.Circle>
 
       <VStack inset={0} justify="center" position="absolute" gap={1}>

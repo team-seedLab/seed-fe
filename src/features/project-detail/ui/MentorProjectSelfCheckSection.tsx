@@ -46,7 +46,7 @@ export const MentorProjectSelfCheckSection = ({ selfCheck }: Props) => {
                 </Text>
                 <Text
                   as="dd"
-                  color={normalizedAnswer ? "neutral.900" : "neutral.400"}
+                  color={normalizedAnswer ? "neutral.900" : "neutral.700"}
                   fontSize="sm"
                   m={0}
                   whiteSpace="pre-wrap"
@@ -63,7 +63,7 @@ export const MentorProjectSelfCheckSection = ({ selfCheck }: Props) => {
           align="center"
           bg="neutral.50"
           borderRadius="xl"
-          color="neutral.400"
+          color="neutral.700"
           minH={32}
           p={{ base: 4, md: 6 }}
         >
