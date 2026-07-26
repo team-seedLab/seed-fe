@@ -6,7 +6,7 @@ import { renderWithProviders } from "@/test/test-utils";
 
 import { MentorProjectDetailSection } from "./MentorProjectDetailSection";
 
-const PROJECT: MentorProjectDetailResponse = {
+const COMPLETED_PROJECT: MentorProjectDetailResponse = {
   projectId: "project-1",
   studentId: "student-1",
   studentNickname: "김멘티",
@@ -69,6 +69,82 @@ const PROJECT: MentorProjectDetailResponse = {
       stepCode: "argument_structuring",
       stepName: "핵심 논거 구조화",
       stepOrder: 2,
+      status: "COMPLETED",
+      completedAt: "2026-07-09T12:00:00",
+      prompt: {
+        providedPromptSnapshot: "2단계 원본 프롬프트",
+        editedPrompt: null,
+        finalPrompt: "2단계 원본 프롬프트",
+        addedCount: 0,
+        removedCount: 0,
+        diffJson: null,
+      },
+      result: {
+        contentMarkdown: "# 2단계 학습 결과",
+      },
+      selfCheck: {
+        checkItems: [],
+        submittedAt: "2026-07-09T12:00:00",
+      },
+    },
+    {
+      stepId: "step-3",
+      stepCode: "draft_generation",
+      stepName: "초안 생성",
+      stepOrder: 3,
+      status: "COMPLETED",
+      completedAt: "2026-07-10T14:20:00",
+      prompt: {
+        providedPromptSnapshot: "3단계 원본 프롬프트",
+        editedPrompt: null,
+        finalPrompt: "3단계 원본 프롬프트",
+        addedCount: 0,
+        removedCount: 0,
+        diffJson: null,
+      },
+      result: {
+        contentMarkdown: "# 3단계 학습 결과",
+      },
+      selfCheck: {
+        checkItems: [],
+        submittedAt: "2026-07-10T14:20:00",
+      },
+    },
+    {
+      stepId: "step-4",
+      stepCode: "report_revision",
+      stepName: "교정 및 검토",
+      stepOrder: 4,
+      status: "COMPLETED",
+      completedAt: "2026-07-10T14:20:00",
+      prompt: {
+        providedPromptSnapshot: "4단계 원본 프롬프트",
+        editedPrompt: null,
+        finalPrompt: "4단계 원본 프롬프트",
+        addedCount: 0,
+        removedCount: 0,
+        diffJson: null,
+      },
+      result: {
+        contentMarkdown: "# 4단계 학습 결과",
+      },
+      selfCheck: {
+        checkItems: [],
+        submittedAt: "2026-07-10T14:20:00",
+      },
+    },
+  ],
+};
+
+const IN_PROGRESS_PROJECT: MentorProjectDetailResponse = {
+  ...COMPLETED_PROJECT,
+  status: "IN_PROGRESS",
+  completedAt: null,
+  dependencyAnalysis: null,
+  steps: [
+    COMPLETED_PROJECT.steps[0],
+    {
+      ...COMPLETED_PROJECT.steps[1],
       status: "IN_PROGRESS",
       completedAt: null,
       prompt: null,
@@ -76,10 +152,15 @@ const PROJECT: MentorProjectDetailResponse = {
       selfCheck: null,
     },
     {
-      stepId: "step-3",
-      stepCode: "draft_generation",
-      stepName: "초안 생성",
-      stepOrder: 3,
+      ...COMPLETED_PROJECT.steps[2],
+      status: "PENDING",
+      completedAt: null,
+      prompt: null,
+      result: null,
+      selfCheck: null,
+    },
+    {
+      ...COMPLETED_PROJECT.steps[3],
       status: "PENDING",
       completedAt: null,
       prompt: null,
@@ -91,7 +172,9 @@ const PROJECT: MentorProjectDetailResponse = {
 
 describe("MentorProjectDetailSection", () => {
   it("멘토가 검토할 프로젝트 정보와 첫 번째 단계 기록을 표시한다", () => {
-    renderWithProviders(<MentorProjectDetailSection project={PROJECT} />);
+    renderWithProviders(
+      <MentorProjectDetailSection project={COMPLETED_PROJECT} />,
+    );
 
     const aiDependencyHeading = screen.getByRole("heading", {
       level: 2,
@@ -104,6 +187,9 @@ describe("MentorProjectDetailSection", () => {
 
     expect(aiDependencyHeading).toBeInTheDocument();
     expect(initialIntentHeading).toBeInTheDocument();
+    expect(
+      screen.getByText(/AI 멘토 질문 사용량, 수정 프롬프트 재질문 비율/),
+    ).toBeInTheDocument();
     expect(
       aiDependencyHeading.compareDocumentPosition(initialIntentHeading) &
         Node.DOCUMENT_POSITION_FOLLOWING,
@@ -144,7 +230,9 @@ describe("MentorProjectDetailSection", () => {
   });
 
   it("진행 중인 단계는 선택하고 Pending 단계는 선택하지 못한다", () => {
-    renderWithProviders(<MentorProjectDetailSection project={PROJECT} />);
+    renderWithProviders(
+      <MentorProjectDetailSection project={IN_PROGRESS_PROJECT} />,
+    );
 
     fireEvent.click(
       screen.getByRole("button", { name: "핵심 논거 검색 및 구조화" }),
@@ -166,9 +254,7 @@ describe("MentorProjectDetailSection", () => {
 
   it("AI 의존도 분석 결과가 없으면 미생성 상태를 표시한다", () => {
     renderWithProviders(
-      <MentorProjectDetailSection
-        project={{ ...PROJECT, dependencyAnalysis: null }}
-      />,
+      <MentorProjectDetailSection project={IN_PROGRESS_PROJECT} />,
     );
 
     expect(
