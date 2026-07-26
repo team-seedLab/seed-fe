@@ -11,7 +11,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { getUserEntryRoutePath, useAuth, useUserInfoStore } from "@/entities";
+import {
+  USER_ROLE,
+  getUserEntryRoutePath,
+  useAuth,
+  useUserInfoStore,
+} from "@/entities";
 import { DoorOutIcon, FolderIcon, PersonIcon, ROUTE_PATHS } from "@/shared";
 
 import { HomeLogoLink } from "../home-logo-link";
@@ -23,6 +28,8 @@ export const Header = () => {
     return state.userInfo?.role ?? state.persistedProfile?.role;
   });
   const { logout, isAuthenticated } = useAuth();
+  const projectMenuLabel =
+    role === USER_ROLE.MENTOR ? "학생 리스트" : "내 프로젝트";
 
   const handleLogout = () => {
     logout();
@@ -125,7 +132,7 @@ export const Header = () => {
                           fontWeight="medium"
                           color="neutral.700"
                         >
-                          내 프로젝트
+                          {projectMenuLabel}
                         </Text>
                       </HStack>
                     </Menu.Item>
