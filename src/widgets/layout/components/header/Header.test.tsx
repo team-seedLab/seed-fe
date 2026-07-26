@@ -22,7 +22,7 @@ const renderHeader = (role: UserRole) => {
     userInfo: {
       userId: "user-1",
       nickname: "테스트 사용자",
-      profileUrl: null,
+      profileUrl: "",
       role,
     },
     persistedProfile: null,
