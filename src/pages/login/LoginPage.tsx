@@ -2,8 +2,8 @@ import { Box, Flex, VStack } from "@chakra-ui/react";
 
 import {
   LoginButtonSection,
-  LoginHelpSection,
   LoginTitleText,
+  MentorLoginEntrySection,
 } from "@/features";
 import { LOGIN_PAGE_SEO, Seo } from "@/shared";
 
@@ -31,7 +31,7 @@ export default function LoginPage() {
         >
           <LoginTitleText />
           <LoginButtonSection />
-          <LoginHelpSection />
+          <MentorLoginEntrySection />
         </VStack>
       </Flex>
     </Box>
