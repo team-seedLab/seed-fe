@@ -1,2 +1,2 @@
 export * from "./LoginButtonSection";
-export * from "./LoginHelpSection";
+export * from "./MentorLoginEntrySection";
