@@ -11,6 +11,7 @@ import {
 } from "@/entities";
 import {
   MentorProjectDetailSection,
+  MentorProjectReviewAction,
   ProjectDetailHeaderSection,
   ProjectDetailSection,
   getMentorProjectDetailErrorMessage,
@@ -83,7 +84,17 @@ export default function ProjectDetailPage() {
                 <Text color="neutral.600">{errorMessage}</Text>
               </Flex>
             ) : project ? (
-              <ProjectDetailHeaderSection project={project} />
+              <ProjectDetailHeaderSection
+                action={
+                  isMentor && mentorProjectQuery.data ? (
+                    <MentorProjectReviewAction
+                      projectId={mentorProjectQuery.data.projectId}
+                      status={mentorProjectQuery.data.reviewStatus}
+                    />
+                  ) : undefined
+                }
+                project={project}
+              />
             ) : (
               <Flex align="center" justify="center" minH={60} w="full">
                 <Text color="neutral.600">프로젝트 정보가 없습니다.</Text>

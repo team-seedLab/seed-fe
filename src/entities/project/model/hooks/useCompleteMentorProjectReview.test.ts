@@ -29,6 +29,7 @@ const PROJECT: MentorProjectDetailResponse = {
   createdAt: "2026-07-14T10:00:00",
   updatedAt: "2026-07-14T12:00:00",
   completedAt: "2026-07-14T12:00:00",
+  dependencyAnalysis: null,
   steps: [],
 };
 

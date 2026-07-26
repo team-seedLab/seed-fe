@@ -9,6 +9,7 @@ import {
 } from "./mentor-project-detail.mapper";
 
 export type {
+  MentorProjectDependencyAnalysis,
   MentorProjectDetailResponse,
   MentorProjectStepDetail,
 } from "./mentor-project-detail.mapper";

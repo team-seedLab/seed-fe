@@ -64,6 +64,7 @@ describe("ProjectDetailPage", () => {
     useGetMentorProjectDetailMock.mockReturnValue({
       data: {
         completedAt: "2026-07-10T14:20:00",
+        dependencyAnalysis: null,
         desiredOutcome: null,
         keyFocus: null,
         projectId: "mentor-project-1",
@@ -108,6 +109,9 @@ describe("ProjectDetailPage", () => {
     expect(screen.getByText("2026.07.08 - 2026.07.10")).toBeInTheDocument();
     expect(screen.getByText("완료됨")).toBeInTheDocument();
     expect(screen.getByText("멘토 프로젝트 리포트")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "검토 완료" }),
+    ).toBeInTheDocument();
     expect(useGetProjectDetailMock).toHaveBeenCalledWith(
       "mentor-project-1",
       false,
@@ -233,6 +237,9 @@ describe("ProjectDetailPage", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "멘티 프로젝트" }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /검토 완료/ }),
+    ).not.toBeInTheDocument();
     expect(useGetProjectDetailMock).toHaveBeenCalledWith(
       "mentor-project-1",
       true,

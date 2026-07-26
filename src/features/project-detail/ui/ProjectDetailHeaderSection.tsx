@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 
 import { type Project, ROADMAP_TYPE_LABEL } from "@/entities";
@@ -6,12 +8,13 @@ import { CheckCircleIcon } from "@/shared";
 import { formatProjectDetailPeriod } from "../utils";
 
 type Props = {
+  action?: ReactNode;
   project: Project & {
     completedAt: string | null;
   };
 };
 
-export const ProjectDetailHeaderSection = ({ project }: Props) => {
+export const ProjectDetailHeaderSection = ({ action, project }: Props) => {
   const isCompleted = project.status === "COMPLETED";
 
   return (
@@ -36,15 +39,30 @@ export const ProjectDetailHeaderSection = ({ project }: Props) => {
         {ROADMAP_TYPE_LABEL[project.roadmapType] ?? project.roadmapType}
       </Box>
 
-      <Text
-        as="h1"
-        color="neutral.900"
-        fontSize={{ base: "2xl", md: "3xl" }}
-        fontWeight="bold"
-        wordBreak="keep-all"
+      <Flex
+        align={{ base: "stretch", md: "center" }}
+        direction={{ base: "column", md: "row" }}
+        gap={3}
+        justify="space-between"
+        w="full"
       >
-        {project.title}
-      </Text>
+        <Text
+          as="h1"
+          color="neutral.900"
+          flex={1}
+          fontSize={{ base: "2xl", md: "3xl" }}
+          fontWeight="bold"
+          wordBreak="keep-all"
+        >
+          {project.title}
+        </Text>
+
+        {action && (
+          <Box alignSelf={{ base: "flex-end", md: "center" }} flexShrink={0}>
+            {action}
+          </Box>
+        )}
+      </Flex>
 
       <Flex
         align="center"

@@ -18,6 +18,15 @@ type MentorProjectStepResultApiResponse = {
   contentMarkdown: string | null;
 };
 
+type MentorProjectDependencyAnalysisApiResponse = {
+  dependencyAnalysisId: string;
+  initiativeScore: number;
+  userEditRatio: number;
+  aiDependencyRatio: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type MentorProjectStepSelfCheckItem = {
   key: string;
   question: string;
@@ -57,6 +66,7 @@ export type MentorProjectDetailApiResponse = {
   updatedAt: string;
   completedAt: string | null;
   steps: MentorProjectStepDetailApiResponse[];
+  dependencyAnalysis: MentorProjectDependencyAnalysisApiResponse | null;
 };
 
 export type MentorProjectStepPrompt = {
@@ -70,6 +80,15 @@ export type MentorProjectStepPrompt = {
 
 export type MentorProjectStepResult = {
   contentMarkdown: string;
+};
+
+export type MentorProjectDependencyAnalysis = {
+  dependencyAnalysisId: string;
+  initiativeScore: number;
+  userEditRatio: number;
+  aiDependencyRatio: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type MentorProjectStepDetail = {
@@ -95,9 +114,27 @@ export interface MentorProjectDetailResponse extends Project {
   updatedAt: string;
   completedAt: string | null;
   steps: MentorProjectStepDetail[];
+  dependencyAnalysis: MentorProjectDependencyAnalysis | null;
 }
 
 const normalizeStepCode = (stepCode: string) => stepCode.toLowerCase();
+
+const mapDependencyAnalysis = (
+  analysis: MentorProjectDependencyAnalysisApiResponse | null,
+): MentorProjectDependencyAnalysis | null => {
+  if (!analysis) {
+    return null;
+  }
+
+  return {
+    dependencyAnalysisId: analysis.dependencyAnalysisId,
+    initiativeScore: analysis.initiativeScore,
+    userEditRatio: analysis.userEditRatio,
+    aiDependencyRatio: analysis.aiDependencyRatio,
+    createdAt: analysis.createdAt,
+    updatedAt: analysis.updatedAt,
+  };
+};
 
 export const mapMentorProjectDetailResponse = (
   response: MentorProjectDetailApiResponse,
@@ -116,6 +153,7 @@ export const mapMentorProjectDetailResponse = (
   createdAt: response.createdAt,
   updatedAt: response.updatedAt,
   completedAt: response.completedAt,
+  dependencyAnalysis: mapDependencyAnalysis(response.dependencyAnalysis),
   steps: response.steps.map((step) => ({
     stepId: step.stepId,
     stepCode: normalizeStepCode(step.stepCode),
