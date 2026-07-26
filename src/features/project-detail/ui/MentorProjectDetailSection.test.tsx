@@ -163,4 +163,19 @@ describe("MentorProjectDetailSection", () => {
       }),
     ).not.toBeInTheDocument();
   });
+
+  it("AI 의존도 분석 결과가 없으면 미생성 상태를 표시한다", () => {
+    renderWithProviders(
+      <MentorProjectDetailSection
+        project={{ ...PROJECT, dependencyAnalysis: null }}
+      />,
+    );
+
+    expect(
+      screen.getByText("AI 의존도 분석 결과가 아직 생성되지 않았습니다."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("progressbar", { name: "AI 의존도" }),
+    ).not.toBeInTheDocument();
+  });
 });

@@ -1,11 +1,11 @@
 import { Flex, Grid, Text, VStack } from "@chakra-ui/react";
 
-import type { MentorProjectAiDependencyMetrics } from "../types";
+import type { MentorProjectDependencyAnalysis } from "@/entities";
 
 import { MentorProjectAiDependencyChart } from "./MentorProjectAiDependencyChart";
 
 type Props = {
-  metrics: MentorProjectAiDependencyMetrics;
+  metrics: MentorProjectDependencyAnalysis | null;
 };
 
 export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
@@ -42,61 +42,79 @@ export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
           보여줍니다. 결과물이 아닌 과정의 주도성을 확인하세요.
         </Text>
 
-        <Grid
-          gap={{ base: 3, md: 6 }}
-          pt={{ base: 3, md: 5 }}
-          templateColumns={{ base: "1fr", sm: "repeat(2, minmax(0, 1fr))" }}
-        >
-          <VStack
-            bg="neutral.50"
-            borderRadius="2xl"
-            gap={1.5}
-            justify="center"
-            minH={31}
-            p={6}
+        {metrics ? (
+          <Grid
+            gap={{ base: 3, md: 6 }}
+            pt={{ base: 3, md: 5 }}
+            templateColumns={{ base: "1fr", sm: "repeat(2, minmax(0, 1fr))" }}
           >
-            <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
-              주도성 점수
-            </Text>
-            <Flex align="baseline" gap={1}>
+            <VStack
+              bg="neutral.50"
+              borderRadius="2xl"
+              gap={1.5}
+              justify="center"
+              minH={31}
+              p={6}
+            >
+              <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
+                주도성 점수
+              </Text>
+              <Flex align="baseline" gap={1}>
+                <Text
+                  color="seed"
+                  fontSize={{ base: "3xl", md: "4xl" }}
+                  fontWeight="bold"
+                  lineHeight="1.2"
+                >
+                  {metrics.initiativeScore}
+                </Text>
+                <Text color="neutral.600" fontSize="md">
+                  /100
+                </Text>
+              </Flex>
+            </VStack>
+
+            <VStack
+              bg="neutral.50"
+              borderRadius="2xl"
+              gap={1.5}
+              justify="center"
+              minH={31}
+              p={6}
+            >
+              <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
+                직접 수정 비율
+              </Text>
               <Text
-                color="seed"
+                color="neutral.900"
                 fontSize={{ base: "3xl", md: "4xl" }}
                 fontWeight="bold"
                 lineHeight="1.2"
               >
-                {metrics.agencyScore}
+                {metrics.userEditRatio}%
               </Text>
-              <Text color="neutral.600" fontSize="md">
-                /100
-              </Text>
-            </Flex>
-          </VStack>
-
-          <VStack
+            </VStack>
+          </Grid>
+        ) : (
+          <Flex
+            align="center"
             bg="neutral.50"
             borderRadius="2xl"
-            gap={1.5}
             justify="center"
             minH={31}
             p={6}
+            mt={{ base: 3, md: 5 }}
           >
-            <Text color="neutral.600" fontSize="sm" fontWeight="semibold">
-              직접 수정 비율
+            <Text color="neutral.500" fontSize="sm" textAlign="center">
+              AI 의존도 분석 결과가 아직 생성되지 않았습니다.
             </Text>
-            <Text
-              color="neutral.900"
-              fontSize={{ base: "3xl", md: "4xl" }}
-              fontWeight="bold"
-              lineHeight="1.2"
-            >
-              {metrics.directEditRate}%
-            </Text>
-          </VStack>
-        </Grid>
+          </Flex>
+        )}
       </VStack>
 
-      <MentorProjectAiDependencyChart value={metrics.aiDependencyRate} />
+      {metrics && (
+        <MentorProjectAiDependencyChart value={metrics.aiDependencyRatio} />
+      )}
     </Flex>
   );
 };

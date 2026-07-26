@@ -5,7 +5,6 @@ import {
   ProjectStepIndicator,
 } from "@/entities";
 
-import { SAMPLE_MENTOR_PROJECT_AI_DEPENDENCY } from "../constants";
 import { useProjectDetailStepSelection } from "../hooks";
 
 import { MentorProjectAiDependencySection } from "./MentorProjectAiDependencySection";
@@ -28,9 +27,7 @@ export const MentorProjectDetailSection = ({ project }: Props) => {
 
   return (
     <VStack align="flex-start" gap={{ base: 10, md: 16 }} w="full">
-      <MentorProjectAiDependencySection
-        metrics={SAMPLE_MENTOR_PROJECT_AI_DEPENDENCY}
-      />
+      <MentorProjectAiDependencySection metrics={project.dependencyAnalysis} />
 
       <MentorProjectInitialIntentSection
         desiredOutcome={project.desiredOutcome}
