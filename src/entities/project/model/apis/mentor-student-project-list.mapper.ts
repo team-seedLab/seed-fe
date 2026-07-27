@@ -41,6 +41,7 @@ export type MentorStudentProjectListProject = {
 export type MentorStudentProjectListResponse = {
   menteeId: string;
   menteeName: string;
+  menteeProfileUrl: string | null;
   projects: MentorStudentProjectListProject[];
 };
 
@@ -49,6 +50,7 @@ export const mapMentorStudentProjectListResponse = (
 ): MentorStudentProjectListResponse => ({
   menteeId: response.studentId,
   menteeName: response.nickname,
+  menteeProfileUrl: response.profileUrl,
   projects: response.projects.map((project) => ({
     projectId: project.projectId,
     title: project.title,
