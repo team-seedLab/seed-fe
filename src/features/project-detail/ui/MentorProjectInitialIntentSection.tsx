@@ -39,8 +39,6 @@ export const MentorProjectInitialIntentSection = ({
             <VStack
               align="flex-start"
               bg="neutral.50"
-              border="1px solid"
-              borderColor="neutral.100"
               borderRadius="xl"
               gap={2}
               key={item.label}
