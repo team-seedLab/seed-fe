@@ -1,6 +1,4 @@
-import { Avatar, Flex, Grid, Text, VStack } from "@chakra-ui/react";
-
-import { PersonIcon } from "@/shared";
+import { Flex, Grid, Text, VStack } from "@chakra-ui/react";
 
 import {
   MENTOR_MENTEE_LIST_DESKTOP_INSET,
@@ -10,6 +8,8 @@ import {
 } from "../constants";
 import type { MentorDashboardMentee } from "../types";
 import { formatUpdatedDate } from "../utils";
+
+import { MentorMenteeProfileAvatar } from "./MentorMenteeProfileAvatar";
 
 type Props = {
   mentee: MentorDashboardMentee;
@@ -41,22 +41,11 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
       onClick={onClick}
     >
       <Flex align="center" gap={{ base: 4, md: 5 }} minW={0}>
-        <Avatar.Root bg="seed" boxSize={{ base: 10, md: 12 }} flexShrink={0}>
-          <Avatar.Fallback
-            aria-label={`${mentee.name} 기본 프로필`}
-            bg="seed"
-            color="white"
-          >
-            <PersonIcon boxSize={{ base: 4, md: 5 }} />
-          </Avatar.Fallback>
-          {mentee.profileUrl && (
-            <Avatar.Image
-              alt={`${mentee.name} 프로필`}
-              objectFit="cover"
-              src={mentee.profileUrl}
-            />
-          )}
-        </Avatar.Root>
+        <MentorMenteeProfileAvatar
+          name={mentee.name}
+          profileUrl={mentee.profileUrl}
+          size="list"
+        />
         <Text
           color="text"
           fontSize={{ base: "md", md: "lg" }}

@@ -46,6 +46,7 @@ describe("MentorMenteeProjectsPage", () => {
       data: {
         menteeId: "mentee-1",
         menteeName: "김멘티",
+        menteeProfileUrl: null,
         projects: [],
       },
       isError: false,
@@ -58,6 +59,7 @@ describe("MentorMenteeProjectsPage", () => {
       data: {
         menteeId: "mentee-1",
         menteeName: "김멘티",
+        menteeProfileUrl: "https://example.com/mentee-1.png",
         projects: [
           {
             projectId: "project-1",
@@ -86,6 +88,10 @@ describe("MentorMenteeProjectsPage", () => {
     renderPage();
 
     expect(screen.getByText("김멘티")).toBeInTheDocument();
+    expect(screen.getByAltText("김멘티 프로필")).toHaveAttribute(
+      "src",
+      "https://example.com/mentee-1.png",
+    );
     expect(screen.getByText("환경학 개론 과제")).toBeInTheDocument();
     const totalSummaryLabels = screen
       .getAllByText("전체")
@@ -109,6 +115,10 @@ describe("MentorMenteeProjectsPage", () => {
     renderPage();
 
     expect(screen.getByText("김멘티")).toBeInTheDocument();
+    expect(screen.getByLabelText("김멘티 기본 프로필")).toHaveAttribute(
+      "data-state",
+      "visible",
+    );
     expect(
       screen.getByText("프로젝트 목록이 준비되면 여기에 표시됩니다."),
     ).toBeInTheDocument();
