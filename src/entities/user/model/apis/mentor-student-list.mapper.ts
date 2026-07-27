@@ -36,6 +36,7 @@ export type MentorDashboardSummary = {
 export type MentorDashboardMentee = {
   menteeId: string;
   name: string;
+  profileUrl: string | null;
   projectCount: number;
   latestUpdatedAt: string | null;
   reviewStatus: MentorStudentReviewStatus;
@@ -57,6 +58,7 @@ export const mapMentorStudentListResponse = (
   mentees: response.students.map((student) => ({
     menteeId: student.studentId,
     name: student.nickname,
+    profileUrl: student.profileUrl,
     projectCount: student.totalProjectCount,
     latestUpdatedAt: student.lastProjectUpdatedAt,
     reviewStatus: student.reviewStatus ?? "NOT_APPLICABLE",
