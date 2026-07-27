@@ -49,7 +49,6 @@ export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
             templateColumns={{ base: "1fr", sm: "repeat(2, minmax(0, 1fr))" }}
           >
             <VStack
-              bg="neutral.50"
               borderRadius="2xl"
               gap={1.5}
               justify="center"
@@ -75,7 +74,6 @@ export const MentorProjectAiDependencySection = ({ metrics }: Props) => {
             </VStack>
 
             <VStack
-              bg="neutral.50"
               borderRadius="2xl"
               gap={1.5}
               justify="center"

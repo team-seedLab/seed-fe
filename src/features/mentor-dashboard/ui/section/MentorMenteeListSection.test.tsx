@@ -60,6 +60,7 @@ describe("MentorMenteeListSection", () => {
           {
             menteeId: "mentee-without-project",
             name: "프로젝트 없음",
+            profileUrl: null,
             projectCount: 0,
             latestUpdatedAt: null,
             reviewStatus: "NOT_APPLICABLE",

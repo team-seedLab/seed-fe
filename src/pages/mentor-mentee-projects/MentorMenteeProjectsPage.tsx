@@ -48,6 +48,7 @@ export default function MentorMenteeProjectsPage() {
             <MentorMenteeProjectsSummarySection
               completedProjectCount={completedProjectCount}
               menteeName={data.menteeName}
+              menteeProfileUrl={data.menteeProfileUrl}
               totalProjectCount={projects.length}
             />
             <MentorMenteeProjectListSection

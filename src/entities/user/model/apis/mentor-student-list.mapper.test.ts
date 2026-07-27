@@ -15,7 +15,7 @@ describe("mapMentorStudentListResponse", () => {
           studentId: "mentee-1",
           nickname: "김멘티",
           email: "mentee@seed.test",
-          profileUrl: null,
+          profileUrl: "https://example.com/mentee-1.png",
           totalProjectCount: 2,
           inProgressProjectCount: 1,
           completedProjectCount: 1,
@@ -46,6 +46,7 @@ describe("mapMentorStudentListResponse", () => {
         {
           menteeId: "mentee-1",
           name: "김멘티",
+          profileUrl: "https://example.com/mentee-1.png",
           projectCount: 2,
           latestUpdatedAt: "2026-07-15T10:00:00",
           reviewStatus: "REVIEWING",
@@ -53,6 +54,7 @@ describe("mapMentorStudentListResponse", () => {
         {
           menteeId: "mentee-2",
           name: "프로젝트 없음",
+          profileUrl: null,
           projectCount: 0,
           latestUpdatedAt: null,
           reviewStatus: "NOT_APPLICABLE",

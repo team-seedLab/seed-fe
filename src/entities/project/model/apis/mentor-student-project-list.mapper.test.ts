@@ -8,7 +8,7 @@ describe("mapMentorStudentProjectListResponse", () => {
       studentId: "mentee-1",
       nickname: "김멘티",
       email: "mentee@seed.test",
-      profileUrl: null,
+      profileUrl: "https://example.com/mentee-1.png",
       projects: [
         {
           projectId: "project-1",
@@ -46,6 +46,7 @@ describe("mapMentorStudentProjectListResponse", () => {
     expect(response).toEqual({
       menteeId: "mentee-1",
       menteeName: "김멘티",
+      menteeProfileUrl: "https://example.com/mentee-1.png",
       projects: [
         {
           projectId: "project-1",

@@ -22,7 +22,7 @@ describe("mentor student list API", () => {
                 studentId: "mentee-1",
                 nickname: "김멘티",
                 email: "mentee@seed.test",
-                profileUrl: null,
+                profileUrl: "https://example.com/mentee-1.png",
                 totalProjectCount: 1,
                 inProgressProjectCount: 0,
                 completedProjectCount: 1,
@@ -46,6 +46,7 @@ describe("mentor student list API", () => {
         {
           menteeId: "mentee-1",
           name: "김멘티",
+          profileUrl: "https://example.com/mentee-1.png",
           reviewStatus: "REVIEWED",
         },
       ],

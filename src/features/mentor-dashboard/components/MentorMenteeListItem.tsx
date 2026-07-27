@@ -9,6 +9,8 @@ import {
 import type { MentorDashboardMentee } from "../types";
 import { formatUpdatedDate } from "../utils";
 
+import { MentorMenteeProfileAvatar } from "./MentorMenteeProfileAvatar";
+
 type Props = {
   mentee: MentorDashboardMentee;
   onClick: () => void;
@@ -39,13 +41,10 @@ export const MentorMenteeListItem = ({ mentee, onClick }: Props) => {
       onClick={onClick}
     >
       <Flex align="center" gap={{ base: 4, md: 5 }} minW={0}>
-        <Flex
-          align="center"
-          bg="seed"
-          borderRadius="full"
-          boxSize={{ base: 10, md: 12 }}
-          flexShrink={0}
-          justify="center"
+        <MentorMenteeProfileAvatar
+          name={mentee.name}
+          profileUrl={mentee.profileUrl}
+          size="list"
         />
         <Text
           color="text"

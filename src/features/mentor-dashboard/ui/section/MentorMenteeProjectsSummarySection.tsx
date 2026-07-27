@@ -1,7 +1,10 @@
 import { Box, Flex, Grid, Skeleton, Text, VStack } from "@chakra-ui/react";
 
+import { MentorMenteeProfileAvatar } from "../../components";
+
 type Props = {
   menteeName?: string | null;
+  menteeProfileUrl: string | null;
   isLoadingName?: boolean;
   totalProjectCount: number;
   completedProjectCount: number;
@@ -9,6 +12,7 @@ type Props = {
 
 export const MentorMenteeProjectsSummarySection = ({
   menteeName,
+  menteeProfileUrl,
   isLoadingName = false,
   totalProjectCount,
   completedProjectCount,
@@ -34,13 +38,10 @@ export const MentorMenteeProjectsSummarySection = ({
       w="full"
     >
       <Flex align="center" gap={{ base: 4, md: 8 }} minW={0}>
-        <Flex
-          align="center"
-          bg="seed"
-          borderRadius="full"
-          boxSize={{ base: 16, md: 20 }}
-          flexShrink={0}
-          justify="center"
+        <MentorMenteeProfileAvatar
+          name={displayName}
+          profileUrl={menteeProfileUrl}
+          size="summary"
         />
         {isLoadingName ? (
           <Skeleton
