@@ -48,6 +48,15 @@ export const UploadAiMentorAssistantMessage = ({
           </Box>
         )}
 
+        <Flex justify="flex-end">
+          <ProjectContentCopyButton
+            copied={copied}
+            onCopy={() => {
+              void copy(content);
+            }}
+          />
+        </Flex>
+
         {isLatest && (
           <HStack align="stretch" flexWrap="wrap" gap={7} pt={2}>
             <Button
@@ -83,15 +92,6 @@ export const UploadAiMentorAssistantMessage = ({
             </Button>
           </HStack>
         )}
-
-        <Flex justify="flex-end">
-          <ProjectContentCopyButton
-            copied={copied}
-            onCopy={() => {
-              void copy(content);
-            }}
-          />
-        </Flex>
       </VStack>
     </Flex>
   );
