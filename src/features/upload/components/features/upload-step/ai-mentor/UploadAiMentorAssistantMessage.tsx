@@ -1,6 +1,7 @@
 import { Box, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
-import { MarkdownContent, SeedAiIcon } from "@/shared";
+import { ProjectContentCopyButton } from "@/entities";
+import { MarkdownContent, SeedAiIcon, useClipboardCopy } from "@/shared";
 
 import { splitAiMentorAnswer } from "../../../../utils";
 
@@ -22,6 +23,7 @@ export const UploadAiMentorAssistantMessage = ({
   onReask,
 }: Props) => {
   const { answer, guide } = splitAiMentorAnswer(content);
+  const { copied, copy } = useClipboardCopy();
 
   return (
     <Flex align="flex-start" gap={4} w="full">
@@ -31,9 +33,17 @@ export const UploadAiMentorAssistantMessage = ({
 
       <VStack align="stretch" flex={1} gap={5} minW={0}>
         <Box spaceY={2}>
-          <Text color="neutral.900" fontSize="xl" fontWeight="semibold">
-            핵심 답변
-          </Text>
+          <Flex align="center" gap={3} justify="space-between">
+            <Text color="neutral.900" fontSize="xl" fontWeight="semibold">
+              핵심 답변
+            </Text>
+            <ProjectContentCopyButton
+              copied={copied}
+              onCopy={() => {
+                void copy(content);
+              }}
+            />
+          </Flex>
           <MarkdownContent content={answer} />
         </Box>
 
