@@ -33,17 +33,9 @@ export const UploadAiMentorAssistantMessage = ({
 
       <VStack align="stretch" flex={1} gap={5} minW={0}>
         <Box spaceY={2}>
-          <Flex align="center" gap={3} justify="space-between">
-            <Text color="neutral.900" fontSize="xl" fontWeight="semibold">
-              핵심 답변
-            </Text>
-            <ProjectContentCopyButton
-              copied={copied}
-              onCopy={() => {
-                void copy(content);
-              }}
-            />
-          </Flex>
+          <Text color="neutral.900" fontSize="xl" fontWeight="semibold">
+            핵심 답변
+          </Text>
           <MarkdownContent content={answer} />
         </Box>
 
@@ -91,6 +83,15 @@ export const UploadAiMentorAssistantMessage = ({
             </Button>
           </HStack>
         )}
+
+        <Flex justify="flex-end">
+          <ProjectContentCopyButton
+            copied={copied}
+            onCopy={() => {
+              void copy(content);
+            }}
+          />
+        </Flex>
       </VStack>
     </Flex>
   );
