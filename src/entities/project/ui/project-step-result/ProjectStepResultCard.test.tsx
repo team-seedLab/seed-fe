@@ -7,6 +7,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import { InputRange } from "dom-input-range";
 import { describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
@@ -211,27 +212,49 @@ describe("ProjectStepResultCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("텍스트를 선택하면 마크다운 서식 도구를 제공한다", () => {
-    renderEditableResult("학습 결과");
+  it("텍스트를 선택하면 입력 포커스를 유지한 채 서식 도구를 띄운다", async () => {
+    const getSelectionRect = vi
+      .spyOn(InputRange.prototype, "getBoundingClientRect")
+      .mockReturnValue(new DOMRect(80, 120, 160, 24));
 
-    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
-      name: "학습 결과",
-    });
-    resultInput.setSelectionRange(0, resultInput.value.length);
-    fireEvent.select(resultInput);
+    try {
+      renderEditableResult("학습 결과");
 
-    [
-      "제목",
-      "굵게",
-      "기울임",
-      "링크",
-      "글머리 목록",
-      "번호 목록",
-      "인용",
-      "인라인 코드",
-    ].forEach((name) => {
-      expect(screen.getByRole("button", { name })).toBeInTheDocument();
-    });
+      const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+        name: "학습 결과",
+      });
+      resultInput.focus();
+      resultInput.setSelectionRange(0, resultInput.value.length);
+      fireEvent.select(resultInput);
+
+      const toolbar = await screen.findByRole("toolbar", {
+        name: "마크다운 서식",
+      });
+      const editorRoot = resultInput.closest(
+        '[data-scope="tabs"][data-part="root"]',
+      );
+
+      expect(
+        toolbar.closest('[data-scope="popover"][data-part="positioner"]'),
+      ).toBeInTheDocument();
+      expect(editorRoot).toContainElement(toolbar);
+      expect(resultInput).toHaveFocus();
+
+      [
+        "제목",
+        "굵게",
+        "기울임",
+        "링크",
+        "글머리 목록",
+        "번호 목록",
+        "인용",
+        "인라인 코드",
+      ].forEach((name) => {
+        expect(screen.getByRole("button", { name })).toBeInTheDocument();
+      });
+    } finally {
+      getSelectionRect.mockRestore();
+    }
   });
 
   it("선택을 해제하거나 입력 영역을 벗어나면 서식 도구를 숨긴다", () => {
