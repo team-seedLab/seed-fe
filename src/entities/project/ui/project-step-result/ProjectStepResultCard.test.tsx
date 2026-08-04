@@ -287,7 +287,7 @@ describe("ProjectStepResultCard", () => {
     const resultInput = screen.getByRole("textbox", { name: "학습 결과" });
 
     expect(resultInput).toHaveStyle({
-      maxHeight: "60dvh",
+      maxHeight: "360px",
       overflowY: "auto",
       overscrollBehavior: "contain",
     });

@@ -152,12 +152,15 @@ export const ProjectStepResultEditor = ({
           color="neutral.900"
           fontSize={{ base: "xs", md: "sm" }}
           fontWeight="medium"
+          maxH={{ base: "360px", md: "480px" }}
           minH={60}
           onBlur={() => {
             shouldReleaseTabRef.current = false;
           }}
           onChange={(event) => onContentChange(event.target.value)}
           onKeyDown={handleKeyDown}
+          overflowY="auto"
+          overscrollBehavior="contain"
           p={{ base: 4, md: 6 }}
           placeholder="이번 단계에서 학습한 내용과 결과를 자유롭게 정리해 주세요."
           value={content}
