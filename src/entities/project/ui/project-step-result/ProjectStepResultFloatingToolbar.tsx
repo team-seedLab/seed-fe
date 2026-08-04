@@ -21,8 +21,13 @@ const ProjectStepResultFloatingToolbarContent = ({
   }, [anchor, reposition]);
 
   return (
-    <Popover.Positioner zIndex="popover">
-      <Popover.Content maxW="calc(100vw - 16px)" outline="none" w="fit-content">
+    <Popover.Positioner>
+      <Popover.Content
+        maxW="calc(100vw - 16px)"
+        outline="none"
+        w="fit-content"
+        zIndex="popover"
+      >
         <ProjectStepResultToolbar textareaId={textareaId} />
       </Popover.Content>
     </Popover.Positioner>
