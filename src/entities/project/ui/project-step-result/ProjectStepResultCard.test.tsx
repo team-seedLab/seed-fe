@@ -258,6 +258,48 @@ describe("ProjectStepResultCard", () => {
     }
   });
 
+  it("선택 영역을 스크롤하면 서식 도구 위치를 다시 계산한다", async () => {
+    let selectionTop = 120;
+    const getSelectionRect = vi
+      .spyOn(InputRange.prototype, "getBoundingClientRect")
+      .mockImplementation(() => new DOMRect(80, selectionTop, 160, 24));
+
+    try {
+      renderEditableResult("학습 결과");
+
+      const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+        name: "학습 결과",
+      });
+      resultInput.setSelectionRange(0, resultInput.value.length);
+      fireEvent.select(resultInput);
+
+      const toolbar = await screen.findByRole("toolbar", {
+        name: "마크다운 서식",
+      });
+      const positioner = toolbar.closest<HTMLElement>(
+        '[data-scope="popover"][data-part="positioner"]',
+      );
+
+      if (!positioner) {
+        throw new Error("선택 도구 위치 요소를 찾을 수 없습니다.");
+      }
+
+      await waitFor(() => {
+        expect(positioner.style.getPropertyValue("--y")).not.toBe("");
+      });
+      const previousY = positioner.style.getPropertyValue("--y");
+
+      selectionTop = 220;
+      fireEvent.scroll(resultInput);
+
+      await waitFor(() => {
+        expect(positioner.style.getPropertyValue("--y")).not.toBe(previousY);
+      });
+    } finally {
+      getSelectionRect.mockRestore();
+    }
+  });
+
   it("선택을 해제하거나 입력 영역을 벗어나면 서식 도구를 숨긴다", () => {
     renderEditableResult("학습 결과");
 
