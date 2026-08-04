@@ -203,8 +203,22 @@ describe("ProjectStepResultCard", () => {
     expect(screen.getByLabelText("학습 결과")).toHaveValue("수정한 학습 결과");
   });
 
-  it("입력 화면에서 마크다운 서식 도구를 제공한다", () => {
-    renderEditableResult();
+  it("선택한 텍스트가 없으면 마크다운 서식 도구를 숨긴다", () => {
+    renderEditableResult("학습 결과");
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("텍스트를 선택하면 마크다운 서식 도구를 제공한다", () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
 
     [
       "제목",
@@ -220,6 +234,35 @@ describe("ProjectStepResultCard", () => {
     });
   });
 
+  it("선택을 해제하거나 입력 영역을 벗어나면 서식 도구를 숨긴다", () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    expect(
+      screen.getByRole("toolbar", { name: "마크다운 서식" }),
+    ).toBeInTheDocument();
+
+    resultInput.setSelectionRange(1, 1);
+    fireEvent.select(resultInput);
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+    fireEvent.blur(resultInput, { relatedTarget: null });
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("서식 도구로 선택한 텍스트를 변경하고 입력을 계속할 수 있다", async () => {
     renderEditableResult("강조");
 
@@ -228,6 +271,7 @@ describe("ProjectStepResultCard", () => {
     });
     resultInput.focus();
     resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
 
     fireEvent.click(screen.getByRole("button", { name: "굵게" }));
 
