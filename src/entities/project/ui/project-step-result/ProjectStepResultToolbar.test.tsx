@@ -46,6 +46,23 @@ describe("ProjectStepResultToolbar", () => {
     });
   });
 
+  it("버튼 설명을 선택 도구 내부에 표시한다", async () => {
+    renderWithProviders(
+      <ProjectStepResultToolbarTestHarness initialContent="학습 결과" />,
+    );
+
+    const toolbar = screen.getByRole("toolbar", { name: "마크다운 서식" });
+    const headingButton = within(toolbar).getByRole("button", {
+      name: "제목",
+    });
+
+    fireEvent.pointerOver(headingButton, { pointerType: "mouse" });
+
+    const tooltip = await screen.findByRole("tooltip");
+
+    expect(toolbar).toContainElement(tooltip);
+  });
+
   it.each([
     { buttonName: "제목", expected: "### 내용", value: "내용" },
     { buttonName: "굵게", expected: "**내용**", value: "내용" },
