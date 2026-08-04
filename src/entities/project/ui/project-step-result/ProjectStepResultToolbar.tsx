@@ -1,22 +1,36 @@
 import { type ReactNode, createElement } from "react";
 
-import { Button, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import "@github/markdown-toolbar-element";
 
 import {
-  PROJECT_CONTENT_CONTROL_BASE_STYLE,
-  PROJECT_CONTENT_CONTROL_SURFACE_STYLE,
-} from "../project-content-control-style";
+  BoldIcon,
+  CodeIcon,
+  HeadingIcon,
+  ItalicIcon,
+  LinkIcon,
+  ListBulletIcon,
+  ListNumberIcon,
+  QuoteIcon,
+} from "@/shared";
+
+import { PROJECT_CONTENT_CONTROL_SURFACE_STYLE } from "../project-content-control-style";
+
+import { ProjectStepResultToolbarButton } from "./ProjectStepResultToolbarButton";
 
 const MARKDOWN_CONTROLS = [
-  { command: "header-3", label: "제목", text: "제목" },
-  { command: "bold", label: "굵게", text: "굵게" },
-  { command: "italic", label: "기울임", text: "기울임" },
-  { command: "link", label: "링크", text: "링크" },
-  { command: "unordered-list", label: "글머리 목록", text: "글머리" },
-  { command: "ordered-list", label: "번호 목록", text: "번호" },
-  { command: "quote", label: "인용", text: "인용" },
-  { command: "code", label: "인라인 코드", text: "코드" },
+  { command: "header-3", Icon: HeadingIcon, label: "제목" },
+  { command: "bold", Icon: BoldIcon, label: "굵게" },
+  { command: "italic", Icon: ItalicIcon, label: "기울임" },
+  { command: "link", Icon: LinkIcon, label: "링크" },
+  {
+    command: "unordered-list",
+    Icon: ListBulletIcon,
+    label: "글머리 목록",
+  },
+  { command: "ordered-list", Icon: ListNumberIcon, label: "번호 목록" },
+  { command: "quote", Icon: QuoteIcon, label: "인용" },
+  { command: "code", Icon: CodeIcon, label: "인라인 코드" },
 ] as const;
 
 type Props = {
@@ -29,7 +43,7 @@ const createMarkdownToolbar = (textareaId: string, children: ReactNode) =>
     {
       "aria-label": "마크다운 서식",
       for: textareaId,
-      style: { display: "block", width: "100%" },
+      style: { display: "block", minWidth: 0, width: "100%" },
     },
     children,
   );
@@ -37,27 +51,25 @@ const createMarkdownToolbar = (textareaId: string, children: ReactNode) =>
 export const ProjectStepResultToolbar = ({ textareaId }: Props) =>
   createMarkdownToolbar(
     textareaId,
-    <HStack gap={1} overflowX="auto" pb={1} scrollbar="hidden" w="full">
-      {MARKDOWN_CONTROLS.map(({ command, label, text }) => (
-        <Button
-          {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
-          {...PROJECT_CONTENT_CONTROL_SURFACE_STYLE}
-          aria-label={label}
-          color="neutral.700"
-          data-md-button={command}
-          flexShrink={0}
+    <HStack
+      {...PROJECT_CONTENT_CONTROL_SURFACE_STYLE}
+      borderRadius="full"
+      gap={0.5}
+      maxW="full"
+      ml="auto"
+      overflowX="auto"
+      p={1}
+      scrollbar="hidden"
+      w="fit-content"
+    >
+      {MARKDOWN_CONTROLS.map(({ command, Icon, label }) => (
+        <ProjectStepResultToolbarButton
+          command={command}
           key={command}
-          type="button"
-          variant="ghost"
-          _focusVisible={{
-            outline: "2px solid",
-            outlineColor: "seed",
-            outlineOffset: "2px",
-          }}
-          _hover={{ bg: "neutral.50" }}
+          label={label}
         >
-          {text}
-        </Button>
+          <Icon boxSize={4} />
+        </ProjectStepResultToolbarButton>
       ))}
     </HStack>,
   );
