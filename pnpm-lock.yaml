@@ -38,6 +38,9 @@ importers:
       diff:
         specifier: ^9.0.0
         version: 9.0.0
+      dom-input-range:
+        specifier: ^2.0.1
+        version: 2.0.1
       react:
         specifier: ^19.2.0
         version: 19.2.4
@@ -1530,6 +1533,9 @@ packages:
 
   dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
+
+  dom-input-range@2.0.1:
+    resolution: {integrity: sha512-UMGnuQlEepIPCju5NrPe+8y52B+pRvSjIaSPW92KpukoDGSEVkI2iaCR4HxK7K6C7zmVsWE8PEjCYZaJMr3vpg==}
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
@@ -4948,6 +4954,8 @@ snapshots:
   dom-accessibility-api@0.5.16: {}
 
   dom-accessibility-api@0.6.3: {}
+
+  dom-input-range@2.0.1: {}
 
   dom-serializer@2.0.0:
     dependencies:
