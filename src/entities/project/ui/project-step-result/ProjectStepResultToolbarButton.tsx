@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { IconButton, Portal, Tooltip } from "@chakra-ui/react";
+import { IconButton, Tooltip } from "@chakra-ui/react";
 
 type Props = {
   children: ReactNode;
@@ -36,20 +36,18 @@ export const ProjectStepResultToolbarButton = ({
           {children}
         </IconButton>
       </Tooltip.Trigger>
-      <Portal>
-        <Tooltip.Positioner>
-          <Tooltip.Content
-            bg="neutral.900"
-            borderRadius="md"
-            color="white"
-            fontSize="xs"
-            px={2}
-            py={1}
-          >
-            {label}
-          </Tooltip.Content>
-        </Tooltip.Positioner>
-      </Portal>
+      <Tooltip.Positioner>
+        <Tooltip.Content
+          bg="neutral.900"
+          borderRadius="md"
+          color="white"
+          fontSize="xs"
+          px={2}
+          py={1}
+        >
+          {label}
+        </Tooltip.Content>
+      </Tooltip.Positioner>
     </Tooltip.Root>
   );
 };
