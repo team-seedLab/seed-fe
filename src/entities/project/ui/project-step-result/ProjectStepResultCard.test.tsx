@@ -6,6 +6,7 @@ import {
   fireEvent,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { InputRange } from "dom-input-range";
 import { describe, expect, it, vi } from "vitest";
@@ -250,7 +251,7 @@ describe("ProjectStepResultCard", () => {
         "인용",
         "인라인 코드",
       ].forEach((name) => {
-        expect(screen.getByRole("button", { name })).toBeInTheDocument();
+        expect(within(toolbar).getByLabelText(name)).toBeInTheDocument();
       });
     } finally {
       getSelectionRect.mockRestore();
