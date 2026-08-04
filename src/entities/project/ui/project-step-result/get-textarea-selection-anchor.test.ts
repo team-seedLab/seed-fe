@@ -21,17 +21,16 @@ describe("getTextareaSelectionAnchor", () => {
     textarea.value = "학습 결과";
     textarea.setSelectionRange(0, 2);
     const selectionRect = new DOMRect(24, 40, 80, 20);
-    const getBoundingClientRect = vi.fn(() => selectionRect);
-
-    vi.spyOn(InputRange, "fromSelection").mockReturnValue({
-      getBoundingClientRect,
-    } as InputRange);
+    const fromSelection = vi.spyOn(InputRange, "fromSelection");
+    const getBoundingClientRect = vi
+      .spyOn(InputRange.prototype, "getBoundingClientRect")
+      .mockReturnValue(selectionRect);
 
     const anchor = getTextareaSelectionAnchor(textarea);
 
     expect(anchor?.contextElement).toBe(textarea);
     expect(anchor?.getBoundingClientRect()).toBe(selectionRect);
-    expect(InputRange.fromSelection).toHaveBeenCalledWith(textarea);
+    expect(fromSelection).toHaveBeenCalledWith(textarea);
     expect(getBoundingClientRect).toHaveBeenCalledOnce();
   });
 });
