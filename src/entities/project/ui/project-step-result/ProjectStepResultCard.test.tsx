@@ -241,9 +241,9 @@ describe("ProjectStepResultCard", () => {
       expect(
         toolbar.closest('[data-scope="popover"][data-part="positioner"]'),
       ).toBeInTheDocument();
-      expect(popoverContent).toHaveStyle({
-        zIndex: "var(--sd-z-indexes-popover)",
-      });
+      expect(window.getComputedStyle(popoverContent!).zIndex).toBe(
+        "var(--sd-z-index-popover)",
+      );
       expect(editorRoot).toContainElement(toolbar);
       expect(resultInput).toHaveFocus();
 
