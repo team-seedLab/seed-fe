@@ -234,10 +234,16 @@ describe("ProjectStepResultCard", () => {
       const editorRoot = resultInput.closest(
         '[data-scope="tabs"][data-part="root"]',
       );
+      const popoverContent = toolbar.closest<HTMLElement>(
+        '[data-scope="popover"][data-part="content"]',
+      );
 
       expect(
         toolbar.closest('[data-scope="popover"][data-part="positioner"]'),
       ).toBeInTheDocument();
+      expect(popoverContent).toHaveStyle({
+        zIndex: "var(--sd-z-indexes-popover)",
+      });
       expect(editorRoot).toContainElement(toolbar);
       expect(resultInput).toHaveFocus();
 
