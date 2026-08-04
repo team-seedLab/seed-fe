@@ -263,6 +263,43 @@ describe("ProjectStepResultCard", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("미리보기를 다녀오면 이전 선택 도구를 다시 표시하지 않는다", async () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    expect(
+      screen.getByRole("toolbar", { name: "마크다운 서식" }),
+    ).toBeInTheDocument();
+
+    await selectView("미리보기");
+    await selectView("입력");
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("서식 도구로 포커스를 옮겨도 카드 이탈 저장을 실행하지 않는다", () => {
+    const onCommit = vi.fn();
+    renderEditableResult("학습 결과", onCommit);
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    const boldButton = screen.getByRole("button", { name: "굵게" });
+    fireEvent.blur(resultInput, { relatedTarget: boldButton });
+
+    expect(onCommit).not.toHaveBeenCalled();
+  });
+
   it("서식 도구로 선택한 텍스트를 변경하고 입력을 계속할 수 있다", async () => {
     renderEditableResult("강조");
 
