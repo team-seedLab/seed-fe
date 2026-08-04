@@ -1,4 +1,6 @@
-import { Popover } from "@chakra-ui/react";
+import { useEffect } from "react";
+
+import { Popover, usePopoverContext } from "@chakra-ui/react";
 
 import { ProjectStepResultToolbar } from "./ProjectStepResultToolbar";
 import type { TextareaSelectionAnchor } from "./get-textarea-selection-anchor";
@@ -6,6 +8,25 @@ import type { TextareaSelectionAnchor } from "./get-textarea-selection-anchor";
 type Props = {
   anchor: TextareaSelectionAnchor;
   textareaId: string;
+};
+
+const ProjectStepResultFloatingToolbarContent = ({
+  anchor,
+  textareaId,
+}: Props) => {
+  const { reposition } = usePopoverContext();
+
+  useEffect(() => {
+    reposition();
+  }, [anchor, reposition]);
+
+  return (
+    <Popover.Positioner zIndex="popover">
+      <Popover.Content maxW="calc(100vw - 16px)" outline="none" w="fit-content">
+        <ProjectStepResultToolbar textareaId={textareaId} />
+      </Popover.Content>
+    </Popover.Positioner>
+  );
 };
 
 export const ProjectStepResultFloatingToolbar = ({
@@ -32,15 +53,10 @@ export const ProjectStepResultFloatingToolbar = ({
       }}
       unstyled
     >
-      <Popover.Positioner zIndex="popover">
-        <Popover.Content
-          maxW="calc(100vw - 16px)"
-          outline="none"
-          w="fit-content"
-        >
-          <ProjectStepResultToolbar textareaId={textareaId} />
-        </Popover.Content>
-      </Popover.Positioner>
+      <ProjectStepResultFloatingToolbarContent
+        anchor={anchor}
+        textareaId={textareaId}
+      />
     </Popover.Root>
   );
 };
