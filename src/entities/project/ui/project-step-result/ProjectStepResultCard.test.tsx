@@ -281,6 +281,18 @@ describe("ProjectStepResultCard", () => {
     });
   });
 
+  it("입력 내용이 화면보다 길어지면 입력창 내부에서 스크롤한다", () => {
+    renderEditableResult();
+
+    const resultInput = screen.getByRole("textbox", { name: "학습 결과" });
+
+    expect(resultInput).toHaveStyle({
+      maxHeight: "60dvh",
+      overflowY: "auto",
+      overscrollBehavior: "contain",
+    });
+  });
+
   it("키보드로 입력창에 접근하면 포커스 위치를 표시한다", () => {
     renderEditableResult();
 
