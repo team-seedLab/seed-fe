@@ -203,6 +203,40 @@ describe("ProjectStepResultCard", () => {
     expect(screen.getByLabelText("학습 결과")).toHaveValue("수정한 학습 결과");
   });
 
+  it("입력 화면에서 마크다운 서식 도구를 제공한다", () => {
+    renderEditableResult();
+
+    [
+      "제목",
+      "굵게",
+      "기울임",
+      "링크",
+      "글머리 목록",
+      "번호 목록",
+      "인용",
+      "인라인 코드",
+    ].forEach((name) => {
+      expect(screen.getByRole("button", { name })).toBeInTheDocument();
+    });
+  });
+
+  it("서식 도구로 선택한 텍스트를 변경하고 입력을 계속할 수 있다", async () => {
+    renderEditableResult("강조");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.focus();
+    resultInput.setSelectionRange(0, resultInput.value.length);
+
+    fireEvent.click(screen.getByRole("button", { name: "굵게" }));
+
+    await waitFor(() => {
+      expect(resultInput).toHaveValue("**강조**");
+      expect(resultInput).toHaveFocus();
+    });
+  });
+
   it("미리보기를 확인한 뒤에도 입력창 DOM 상태를 유지한다", async () => {
     renderEditableResult("학습 결과");
 
