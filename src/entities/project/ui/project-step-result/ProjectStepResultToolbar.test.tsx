@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
@@ -31,6 +31,21 @@ const ProjectStepResultToolbarTestHarness = ({
 };
 
 describe("ProjectStepResultToolbar", () => {
+  it("서식 기능을 텍스트 대신 아이콘 버튼으로 제공한다", () => {
+    renderWithProviders(
+      <ProjectStepResultToolbarTestHarness initialContent="학습 결과" />,
+    );
+
+    const toolbar = screen.getByRole("toolbar", { name: "마크다운 서식" });
+    const buttons = within(toolbar).getAllByRole("button");
+
+    expect(buttons).toHaveLength(8);
+    buttons.forEach((button) => {
+      expect(button.querySelector("svg")).toBeInTheDocument();
+      expect(button.textContent).toBe("");
+    });
+  });
+
   it.each([
     { buttonName: "제목", expected: "### 내용", value: "내용" },
     { buttonName: "굵게", expected: "**내용**", value: "내용" },
