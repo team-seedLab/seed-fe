@@ -1,14 +1,20 @@
 import { type FocusEvent, useState } from "react";
 
+import {
+  type TextareaSelectionAnchor,
+  getTextareaSelectionAnchor,
+} from "./get-textarea-selection-anchor";
+
 export const useProjectStepResultSelection = () => {
-  const [hasTextSelection, setHasTextSelection] = useState(false);
+  const [selectionAnchor, setSelectionAnchor] =
+    useState<TextareaSelectionAnchor | null>(null);
 
   const updateTextSelection = (textarea: HTMLTextAreaElement) => {
-    setHasTextSelection(textarea.selectionStart < textarea.selectionEnd);
+    setSelectionAnchor(getTextareaSelectionAnchor(textarea));
   };
 
   const clearTextSelection = () => {
-    setHasTextSelection(false);
+    setSelectionAnchor(null);
   };
 
   const handleSelectionScopeBlur = (event: FocusEvent<HTMLDivElement>) => {
@@ -27,7 +33,7 @@ export const useProjectStepResultSelection = () => {
   return {
     clearTextSelection,
     handleSelectionScopeBlur,
-    hasTextSelection,
+    selectionAnchor,
     updateTextSelection,
   };
 };

@@ -1,6 +1,6 @@
 import { type KeyboardEvent, useId, useRef, useState } from "react";
 
-import { Box, Flex, Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
+import { Flex, Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
 
 import {
   PROJECT_CONTENT_CONTROL_BASE_STYLE,
@@ -8,7 +8,7 @@ import {
 } from "../project-content-control-style";
 
 import { ProjectStepResultContent } from "./ProjectStepResultContent";
-import { ProjectStepResultToolbar } from "./ProjectStepResultToolbar";
+import { ProjectStepResultFloatingToolbar } from "./ProjectStepResultFloatingToolbar";
 import { getMarkdownInputEdit } from "./get-markdown-input-edit";
 import { useProjectStepResultInputViewHeight } from "./useProjectStepResultInputViewHeight";
 import { useProjectStepResultSelection } from "./useProjectStepResultSelection";
@@ -34,7 +34,7 @@ export const ProjectStepResultEditor = ({
   const {
     clearTextSelection,
     handleSelectionScopeBlur,
-    hasTextSelection,
+    selectionAnchor,
     updateTextSelection,
   } = useProjectStepResultSelection();
 
@@ -149,13 +149,14 @@ export const ProjectStepResultEditor = ({
             미리보기
           </Tabs.Trigger>
         </Tabs.List>
-
-        {selectedView === "input" && hasTextSelection && (
-          <Box flex="1" minW={0}>
-            <ProjectStepResultToolbar textareaId={textareaId} />
-          </Box>
-        )}
       </Flex>
+
+      {selectedView === "input" && selectionAnchor && (
+        <ProjectStepResultFloatingToolbar
+          anchor={selectionAnchor}
+          textareaId={textareaId}
+        />
+      )}
 
       <Tabs.Content ref={inputViewRef} p={0} pt={3} value="input">
         <Textarea
