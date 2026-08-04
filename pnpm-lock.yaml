@@ -20,6 +20,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react@19.2.4)
+      '@github/markdown-toolbar-element':
+        specifier: ^2.2.3
+        version: 2.2.3
       '@react-pdf/renderer':
         specifier: ^4.3.2
         version: 4.3.2(react@19.2.4)
@@ -417,6 +420,9 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@github/markdown-toolbar-element@2.2.3':
+    resolution: {integrity: sha512-AlquKGee+IWiAMYVB0xyHFZRMnu4n3X4HTvJHu79GiVJ1ojTukCWyxMlF5NMsecoLcBKsuBhx3QPv2vkE/zQ0A==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3466,6 +3472,8 @@ snapshots:
       '@floating-ui/utils': 0.2.10
 
   '@floating-ui/utils@0.2.10': {}
+
+  '@github/markdown-toolbar-element@2.2.3': {}
 
   '@humanfs/core@0.19.1': {}
 

@@ -1,6 +1,6 @@
 import { type KeyboardEvent, useId, useRef, useState } from "react";
 
-import { Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
+import { Tabs, Textarea, VStack, VisuallyHidden } from "@chakra-ui/react";
 
 import {
   PROJECT_CONTENT_CONTROL_BASE_STYLE,
@@ -8,6 +8,7 @@ import {
 } from "../project-content-control-style";
 
 import { ProjectStepResultContent } from "./ProjectStepResultContent";
+import { ProjectStepResultToolbar } from "./ProjectStepResultToolbar";
 import { getMarkdownInputEdit } from "./get-markdown-input-edit";
 import { useProjectStepResultInputViewHeight } from "./useProjectStepResultInputViewHeight";
 
@@ -22,6 +23,7 @@ export const ProjectStepResultEditor = ({
 }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const shouldReleaseTabRef = useRef(false);
+  const textareaId = useId();
   const tabExitInstructionId = useId();
   const [selectedView, setSelectedView] = useState<"input" | "preview">(
     "input",
@@ -136,35 +138,41 @@ export const ProjectStepResultEditor = ({
       </Tabs.List>
 
       <Tabs.Content ref={inputViewRef} p={0} pt={3} value="input">
-        <Textarea
-          ref={inputRef}
-          aria-describedby={tabExitInstructionId}
-          aria-label="학습 결과"
-          autoresize
-          _focusVisible={{
-            outline: "none",
-            boxShadow: "0 0 0 1px var(--sd-colors-seed)",
-          }}
-          _placeholder={{ color: "neutral.300" }}
-          bg="neutral.50"
-          border="none"
-          borderRadius="xl"
-          color="neutral.900"
-          fontSize={{ base: "xs", md: "sm" }}
-          fontWeight="medium"
-          maxH={{ base: "360px", md: "480px" }}
-          minH={60}
-          onBlur={() => {
-            shouldReleaseTabRef.current = false;
-          }}
-          onChange={(event) => onContentChange(event.target.value)}
-          onKeyDown={handleKeyDown}
-          overflowY="auto"
-          overscrollBehavior="contain"
-          p={{ base: 4, md: 6 }}
-          placeholder="이번 단계에서 학습한 내용과 결과를 자유롭게 정리해 주세요."
-          value={content}
-        />
+        <VStack align="stretch" gap={2}>
+          {selectedView === "input" && (
+            <ProjectStepResultToolbar textareaId={textareaId} />
+          )}
+          <Textarea
+            ref={inputRef}
+            aria-describedby={tabExitInstructionId}
+            aria-label="학습 결과"
+            autoresize
+            _focusVisible={{
+              outline: "none",
+              boxShadow: "0 0 0 1px var(--sd-colors-seed)",
+            }}
+            _placeholder={{ color: "neutral.300" }}
+            bg="neutral.50"
+            border="none"
+            borderRadius="xl"
+            color="neutral.900"
+            fontSize={{ base: "xs", md: "sm" }}
+            fontWeight="medium"
+            id={textareaId}
+            maxH={{ base: "360px", md: "480px" }}
+            minH={60}
+            onBlur={() => {
+              shouldReleaseTabRef.current = false;
+            }}
+            onChange={(event) => onContentChange(event.target.value)}
+            onKeyDown={handleKeyDown}
+            overflowY="auto"
+            overscrollBehavior="contain"
+            p={{ base: 4, md: 6 }}
+            placeholder="이번 단계에서 학습한 내용과 결과를 자유롭게 정리해 주세요."
+            value={content}
+          />
+        </VStack>
         <VisuallyHidden id={tabExitInstructionId}>
           Escape를 누른 뒤 Tab 키를 누르면 입력창을 벗어날 수 있습니다.
         </VisuallyHidden>
