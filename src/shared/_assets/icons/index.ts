@@ -8,12 +8,14 @@ import _ArrowLeftIcon from "@/shared/_assets/icons/arrow-left.svg?react";
 import _ArrowRightIcon from "@/shared/_assets/icons/arrow-right.svg?react";
 import _BeakerIcon from "@/shared/_assets/icons/beaker.svg?react";
 import _BoardTeacherIcon from "@/shared/_assets/icons/board-teacher.svg?react";
+import _BoldIcon from "@/shared/_assets/icons/bold.svg?react";
 import _CheckCheckIcon from "@/shared/_assets/icons/check-check.svg?react";
 import _CheckCircleIcon from "@/shared/_assets/icons/check-circle.svg?react";
 import _CheckIcon from "@/shared/_assets/icons/check.svg?react";
 import _ChevronLeftIcon from "@/shared/_assets/icons/chevron-left.svg?react";
 import _ChevronRightIcon from "@/shared/_assets/icons/chevron-right.svg?react";
 import _ClipboardCheckIcon from "@/shared/_assets/icons/clipboard-check.svg?react";
+import _CodeIcon from "@/shared/_assets/icons/code.svg?react";
 import _CopyIcon from "@/shared/_assets/icons/copy.svg?react";
 import _DeleteIcon from "@/shared/_assets/icons/delete.svg?react";
 import _DocumentTextIcon from "@/shared/_assets/icons/document-text.svg?react";
@@ -22,6 +24,11 @@ import _ErrorIcon from "@/shared/_assets/icons/error.svg?react";
 import _FilePdfIcon from "@/shared/_assets/icons/file-pdf.svg?react";
 import _FilePenIcon from "@/shared/_assets/icons/file-pen.svg?react";
 import _FolderIcon from "@/shared/_assets/icons/folder.svg?react";
+import _HeadingIcon from "@/shared/_assets/icons/heading.svg?react";
+import _ItalicIcon from "@/shared/_assets/icons/italic.svg?react";
+import _LinkIcon from "@/shared/_assets/icons/link.svg?react";
+import _ListBulletIcon from "@/shared/_assets/icons/list-bullet.svg?react";
+import _ListNumberIcon from "@/shared/_assets/icons/list-number.svg?react";
 import _MagnifyingGlassIcon from "@/shared/_assets/icons/magnifying-glass.svg?react";
 import _MicroscopeIcon from "@/shared/_assets/icons/microscope.svg?react";
 import _MoreHorizontalIcon from "@/shared/_assets/icons/more-horizontal.svg?react";
@@ -30,6 +37,7 @@ import _PersonIcon from "@/shared/_assets/icons/person.svg?react";
 import _PictureIcon from "@/shared/_assets/icons/picture.svg?react";
 import _PlusCircleIcon from "@/shared/_assets/icons/plus-circle.svg?react";
 import _PlusIcon from "@/shared/_assets/icons/plus.svg?react";
+import _QuoteIcon from "@/shared/_assets/icons/quote.svg?react";
 import _ScriptIcon from "@/shared/_assets/icons/script.svg?react";
 import _SeedAiIcon from "@/shared/_assets/icons/seed-ai.svg?react";
 import _SendIcon from "@/shared/_assets/icons/send.svg?react";
@@ -53,6 +61,7 @@ export const BoardTeacherIcon = createIcon(
   _BoardTeacherIcon,
   "BoardTeacherIcon",
 );
+export const BoldIcon = createIcon(_BoldIcon, "BoldIcon");
 export const CheckCheckIcon = createIcon(_CheckCheckIcon, "CheckCheckIcon");
 export const CheckCircleIcon = createIcon(_CheckCircleIcon, "CheckCircleIcon");
 export const CheckIcon = createIcon(_CheckIcon, "CheckIcon");
@@ -65,6 +74,7 @@ export const ClipboardCheckIcon = createIcon(
   _ClipboardCheckIcon,
   "ClipboardCheckIcon",
 );
+export const CodeIcon = createIcon(_CodeIcon, "CodeIcon");
 export const CopyIcon = createIcon(_CopyIcon, "CopyIcon");
 export const DeleteIcon = createIcon(_DeleteIcon, "DeleteIcon");
 export const DocumentTextIcon = createIcon(
@@ -76,6 +86,11 @@ export const ErrorIcon = createIcon(_ErrorIcon, "ErrorIcon");
 export const FilePdfIcon = createIcon(_FilePdfIcon, "FilePdfIcon");
 export const FilePenIcon = createIcon(_FilePenIcon, "FilePenIcon");
 export const FolderIcon = createIcon(_FolderIcon, "FolderIcon");
+export const HeadingIcon = createIcon(_HeadingIcon, "HeadingIcon");
+export const ItalicIcon = createIcon(_ItalicIcon, "ItalicIcon");
+export const LinkIcon = createIcon(_LinkIcon, "LinkIcon");
+export const ListBulletIcon = createIcon(_ListBulletIcon, "ListBulletIcon");
+export const ListNumberIcon = createIcon(_ListNumberIcon, "ListNumberIcon");
 export const MagnifyingGlassIcon = createIcon(
   _MagnifyingGlassIcon,
   "MagnifyingGlassIcon",
@@ -90,6 +105,7 @@ export const PersonIcon = createIcon(_PersonIcon, "PersonIcon");
 export const PictureIcon = createIcon(_PictureIcon, "PictureIcon");
 export const PlusCircleIcon = createIcon(_PlusCircleIcon, "PlusCircleIcon");
 export const PlusIcon = createIcon(_PlusIcon, "PlusIcon");
+export const QuoteIcon = createIcon(_QuoteIcon, "QuoteIcon");
 export const ScriptIcon = createIcon(_ScriptIcon, "ScriptIcon");
 export const SeedAiIcon = createIcon(_SeedAiIcon, "SeedAiIcon");
 export const SendIcon = createIcon(_SendIcon, "SendIcon");

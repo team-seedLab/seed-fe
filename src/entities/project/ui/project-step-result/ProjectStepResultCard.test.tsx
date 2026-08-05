@@ -6,7 +6,9 @@ import {
   fireEvent,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
+import { InputRange } from "dom-input-range";
 import { describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/test/test-utils";
@@ -203,6 +205,192 @@ describe("ProjectStepResultCard", () => {
     expect(screen.getByLabelText("학습 결과")).toHaveValue("수정한 학습 결과");
   });
 
+  it("선택한 텍스트가 없으면 마크다운 서식 도구를 숨긴다", () => {
+    renderEditableResult("학습 결과");
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("텍스트를 선택하면 입력 포커스를 유지한 채 서식 도구를 띄운다", async () => {
+    const getSelectionRect = vi
+      .spyOn(InputRange.prototype, "getBoundingClientRect")
+      .mockReturnValue(new DOMRect(80, 120, 160, 24));
+
+    try {
+      renderEditableResult("학습 결과");
+
+      const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+        name: "학습 결과",
+      });
+      resultInput.focus();
+      resultInput.setSelectionRange(0, resultInput.value.length);
+      fireEvent.select(resultInput);
+
+      const toolbar = await screen.findByRole("toolbar", {
+        name: "마크다운 서식",
+      });
+      const editorRoot = resultInput.closest(
+        '[data-scope="tabs"][data-part="root"]',
+      );
+      const popoverContent = toolbar.closest<HTMLElement>(
+        '[data-scope="popover"][data-part="content"]',
+      );
+
+      expect(
+        toolbar.closest('[data-scope="popover"][data-part="positioner"]'),
+      ).toBeInTheDocument();
+      expect(window.getComputedStyle(popoverContent!).zIndex).toBe(
+        "var(--sd-z-index-popover)",
+      );
+      expect(editorRoot).toContainElement(toolbar);
+      expect(resultInput).toHaveFocus();
+
+      [
+        "제목",
+        "굵게",
+        "기울임",
+        "링크",
+        "글머리 목록",
+        "번호 목록",
+        "인용",
+        "인라인 코드",
+      ].forEach((name) => {
+        expect(within(toolbar).getByLabelText(name)).toBeInTheDocument();
+      });
+    } finally {
+      getSelectionRect.mockRestore();
+    }
+  });
+
+  it("복제 영역 동기화 후 서식 도구 위치를 다시 계산한다", async () => {
+    let selectionTop = 120;
+    const getSelectionRect = vi
+      .spyOn(InputRange.prototype, "getBoundingClientRect")
+      .mockImplementation(() => new DOMRect(80, selectionTop, 160, 24));
+
+    try {
+      renderEditableResult("학습 결과");
+
+      const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+        name: "학습 결과",
+      });
+      const styleClone = InputRange.fromSelection(resultInput).getStyleClone();
+      resultInput.setSelectionRange(0, resultInput.value.length);
+      fireEvent.select(resultInput);
+
+      const toolbar = await screen.findByRole("toolbar", {
+        name: "마크다운 서식",
+      });
+      const positioner = toolbar.closest<HTMLElement>(
+        '[data-scope="popover"][data-part="positioner"]',
+      );
+
+      if (!positioner) {
+        throw new Error("선택 도구 위치 요소를 찾을 수 없습니다.");
+      }
+
+      await waitFor(() => {
+        expect(positioner.style.getPropertyValue("--y")).not.toBe("");
+      });
+      const previousY = positioner.style.getPropertyValue("--y");
+
+      selectionTop = 220;
+      styleClone.dispatchEvent(new Event("update"));
+
+      await waitFor(() => {
+        expect(positioner.style.getPropertyValue("--y")).not.toBe(previousY);
+      });
+    } finally {
+      getSelectionRect.mockRestore();
+    }
+  });
+
+  it("선택을 해제하거나 입력 영역을 벗어나면 서식 도구를 숨긴다", () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    expect(
+      screen.getByRole("toolbar", { name: "마크다운 서식" }),
+    ).toBeInTheDocument();
+
+    resultInput.setSelectionRange(1, 1);
+    fireEvent.select(resultInput);
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+    fireEvent.blur(resultInput, { relatedTarget: null });
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("미리보기를 다녀오면 이전 선택 도구를 다시 표시하지 않는다", async () => {
+    renderEditableResult("학습 결과");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    expect(
+      screen.getByRole("toolbar", { name: "마크다운 서식" }),
+    ).toBeInTheDocument();
+
+    await selectView("미리보기");
+    await selectView("입력");
+
+    expect(
+      screen.queryByRole("toolbar", { name: "마크다운 서식" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("서식 도구로 포커스를 옮겨도 카드 이탈 저장을 실행하지 않는다", () => {
+    const onCommit = vi.fn();
+    renderEditableResult("학습 결과", onCommit);
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    const boldButton = screen.getByRole("button", { name: "굵게" });
+    fireEvent.blur(resultInput, { relatedTarget: boldButton });
+
+    expect(onCommit).not.toHaveBeenCalled();
+  });
+
+  it("서식 도구로 선택한 텍스트를 변경하고 입력을 계속할 수 있다", async () => {
+    renderEditableResult("강조");
+
+    const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
+      name: "학습 결과",
+    });
+    resultInput.focus();
+    resultInput.setSelectionRange(0, resultInput.value.length);
+    fireEvent.select(resultInput);
+
+    fireEvent.click(screen.getByRole("button", { name: "굵게" }));
+
+    await waitFor(() => {
+      expect(resultInput).toHaveValue("**강조**");
+      expect(resultInput).toHaveFocus();
+    });
+  });
+
   it("미리보기를 확인한 뒤에도 입력창 DOM 상태를 유지한다", async () => {
     renderEditableResult("학습 결과");
 
@@ -278,6 +466,18 @@ describe("ProjectStepResultCard", () => {
 
     await waitFor(() => {
       expect(resultInput).toHaveStyle({ height: "320px", resize: "none" });
+    });
+  });
+
+  it("입력 내용이 화면보다 길어지면 입력창 내부에서 스크롤한다", () => {
+    renderEditableResult();
+
+    const resultInput = screen.getByRole("textbox", { name: "학습 결과" });
+
+    expect(resultInput).toHaveStyle({
+      maxHeight: "360px",
+      overflowY: "auto",
+      overscrollBehavior: "contain",
     });
   });
 

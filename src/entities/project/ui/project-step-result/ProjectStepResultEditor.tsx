@@ -8,8 +8,10 @@ import {
 } from "../project-content-control-style";
 
 import { ProjectStepResultContent } from "./ProjectStepResultContent";
+import { ProjectStepResultFloatingToolbar } from "./ProjectStepResultFloatingToolbar";
 import { getMarkdownInputEdit } from "./get-markdown-input-edit";
 import { useProjectStepResultInputViewHeight } from "./useProjectStepResultInputViewHeight";
+import { useProjectStepResultSelection } from "./useProjectStepResultSelection";
 
 type Props = {
   content: string;
@@ -22,12 +24,19 @@ export const ProjectStepResultEditor = ({
 }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const shouldReleaseTabRef = useRef(false);
+  const textareaId = useId();
   const tabExitInstructionId = useId();
   const [selectedView, setSelectedView] = useState<"input" | "preview">(
     "input",
   );
   const { inputViewHeight, inputViewRef } =
     useProjectStepResultInputViewHeight();
+  const {
+    clearTextSelection,
+    handleSelectionScopeBlur,
+    selectionAnchor,
+    updateTextSelection,
+  } = useProjectStepResultSelection();
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.nativeEvent.isComposing) {
@@ -73,9 +82,14 @@ export const ProjectStepResultEditor = ({
 
   return (
     <Tabs.Root
+      onBlur={handleSelectionScopeBlur}
       onValueChange={({ value }) => {
         if (value === "input" || value === "preview") {
           setSelectedView(value);
+
+          if (value === "preview") {
+            clearTextSelection();
+          }
         }
       }}
       value={selectedView}
@@ -135,6 +149,13 @@ export const ProjectStepResultEditor = ({
         </Tabs.Trigger>
       </Tabs.List>
 
+      {selectedView === "input" && selectionAnchor && (
+        <ProjectStepResultFloatingToolbar
+          anchor={selectionAnchor}
+          textareaId={textareaId}
+        />
+      )}
+
       <Tabs.Content ref={inputViewRef} p={0} pt={3} value="input">
         <Textarea
           ref={inputRef}
@@ -152,12 +173,17 @@ export const ProjectStepResultEditor = ({
           color="neutral.900"
           fontSize={{ base: "xs", md: "sm" }}
           fontWeight="medium"
+          id={textareaId}
+          maxH={{ base: "360px", md: "480px" }}
           minH={60}
           onBlur={() => {
             shouldReleaseTabRef.current = false;
           }}
           onChange={(event) => onContentChange(event.target.value)}
           onKeyDown={handleKeyDown}
+          onSelect={(event) => updateTextSelection(event.currentTarget)}
+          overflowY="auto"
+          overscrollBehavior="contain"
           p={{ base: 4, md: 6 }}
           placeholder="이번 단계에서 학습한 내용과 결과를 자유롭게 정리해 주세요."
           value={content}
