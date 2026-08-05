@@ -68,7 +68,7 @@ export const ProjectStepResultToolbar = ({ textareaId }: Props) =>
           key={command}
           label={label}
         >
-          <Icon boxSize={4} />
+          <Icon boxSize="18px" />
         </ProjectStepResultToolbarButton>
       ))}
     </HStack>,
