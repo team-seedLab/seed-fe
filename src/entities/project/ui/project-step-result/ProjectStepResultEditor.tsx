@@ -1,6 +1,6 @@
 import { type KeyboardEvent, useId, useRef, useState } from "react";
 
-import { Flex, Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
+import { Tabs, Textarea, VisuallyHidden } from "@chakra-ui/react";
 
 import {
   PROJECT_CONTENT_CONTROL_BASE_STYLE,
@@ -96,60 +96,58 @@ export const ProjectStepResultEditor = ({
       variant="plain"
       w="full"
     >
-      <Flex align="center" gap={2} justify="space-between" minW={0} w="full">
-        <Tabs.List
-          bg="neutral.50"
-          borderColor="neutral.100"
-          borderRadius="full"
-          css={{
-            "--transition-duration": "180ms",
-            "--transition-timing-function": "ease-out",
-            "@media (prefers-reduced-motion: reduce)": {
-              "--transition-duration": "0ms",
-            },
+      <Tabs.List
+        alignSelf="flex-start"
+        bg="neutral.50"
+        borderColor="neutral.100"
+        borderRadius="full"
+        css={{
+          "--transition-duration": "180ms",
+          "--transition-timing-function": "ease-out",
+          "@media (prefers-reduced-motion: reduce)": {
+            "--transition-duration": "0ms",
+          },
+        }}
+        gap="4px"
+        p="4px"
+      >
+        <Tabs.Indicator
+          {...PROJECT_CONTENT_CONTROL_SURFACE_STYLE}
+          borderRadius={PROJECT_CONTENT_CONTROL_BASE_STYLE.borderRadius}
+        />
+        <Tabs.Trigger
+          {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
+          color="neutral.600"
+          value="input"
+          zIndex={1}
+          _focusVisible={{
+            outline: "2px solid",
+            outlineColor: "seed",
+            outlineOffset: "2px",
           }}
-          flexShrink={0}
-          gap="4px"
-          p="4px"
+          _selected={{
+            color: "neutral.900",
+          }}
         >
-          <Tabs.Indicator
-            {...PROJECT_CONTENT_CONTROL_SURFACE_STYLE}
-            borderRadius={PROJECT_CONTENT_CONTROL_BASE_STYLE.borderRadius}
-          />
-          <Tabs.Trigger
-            {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
-            color="neutral.600"
-            value="input"
-            zIndex={1}
-            _focusVisible={{
-              outline: "2px solid",
-              outlineColor: "seed",
-              outlineOffset: "2px",
-            }}
-            _selected={{
-              color: "neutral.900",
-            }}
-          >
-            입력
-          </Tabs.Trigger>
-          <Tabs.Trigger
-            {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
-            color="neutral.600"
-            value="preview"
-            zIndex={1}
-            _focusVisible={{
-              outline: "2px solid",
-              outlineColor: "seed",
-              outlineOffset: "2px",
-            }}
-            _selected={{
-              color: "neutral.900",
-            }}
-          >
-            미리보기
-          </Tabs.Trigger>
-        </Tabs.List>
-      </Flex>
+          입력
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          {...PROJECT_CONTENT_CONTROL_BASE_STYLE}
+          color="neutral.600"
+          value="preview"
+          zIndex={1}
+          _focusVisible={{
+            outline: "2px solid",
+            outlineColor: "seed",
+            outlineOffset: "2px",
+          }}
+          _selected={{
+            color: "neutral.900",
+          }}
+        >
+          미리보기
+        </Tabs.Trigger>
+      </Tabs.List>
 
       {selectedView === "input" && selectionAnchor && (
         <ProjectStepResultFloatingToolbar
