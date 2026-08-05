@@ -183,7 +183,6 @@ export const ProjectStepResultEditor = ({
           }}
           onChange={(event) => onContentChange(event.target.value)}
           onKeyDown={handleKeyDown}
-          onScroll={(event) => updateTextSelection(event.currentTarget)}
           onSelect={(event) => updateTextSelection(event.currentTarget)}
           overflowY="auto"
           overscrollBehavior="contain"
