@@ -264,7 +264,7 @@ describe("ProjectStepResultCard", () => {
     }
   });
 
-  it("선택 영역을 스크롤하면 서식 도구 위치를 다시 계산한다", async () => {
+  it("복제 영역 동기화 후 서식 도구 위치를 다시 계산한다", async () => {
     let selectionTop = 120;
     const getSelectionRect = vi
       .spyOn(InputRange.prototype, "getBoundingClientRect")
@@ -276,6 +276,7 @@ describe("ProjectStepResultCard", () => {
       const resultInput = screen.getByRole<HTMLTextAreaElement>("textbox", {
         name: "학습 결과",
       });
+      const styleClone = InputRange.fromSelection(resultInput).getStyleClone();
       resultInput.setSelectionRange(0, resultInput.value.length);
       fireEvent.select(resultInput);
 
@@ -296,7 +297,7 @@ describe("ProjectStepResultCard", () => {
       const previousY = positioner.style.getPropertyValue("--y");
 
       selectionTop = 220;
-      fireEvent.scroll(resultInput);
+      styleClone.dispatchEvent(new Event("update"));
 
       await waitFor(() => {
         expect(positioner.style.getPropertyValue("--y")).not.toBe(previousY);

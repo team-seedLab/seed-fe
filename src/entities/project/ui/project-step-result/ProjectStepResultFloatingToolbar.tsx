@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 import { Popover, usePopoverContext } from "@chakra-ui/react";
 
@@ -15,10 +15,13 @@ const ProjectStepResultFloatingToolbarContent = ({
   textareaId,
 }: Props) => {
   const { reposition } = usePopoverContext();
+  const repositionAfterUpdate = useEffectEvent(() => reposition());
 
   useEffect(() => {
-    reposition();
-  }, [anchor, reposition]);
+    repositionAfterUpdate();
+
+    return anchor.subscribeToPositionUpdates(repositionAfterUpdate);
+  }, [anchor]);
 
   return (
     <Popover.Positioner>
