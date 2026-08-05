@@ -33,4 +33,29 @@ describe("getTextareaSelectionAnchor", () => {
     expect(fromSelection).toHaveBeenCalledWith(textarea);
     expect(getBoundingClientRect).toHaveBeenCalledOnce();
   });
+
+  it("복제 영역 업데이트를 구독하고 해제한다", () => {
+    const textarea = document.createElement("textarea");
+    textarea.value = "학습 결과";
+    textarea.setSelectionRange(0, 2);
+    const styleClone = InputRange.fromSelection(textarea).getStyleClone();
+    const handlePositionUpdate = vi.fn();
+
+    try {
+      const anchor = getTextareaSelectionAnchor(textarea);
+      const unsubscribe =
+        anchor?.subscribeToPositionUpdates(handlePositionUpdate);
+
+      styleClone.dispatchEvent(new Event("update"));
+
+      expect(handlePositionUpdate).toHaveBeenCalledOnce();
+
+      unsubscribe?.();
+      styleClone.dispatchEvent(new Event("update"));
+
+      expect(handlePositionUpdate).toHaveBeenCalledOnce();
+    } finally {
+      styleClone.disconnect();
+    }
+  });
 });
